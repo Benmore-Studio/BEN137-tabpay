@@ -28,8 +28,14 @@ export default function Install() {
   // If already installed, show success
   if (isStandalone) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+      <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-green-100 rounded-full blur-3xl opacity-60" />
+          <div className="absolute -bottom-40 -left-40 w-[300px] h-[300px] bg-primary-100 rounded-full blur-3xl opacity-50" />
+        </div>
+
+        <div className="relative flex-1 flex flex-col items-center justify-center px-6 py-12">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-500/30 mb-6">
             <CheckCircle2 className="w-10 h-10 text-white" />
           </div>
@@ -47,10 +53,19 @@ export default function Install() {
     );
   }
 
+  const isIOS = platform === 'ios';
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-primary-100 rounded-full blur-3xl opacity-60" />
+        <div className="absolute -bottom-40 -left-40 w-[300px] h-[300px] bg-gold-100 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-50 rounded-full blur-3xl opacity-40" />
+      </div>
+
       {/* Header */}
-      <div className="px-6 pt-12 pb-8 text-center">
+      <div className="relative px-6 pt-12 pb-8 text-center">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/25 mx-auto mb-5">
           <Martini className="w-8 h-8 text-white" strokeWidth={1.5} />
         </div>
@@ -62,25 +77,27 @@ export default function Install() {
         </p>
       </div>
 
-      {/* Platform Toggle */}
-      <div className="px-6 mb-6">
-        <div className="flex bg-slate-100 rounded-xl p-1">
+      {/* Platform Toggle with sliding indicator */}
+      <div className="relative px-6 mb-6">
+        <div className="relative flex bg-slate-100 rounded-xl p-1">
+          {/* Sliding indicator */}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm ring-1 ring-slate-200/50 transition-all duration-300 ease-out ${
+              isIOS ? 'left-1' : 'left-[calc(50%+2px)]'
+            }`}
+          />
           <button
             onClick={() => setPlatform('ios')}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              platform === 'ios'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-500'
+            className={`relative flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors z-10 ${
+              isIOS ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             iPhone
           </button>
           <button
             onClick={() => setPlatform('android')}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              platform === 'android'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-500'
+            className={`relative flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors z-10 ${
+              !isIOS ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Android
@@ -89,8 +106,8 @@ export default function Install() {
       </div>
 
       {/* Instructions */}
-      <div className="flex-1 px-6">
-        {platform === 'ios' ? (
+      <div className="relative flex-1 px-6">
+        {isIOS ? (
           <div className="space-y-4">
             {/* Step 1 */}
             <div className="bg-white rounded-2xl p-5 ring-1 ring-slate-900/5 shadow-sm">
@@ -214,7 +231,7 @@ export default function Install() {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-6 space-y-3">
+      <div className="relative px-6 py-6 space-y-3">
         <Link to="/menu" className="block">
           <Button variant="primary" className="w-full" size="lg">
             Continue to Menu

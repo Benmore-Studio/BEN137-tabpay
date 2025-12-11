@@ -42,7 +42,7 @@ export default function Landing() {
                 </Link>
               </>
             ) : (
-              <Link to="/auth">
+              <Link to="/menu">
                 <Button size="sm" className="bg-primary-600 hover:bg-primary-700">
                   Continue <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
