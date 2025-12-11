@@ -76,33 +76,35 @@ export default function Menu() {
         onCategoryChange={handleCategoryChange}
       />
 
-      <div className="pb-8">
-        {categories.map((category) => {
-          const items = getMenuItemsByCategory(category.id);
-          if (items.length === 0) return null;
+      <div className="pb-24 md:pb-8">
+        <div className="max-w-7xl mx-auto">
+          {categories.map((category) => {
+            const items = getMenuItemsByCategory(category.id);
+            if (items.length === 0) return null;
 
-          return (
-            <section
-              key={category.id}
-              ref={(el) => {
-                sectionRefs.current[category.id] = el;
-              }}
-              className="px-4 pt-6"
-            >
-              <h2 className="text-lg font-bold text-gray-900 mb-4">{category.name}</h2>
-              <div className="space-y-3">
-                {items.map((item) => (
-                  <MenuItemCard
-                    key={item.id}
-                    item={item}
-                    onQuickAdd={() => handleQuickAdd(item)}
-                    onViewDetails={() => handleViewDetails(item)}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+            return (
+              <section
+                key={category.id}
+                ref={(el) => {
+                  sectionRefs.current[category.id] = el;
+                }}
+                className="px-4 pt-6"
+              >
+                <h2 className="text-lg font-bold text-slate-900 mb-4">{category.name}</h2>
+                <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
+                  {items.map((item) => (
+                    <MenuItemCard
+                      key={item.id}
+                      item={item}
+                      onQuickAdd={() => handleQuickAdd(item)}
+                      onViewDetails={() => handleViewDetails(item)}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
       </div>
 
       <ItemDetailModal

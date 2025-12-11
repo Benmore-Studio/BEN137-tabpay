@@ -24,15 +24,15 @@ export default function Card({
 
   const variants = {
     default: `
-      bg-white border border-slate-200
+      bg-white ring-1 ring-slate-900/5
       shadow-sm
     `,
     elevated: `
-      bg-white border border-slate-100
-      shadow-md
+      bg-white ring-1 ring-slate-900/5
+      shadow-lg shadow-slate-900/5
     `,
     outlined: `
-      bg-transparent border border-slate-200
+      bg-transparent ring-1 ring-slate-200
     `,
   };
 
@@ -47,7 +47,7 @@ export default function Card({
         ${variants[variant]}
         ${onClick ? `
           cursor-pointer
-          hover:shadow-lg hover:border-slate-300
+          hover:shadow-lg hover:ring-slate-200 hover:-translate-y-0.5
           active:scale-[0.99]
           text-left w-full
         ` : ''}

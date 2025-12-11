@@ -34,10 +34,10 @@ export default function CategoryNav({
   return (
     <nav
       ref={navRef}
-      className="sticky top-14 z-40 bg-white border-b border-gray-100 overflow-x-auto scrollbar-hide"
+      className="sticky top-14 z-40 bg-slate-50/80 backdrop-blur-lg border-b border-slate-200/50 overflow-x-auto scrollbar-hide"
       aria-label="Menu categories"
     >
-      <div className="flex gap-2 px-4 py-3 min-w-max">
+      <div className="max-w-7xl mx-auto flex gap-2 px-4 py-3 min-w-max">
         {categories.map((category) => (
           <div
             key={category.id}

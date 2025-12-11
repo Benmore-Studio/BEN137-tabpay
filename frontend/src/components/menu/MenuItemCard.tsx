@@ -14,14 +14,14 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
   return (
     <div
       className={`
-        flex gap-4 p-4 bg-white rounded-xl border border-gray-100
-        ${item.available ? 'cursor-pointer hover:shadow-md' : 'opacity-60'}
-        transition-shadow duration-200
+        flex gap-4 p-4 bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-sm
+        ${item.available ? 'cursor-pointer hover:shadow-lg hover:ring-slate-200 hover:-translate-y-0.5' : 'opacity-60'}
+        transition-all duration-200
       `}
       onClick={item.available ? onViewDetails : undefined}
     >
       {/* Image */}
-      <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+      <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-slate-100">
         {item.image ? (
           <img
             src={item.image}
@@ -32,7 +32,7 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
+          <div className="w-full h-full flex items-center justify-center text-slate-400">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
@@ -49,7 +49,7 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
+            <h3 className="font-semibold text-slate-900 truncate">{item.name}</h3>
             {!item.available && (
               <span className="text-xs text-red-600 font-medium">Unavailable</span>
             )}
@@ -57,7 +57,7 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
           <Price amount={item.price} className="flex-shrink-0" />
         </div>
 
-        <p className="mt-1 text-sm text-gray-600 line-clamp-2">{item.description}</p>
+        <p className="mt-1 text-sm text-slate-500 line-clamp-2">{item.description}</p>
 
         {/* Dietary tags */}
         {item.dietary && (
@@ -93,9 +93,11 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
             w-10 h-10
             flex items-center justify-center
             rounded-full
-            bg-primary-600 text-white
-            hover:bg-primary-700 active:bg-primary-800
-            transition-colors duration-200
+            bg-gradient-to-br from-primary-500 to-primary-600 text-white
+            shadow-md shadow-primary-500/25
+            hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105
+            active:scale-95
+            transition-all duration-200
           "
           aria-label={`Add ${item.name} to cart`}
         >

@@ -19,119 +19,135 @@ export default function Confirmation() {
   const currentStageIndex = orderStages.findIndex((s) => s.status === currentStatus);
 
   return (
-    <AppLayout showHeader={false}>
-      <div className="min-h-screen flex flex-col px-4 py-8">
-        {/* Success Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-            <CheckCircleIcon className="w-12 h-12 text-green-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Order Confirmed!</h1>
-          <p className="text-gray-600 mt-1">Thank you for your order</p>
-          <p className="text-lg font-mono font-semibold text-primary-600 mt-2">
-            #{orderId}
-          </p>
+    <AppLayout showHeader={false} showBottomNav={false}>
+      <div className="min-h-screen flex flex-col px-4 py-8 relative">
+        {/* Background decorations */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-green-100 rounded-full blur-3xl opacity-50" />
+          <div className="absolute -bottom-40 -left-40 w-[300px] h-[300px] bg-primary-100 rounded-full blur-3xl opacity-40" />
         </div>
 
-        {/* Estimated Time */}
-        <Card className="mb-6">
-          <div className="text-center">
-            <p className="text-sm text-gray-600">Estimated Delivery Time</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">15-20 minutes</p>
-          </div>
-        </Card>
-
-        {/* Order Status Tracker */}
-        <Card className="mb-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Order Status</h2>
-          <div className="relative">
-            {/* Progress Line */}
-            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-200" />
-            <div
-              className="absolute left-4 top-4 w-0.5 bg-primary-600 transition-all duration-500"
-              style={{
-                height: `${(currentStageIndex / (orderStages.length - 1)) * 100}%`,
-              }}
-            />
-
-            {/* Stages */}
-            <div className="space-y-6">
-              {orderStages.map((stage, index) => {
-                const isComplete = index <= currentStageIndex;
-                const isCurrent = index === currentStageIndex;
-
-                return (
-                  <div key={stage.status} className="flex items-center gap-4">
-                    {/* Status Dot */}
-                    <div
-                      className={`
-                        relative z-10 w-8 h-8 rounded-full
-                        flex items-center justify-center
-                        transition-colors duration-300
-                        ${
-                          isComplete
-                            ? 'bg-primary-600'
-                            : 'bg-white border-2 border-gray-300'
-                        }
-                      `}
-                    >
-                      {isComplete && (
-                        <svg
-                          className="w-4 h-4 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
-                    </div>
-
-                    {/* Label */}
-                    <div>
-                      <p
-                        className={`
-                          font-medium
-                          ${isCurrent ? 'text-primary-600' : isComplete ? 'text-gray-900' : 'text-gray-400'}
-                        `}
-                      >
-                        {stage.label}
-                      </p>
-                      {isCurrent && (
-                        <p className="text-sm text-gray-500">In progress...</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+        <div className="relative">
+          {/* Success Header */}
+          <div className="text-center mb-8">
+            <div className="w-24 h-24 mx-auto mb-5 rounded-full bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-500/30 animate-scale-in">
+              <CheckCircleIcon className="w-14 h-14 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">Order Confirmed!</h1>
+            <p className="text-slate-500 mt-1">Thank you for your order</p>
+            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 ring-1 ring-slate-200">
+              <span className="text-sm text-slate-500">Order</span>
+              <span className="text-base font-mono font-bold text-primary-600">
+                #{orderId}
+              </span>
             </div>
           </div>
-        </Card>
 
-        {/* Help Text */}
-        <p className="text-sm text-gray-500 text-center mb-6">
-          A server will bring your order to your location.
-          <br />
-          Please stay nearby to receive your order.
-        </p>
+          {/* Estimated Time */}
+          <Card variant="elevated" className="mb-5">
+            <div className="text-center py-2">
+              <p className="text-sm text-slate-500 mb-1">Estimated Delivery Time</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">15-20 min</p>
+            </div>
+          </Card>
 
-        {/* Actions */}
-        <div className="mt-auto space-y-3">
-          <Link to="/menu" className="block">
-            <Button variant="primary" className="w-full">
-              Order More
-            </Button>
-          </Link>
-          <Link to="/" className="block">
-            <Button variant="secondary" className="w-full">
-              Back to Home
-            </Button>
-          </Link>
+          {/* Order Status Tracker */}
+          <Card variant="elevated" className="mb-5">
+            <h2 className="font-bold text-slate-900 mb-4">Order Status</h2>
+            <div className="relative">
+              {/* Progress Line */}
+              <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-200" />
+              <div
+                className="absolute left-4 top-4 w-0.5 bg-gradient-to-b from-primary-500 to-primary-600 transition-all duration-500"
+                style={{
+                  height: `${(currentStageIndex / (orderStages.length - 1)) * 100}%`,
+                }}
+              />
+
+              {/* Stages */}
+              <div className="space-y-6">
+                {orderStages.map((stage, index) => {
+                  const isComplete = index <= currentStageIndex;
+                  const isCurrent = index === currentStageIndex;
+
+                  return (
+                    <div key={stage.status} className="flex items-center gap-4">
+                      {/* Status Dot */}
+                      <div
+                        className={`
+                          relative z-10 w-8 h-8 rounded-full
+                          flex items-center justify-center
+                          transition-all duration-300
+                          ${
+                            isComplete
+                              ? 'bg-gradient-to-br from-primary-500 to-primary-600 shadow-md shadow-primary-500/30'
+                              : 'bg-white ring-2 ring-slate-200'
+                          }
+                        `}
+                      >
+                        {isComplete && (
+                          <svg
+                            className="w-4 h-4 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={3}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
+                      </div>
+
+                      {/* Label */}
+                      <div>
+                        <p
+                          className={`
+                            font-semibold
+                            ${isCurrent ? 'text-primary-600' : isComplete ? 'text-slate-900' : 'text-slate-400'}
+                          `}
+                        >
+                          {stage.label}
+                        </p>
+                        {isCurrent && (
+                          <p className="text-sm text-slate-500 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+                            In progress...
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Card>
+
+          {/* Help Text */}
+          <div className="mb-6 p-4 rounded-xl bg-slate-100 ring-1 ring-slate-200 text-center">
+            <p className="text-sm text-slate-600">
+              A server will bring your order to your location.
+              <br />
+              <span className="font-medium text-slate-700">Please stay nearby to receive your order.</span>
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-auto space-y-3">
+            <Link to="/menu" className="block">
+              <Button variant="primary" className="w-full">
+                Order More
+              </Button>
+            </Link>
+            <Link to="/" className="block">
+              <Button variant="secondary" className="w-full">
+                Back to Home
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </AppLayout>

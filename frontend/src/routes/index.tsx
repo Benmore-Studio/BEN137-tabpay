@@ -1,24 +1,35 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { MobileOnlyLayout } from '../components';
+
+// Public pages (desktop-friendly)
 import Landing from '../pages/Landing';
 import Auth from '../pages/Auth';
-import Venues from '../pages/Venues';
-import ServiceBars from '../pages/ServiceBars';
+import Install from '../pages/Install';
+
+// Mobile-only ordering flow
 import Menu from '../pages/Menu';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Confirmation from '../pages/Confirmation';
+import ServiceBars from '../pages/ServiceBars';
 
 export const router = createBrowserRouter([
-  // Landing / Entry
+  // ================================
+  // Public Routes (Desktop-Friendly)
+  // ================================
   {
     path: '/',
     element: <Landing />,
   },
-  // Auth (unified login/register)
   {
     path: '/auth',
     element: <Auth />,
   },
+  {
+    path: '/install',
+    element: <Install />,
+  },
+
   // Legacy routes redirect to /auth
   {
     path: '/login',
@@ -28,30 +39,63 @@ export const router = createBrowserRouter([
     path: '/register',
     element: <Navigate to="/auth" replace />,
   },
-  // Venue & Service Bar Selection
+
+  // Legacy venues route redirects to menu
   {
     path: '/venues',
-    element: <Venues />,
+    element: <Navigate to="/menu" replace />,
   },
+
+  // ================================
+  // Mobile-Only Routes
+  // ================================
   {
-    path: '/venues/:venueId/bars',
-    element: <ServiceBars />,
+    element: <MobileOnlyLayout />,
+    children: [
+      // Ordering flow
+      {
+        path: '/menu',
+        element: <Menu />,
+      },
+      {
+        path: '/cart',
+        element: <Cart />,
+      },
+      {
+        path: '/checkout',
+        element: <Checkout />,
+      },
+      {
+        path: '/confirmation/:orderId',
+        element: <Confirmation />,
+      },
+
+      // Service bar selection (for multi-bar venues)
+      {
+        path: '/venues/:venueId/bars',
+        element: <ServiceBars />,
+      },
+
+      // Future: Orders history, Account settings
+      // {
+      //   path: '/orders',
+      //   element: <Orders />,
+      // },
+      // {
+      //   path: '/account',
+      //   element: <Account />,
+      // },
+    ],
   },
-  // Ordering Flow
-  {
-    path: '/menu',
-    element: <Menu />,
-  },
-  {
-    path: '/cart',
-    element: <Cart />,
-  },
-  {
-    path: '/checkout',
-    element: <Checkout />,
-  },
-  {
-    path: '/confirmation/:orderId',
-    element: <Confirmation />,
-  },
+
+  // ================================
+  // Admin Routes (Desktop-Friendly)
+  // ================================
+  // Future: Admin dashboard, venue management, etc.
+  // {
+  //   element: <AdminLayout />,
+  //   children: [
+  //     { path: '/admin', element: <Dashboard /> },
+  //   ],
+  // },
 ]);

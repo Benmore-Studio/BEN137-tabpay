@@ -19,16 +19,16 @@ export default function CategoryChip({
       onClick={onClick}
       className={`
         inline-flex items-center gap-2
-        px-4 py-2
+        px-4 py-2.5
         rounded-full
         font-medium text-sm
         whitespace-nowrap
-        transition-colors duration-200
+        transition-all duration-200
         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
         ${
           active
-            ? 'bg-primary-600 text-white'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            ? 'bg-primary-600 text-white shadow-md shadow-primary-500/25'
+            : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-300 hover:bg-slate-50'
         }
       `}
     >
@@ -38,7 +38,7 @@ export default function CategoryChip({
         <span
           className={`
             text-xs
-            ${active ? 'text-primary-200' : 'text-gray-500'}
+            ${active ? 'text-primary-200' : 'text-slate-400'}
           `}
         >
           ({count})

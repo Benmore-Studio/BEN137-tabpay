@@ -68,11 +68,11 @@ export default function Checkout() {
   ];
 
   return (
-    <AppLayout showBackButton headerTitle="Checkout">
-      <div className="pb-40 px-4 pt-4 space-y-6">
+    <AppLayout showBackButton headerTitle="Checkout" showBottomNav={false}>
+      <div className="pb-48 px-4 pt-6 space-y-5">
         {/* Location Confirmation */}
-        <Card>
-          <h2 className="font-semibold text-gray-900 mb-3">Delivery Location</h2>
+        <Card variant="elevated">
+          <h2 className="font-bold text-slate-900 mb-3">Delivery Location</h2>
           <Input
             label="Table or Machine Number"
             placeholder="e.g., Table 42 or Machine 123"
@@ -84,12 +84,12 @@ export default function Checkout() {
         </Card>
 
         {/* Order Summary */}
-        <Card>
-          <h2 className="font-semibold text-gray-900 mb-3">Order Summary</h2>
+        <Card variant="elevated">
+          <h2 className="font-bold text-slate-900 mb-3">Order Summary</h2>
           <div className="space-y-2">
             {items.map((item) => (
               <div key={item.id} className="flex justify-between text-sm">
-                <span className="text-gray-600">
+                <span className="text-slate-600">
                   {item.quantity}x {item.menuItem.name}
                 </span>
                 <Price amount={item.totalPrice} size="sm" />
@@ -99,20 +99,20 @@ export default function Checkout() {
         </Card>
 
         {/* Tip Selection */}
-        <Card>
-          <h2 className="font-semibold text-gray-900 mb-3">Add a Tip</h2>
+        <Card variant="elevated">
+          <h2 className="font-bold text-slate-900 mb-3">Add a Tip</h2>
           <div className="grid grid-cols-5 gap-2">
             {tipOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => setTipOption(option.value)}
                 className={`
-                  py-2 px-1 rounded-lg text-sm font-medium
-                  border transition-colors duration-200
+                  py-2.5 px-1 rounded-xl text-sm font-semibold
+                  transition-all duration-200
                   ${
                     tipOption === option.value
-                      ? 'bg-primary-600 text-white border-primary-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-primary-400'
+                      ? 'bg-gradient-to-r from-gold-400 to-gold-500 text-slate-900 shadow-md shadow-gold-500/25'
+                      : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-300'
                   }
                 `}
               >
@@ -133,59 +133,59 @@ export default function Checkout() {
             </div>
           )}
           {tipAmount > 0 && (
-            <p className="mt-2 text-sm text-gray-500">
-              Tip amount: ${tipAmount.toFixed(2)}
+            <p className="mt-2 text-sm text-slate-500">
+              Tip amount: <span className="font-semibold text-gold-600">${tipAmount.toFixed(2)}</span>
             </p>
           )}
         </Card>
 
         {/* Payment Method */}
-        <Card>
-          <h2 className="font-semibold text-gray-900 mb-3">Payment Method</h2>
+        <Card variant="elevated">
+          <h2 className="font-bold text-slate-900 mb-3">Payment Method</h2>
           <div className="space-y-2">
             <button
               onClick={() => setPaymentMethod('card')}
               className={`
-                w-full flex items-center gap-3 p-3 rounded-lg border transition-colors
+                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
                 ${
                   paymentMethod === 'card'
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'ring-2 ring-primary-500 bg-primary-50'
+                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
                 }
               `}
             >
-              <CreditCardIcon className="w-6 h-6 text-gray-600" />
-              <span className="font-medium text-gray-900">Credit / Debit Card</span>
+              <CreditCardIcon className="w-6 h-6 text-slate-600" />
+              <span className="font-medium text-slate-900">Credit / Debit Card</span>
             </button>
 
             <button
               onClick={() => setPaymentMethod('apple-pay')}
               className={`
-                w-full flex items-center gap-3 p-3 rounded-lg border transition-colors
+                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
                 ${
                   paymentMethod === 'apple-pay'
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'ring-2 ring-primary-500 bg-primary-50'
+                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
                 }
               `}
             >
-              <DevicePhoneMobileIcon className="w-6 h-6 text-gray-600" />
-              <span className="font-medium text-gray-900">Apple Pay</span>
+              <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
+              <span className="font-medium text-slate-900">Apple Pay</span>
             </button>
 
             <button
               onClick={() => setPaymentMethod('google-pay')}
               className={`
-                w-full flex items-center gap-3 p-3 rounded-lg border transition-colors
+                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
                 ${
                   paymentMethod === 'google-pay'
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'ring-2 ring-primary-500 bg-primary-50'
+                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
                 }
               `}
             >
-              <DevicePhoneMobileIcon className="w-6 h-6 text-gray-600" />
-              <span className="font-medium text-gray-900">Google Pay</span>
+              <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
+              <span className="font-medium text-slate-900">Google Pay</span>
             </button>
           </div>
 
@@ -209,7 +209,7 @@ export default function Checkout() {
                   disabled
                 />
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-500">
                 * This is a demo. No payment will be processed.
               </p>
             </div>
@@ -217,44 +217,44 @@ export default function Checkout() {
         </Card>
 
         {/* Terms */}
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-xs text-slate-500 text-center">
           By placing this order, you agree to our{' '}
-          <button className="text-primary-600 underline">Terms of Service</button>
+          <button className="text-primary-600 hover:underline">Terms of Service</button>
           {' '}and{' '}
-          <button className="text-primary-600 underline">Privacy Policy</button>.
+          <button className="text-primary-600 hover:underline">Privacy Policy</button>.
         </p>
       </div>
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 space-y-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/50 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
         {/* Price Breakdown */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Subtotal</span>
+            <span className="text-slate-500">Subtotal</span>
             <Price amount={subtotal} size="sm" />
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Tax (8.75%)</span>
+            <span className="text-slate-500">Tax (8.75%)</span>
             <Price amount={tax} size="sm" />
           </div>
           {tipAmount > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Tip</span>
-              <Price amount={tipAmount} size="sm" />
+              <span className="text-slate-500">Tip</span>
+              <span className="font-medium text-gold-600">${tipAmount.toFixed(2)}</span>
             </div>
           )}
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Service Fee</span>
+            <span className="text-slate-500">Service Fee</span>
             <Price amount={SERVICE_FEE} size="sm" />
           </div>
-          <div className="flex justify-between font-semibold pt-2 border-t border-gray-100">
-            <span>Total</span>
+          <div className="flex justify-between font-bold pt-2 border-t border-slate-200">
+            <span className="text-slate-900">Total</span>
             <Price amount={total} size="lg" />
           </div>
         </div>
 
         {/* Payment info */}
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-slate-400 text-center">
           Secure payment processed by Stripe
         </p>
 

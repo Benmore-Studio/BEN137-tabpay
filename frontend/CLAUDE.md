@@ -416,6 +416,97 @@ For "How it Works" sections:
 </div>
 ```
 
+### Auth/Form Page Structure
+Use card with distinct sections for visual hierarchy:
+```tsx
+<div className="bg-white rounded-3xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 overflow-hidden">
+  {/* Header - logo, back link, branding */}
+  <div className="relative px-6 sm:px-8 pt-6 pb-5 bg-gradient-to-b from-slate-50 to-white border-b border-slate-100">
+    <Link to="/" className="absolute top-3 left-4 ...">← Home</Link>
+    <div className="flex flex-col items-center pt-3">
+      {/* Logo */}
+    </div>
+  </div>
+
+  {/* Content - form fields */}
+  <div className="px-6 sm:px-8 py-5">
+    {/* Form */}
+  </div>
+
+  {/* Footer - secondary actions */}
+  <div className="px-6 sm:px-8 py-3 bg-slate-50 border-t border-slate-100 text-center">
+    {/* Toggle prompt, links */}
+  </div>
+</div>
+```
+
+**Guidelines:**
+- Keep forms centered, single-column on all screen sizes
+- Mobile padding: `px-6`, Desktop: `sm:px-8`
+- 48px minimum touch targets (casino users may be distracted)
+- Don't use split-screen layouts for auth - speed > immersion
+
+### Smooth Height Transitions
+Avoid layout jumping when showing/hiding form fields:
+```tsx
+// ❌ DON'T: Conditional rendering causes jumping
+{!isLogin && <input ... />}
+
+// ✅ DO: Use max-height with overflow-hidden
+<div className={`transition-all duration-300 ease-out ${
+  showField ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'
+}`}>
+  <input tabIndex={showField ? 0 : -1} ... />
+</div>
+```
+
+**Key points:**
+- Use `max-h-20` (or appropriate value) instead of `max-h-full`
+- Add `overflow-hidden` to clip content during collapse
+- Use `tabIndex={-1}` on hidden fields for accessibility
+- Pair with `opacity` for smoother visual transition
+
+### Toggle Pill with Sliding Indicator
+For mode switching (login/register, tabs, etc.):
+```tsx
+<div className="relative flex bg-slate-100 rounded-xl p-1">
+  {/* Sliding background indicator */}
+  <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm ring-1 ring-slate-200/50 transition-all duration-300 ease-out ${
+    isFirstOption ? 'left-1' : 'left-[calc(50%+2px)]'
+  }`} />
+
+  {/* Option buttons */}
+  <button className={`relative flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors z-10 ${
+    isFirstOption ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
+  }`}>
+    Option 1
+  </button>
+  <button className="...">Option 2</button>
+</div>
+```
+
+### Enhanced Depth with Custom Shadows
+For premium feel, use layered and colored shadows:
+```tsx
+// Card with layered shadow + subtle ring
+<div className="bg-white rounded-3xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5">
+
+// Hover lift effect
+<div className="hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] transition-all duration-300">
+
+// Colored shadow (purple glow on buttons)
+<div className="shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40">
+
+// Gradient glow behind card
+<div className="absolute -inset-2 bg-gradient-to-b from-primary-200/40 via-slate-200/50 to-gold-200/40 rounded-[2.5rem] blur-2xl opacity-70" />
+```
+
+**Pattern for depth:**
+1. Base shadow for elevation
+2. `ring-1 ring-slate-900/5` for subtle definition
+3. Colored shadow (`shadow-primary-500/25`) for brand elements
+4. Hover: increase shadow + slight `translate-y` lift
+
 ---
 
 ## Utility Classes Reference

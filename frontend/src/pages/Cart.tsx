@@ -12,11 +12,11 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <AppLayout showBackButton headerTitle="Cart">
+      <AppLayout showBackButton headerTitle="Cart" showBottomNav={false}>
         <div className="flex flex-col items-center justify-center px-4 py-16">
-          <div className="w-24 h-24 mb-6 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="w-24 h-24 mb-6 rounded-2xl bg-slate-100 flex items-center justify-center">
             <svg
-              className="w-12 h-12 text-gray-400"
+              className="w-12 h-12 text-slate-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -29,8 +29,8 @@ export default function Cart() {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6 text-center">
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Your cart is empty</h2>
+          <p className="text-slate-500 mb-6 text-center">
             Browse our menu and add some delicious items!
           </p>
           <Link to="/menu">
@@ -42,15 +42,15 @@ export default function Cart() {
   }
 
   return (
-    <AppLayout showBackButton headerTitle="Cart" cartCount={itemCount}>
-      <div className="pb-40">
+    <AppLayout showBackButton headerTitle="Cart" cartCount={itemCount} showBottomNav={false}>
+      <div className="pb-48 pt-2">
         {/* Cart Items */}
-        <div className="divide-y divide-gray-100">
+        <div className="px-4 space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="px-4 py-4">
+            <div key={item.id} className="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-4">
               <div className="flex gap-3">
                 {/* Item Image */}
-                <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-slate-100">
                   {item.menuItem.image ? (
                     <img
                       src={item.menuItem.image}
@@ -61,7 +61,7 @@ export default function Cart() {
                       }}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
@@ -77,10 +77,10 @@ export default function Cart() {
                 {/* Item Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
-                    <h3 className="font-medium text-gray-900">{item.menuItem.name}</h3>
+                    <h3 className="font-semibold text-slate-900">{item.menuItem.name}</h3>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="p-1 -mr-1 text-gray-400 hover:text-red-500 transition-colors"
+                      className="p-1 -mr-1 text-slate-400 hover:text-red-500 transition-colors"
                       aria-label={`Remove ${item.menuItem.name}`}
                     >
                       <TrashIcon className="w-5 h-5" />
@@ -89,7 +89,7 @@ export default function Cart() {
 
                   {/* Modifiers */}
                   {item.selectedModifiers.length > 0 && (
-                    <p className="text-sm text-gray-500 mt-0.5">
+                    <p className="text-sm text-slate-500 mt-0.5">
                       {item.selectedModifiers
                         .map((m) => m.selectedOptions.map((o) => o.name).join(', '))
                         .join(' \u2022 ')}
@@ -98,7 +98,7 @@ export default function Cart() {
 
                   {/* Special Instructions */}
                   {item.specialInstructions && (
-                    <p className="text-sm text-gray-500 italic mt-0.5">
+                    <p className="text-sm text-slate-500 italic mt-0.5">
                       "{item.specialInstructions}"
                     </p>
                   )}
@@ -120,7 +120,7 @@ export default function Cart() {
         </div>
 
         {/* Clear Cart */}
-        <div className="px-4 py-2">
+        <div className="px-4 py-4">
           <button
             onClick={clearCart}
             className="text-sm text-red-600 hover:text-red-700 font-medium"
@@ -131,19 +131,19 @@ export default function Cart() {
       </div>
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 space-y-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/50 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
         {/* Price Breakdown */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Subtotal</span>
+            <span className="text-slate-500">Subtotal</span>
             <Price amount={subtotal} size="sm" />
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Tax (8.75%)</span>
+            <span className="text-slate-500">Tax (8.75%)</span>
             <Price amount={tax} size="sm" />
           </div>
-          <div className="flex justify-between font-semibold pt-1 border-t border-gray-100">
-            <span>Total</span>
+          <div className="flex justify-between font-bold pt-2 border-t border-slate-200">
+            <span className="text-slate-900">Total</span>
             <Price amount={total} size="lg" />
           </div>
         </div>

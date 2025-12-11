@@ -21,10 +21,10 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm shadow-slate-900/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/30">
               <Martini className="w-5 h-5 text-white" strokeWidth={1.5} />
             </div>
             <span className="font-bold text-xl text-slate-900">TabPay</span>
@@ -42,7 +42,7 @@ export default function Landing() {
                 </Link>
               </>
             ) : (
-              <Link to="/venues">
+              <Link to="/auth">
                 <Button size="sm" className="bg-primary-600 hover:bg-primary-700">
                   Continue <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -66,7 +66,7 @@ export default function Landing() {
             {/* Left: Text content */}
             <div className="text-center lg:text-left">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 border border-primary-100 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-50 to-primary-100/50 border border-primary-200/60 mb-6 shadow-sm shadow-primary-500/10">
                 <Sparkles className="w-4 h-4 text-primary-600" />
                 <span className="text-sm font-medium text-primary-700">Casino drink ordering, reimagined</span>
               </div>
@@ -83,13 +83,13 @@ export default function Landing() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link to={isAuthenticated ? "/venues" : "/auth"}>
-                  <Button size="lg" fullWidth className="sm:w-auto sm:px-8 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all">
+                <Link to={isAuthenticated ? "/menu" : "/auth"}>
+                  <Button size="lg" fullWidth className="sm:w-auto sm:px-8 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300">
                     {isAuthenticated ? 'Continue' : 'Get Started Free'}
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
-                <button className="flex items-center justify-center gap-2 px-6 h-14 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all">
+                <button className="flex items-center justify-center gap-2 px-6 h-14 rounded-xl bg-slate-900 text-white shadow-xl shadow-slate-900/30 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/40 hover:-translate-y-0.5 transition-all duration-300">
                   <QrCode className="w-5 h-5" />
                   <span className="font-medium">Scan QR Code</span>
                 </button>
@@ -123,7 +123,7 @@ export default function Landing() {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-400/30 to-gold-400/30 rounded-[4rem] blur-3xl scale-110 group-hover/phone:scale-125 group-hover/phone:opacity-80 transition-all duration-700" />
 
                 {/* Phone frame */}
-                <div className="relative w-[280px] sm:w-[300px] h-[560px] sm:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-2xl ring-1 ring-slate-700/50 group-hover/phone:shadow-primary-500/10 transition-shadow duration-500">
+                <div className="relative w-[280px] sm:w-[300px] h-[560px] sm:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(100,100,120,0.1)] ring-1 ring-white/10 group-hover/phone:shadow-[0_30px_60px_-15px_rgba(124,58,237,0.3),0_0_0_1px_rgba(100,100,120,0.1)] transition-all duration-500">
                   {/* Highlight edge - top */}
                   <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
 
@@ -282,9 +282,9 @@ export default function Landing() {
                 </div>
 
                 {/* Floating notification card - top left */}
-                <div className="absolute left-0 sm:-left-6 top-12 -translate-x-1/2 bg-white rounded-2xl shadow-xl p-3 ring-1 ring-slate-100 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                <div className="absolute left-0 sm:-left-6 top-12 -translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/20">
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/30">
                       <Shield className="w-4 h-4 text-white" />
                     </div>
                     <div>
@@ -295,9 +295,9 @@ export default function Landing() {
                 </div>
 
                 {/* Floating stat card - bottom right */}
-                <div className="absolute right-0 sm:-right-6 bottom-24 translate-x-1/2 bg-white rounded-2xl shadow-xl p-3 ring-1 ring-slate-100 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                <div className="absolute right-0 sm:-right-6 bottom-24 translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/20">
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/30">
                       <Zap className="w-4 h-4 text-white" />
                     </div>
                     <div>
@@ -308,7 +308,7 @@ export default function Landing() {
                 </div>
 
                 {/* Floating reward card - top right */}
-                <div className="absolute right-0 sm:-right-4 top-32 translate-x-1/3 bg-gradient-to-r from-gold-500 to-gold-600 rounded-lg shadow-xl px-2.5 py-1.5 ring-1 ring-gold-400/50 hover:scale-110 transition-transform duration-300">
+                <div className="absolute right-0 sm:-right-4 top-32 translate-x-1/3 bg-gradient-to-r from-gold-500 to-gold-600 rounded-lg shadow-[0_15px_30px_-10px_rgba(212,175,55,0.5)] px-2.5 py-1.5 ring-1 ring-gold-400/50 hover:scale-110 hover:shadow-[0_20px_40px_-10px_rgba(212,175,55,0.6)] transition-all duration-300">
                   <div className="flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-white" />
                     <span className="text-[10px] font-bold text-white">+50 pts!</span>
@@ -327,7 +327,7 @@ export default function Landing() {
 
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-white to-slate-50 border border-slate-200/80 shadow-md shadow-slate-900/5 mb-6">
               <Heart className="w-4 h-4 text-primary-600" />
               <span className="text-sm font-medium text-slate-700">Why guests love us</span>
             </div>
@@ -342,7 +342,7 @@ export default function Landing() {
           {/* Bento-style feature grid */}
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Large feature - Never leave your seat */}
-            <div className="lg:col-span-2 lg:row-span-2 group relative bg-white rounded-3xl p-8 lg:p-10 shadow-sm border border-slate-100 hover:shadow-xl hover:border-primary-100 transition-all duration-500 overflow-hidden">
+            <div className="lg:col-span-2 lg:row-span-2 group relative bg-gradient-to-br from-white via-white to-slate-50/80 rounded-3xl p-8 lg:p-10 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1),0_0_0_1px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-15px_rgba(124,58,237,0.15),0_0_0_1px_rgba(124,58,237,0.1)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-100 to-transparent rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2" />
               <div className="relative">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-6 shadow-xl shadow-primary-500/20 group-hover:scale-110 transition-transform duration-500">
@@ -366,7 +366,7 @@ export default function Landing() {
             </div>
 
             {/* Feature - GPS delivery */}
-            <div className="group relative bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:border-gold-100 transition-all duration-500 overflow-hidden">
+            <div className="group relative bg-gradient-to-br from-white via-white to-gold-50/30 rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1),0_0_0_1px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-15px_rgba(212,175,55,0.2),0_0_0_1px_rgba(212,175,55,0.1)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gold-100 to-transparent rounded-full blur-2xl opacity-50" />
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mb-5 shadow-lg shadow-gold-500/20 group-hover:scale-110 transition-transform duration-500">
@@ -380,7 +380,7 @@ export default function Landing() {
             </div>
 
             {/* Feature - Secure payments */}
-            <div className="group relative bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:border-green-100 transition-all duration-500 overflow-hidden">
+            <div className="group relative bg-gradient-to-br from-white via-white to-green-50/30 rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1),0_0_0_1px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-15px_rgba(34,197,94,0.15),0_0_0_1px_rgba(34,197,94,0.1)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-100 to-transparent rounded-full blur-2xl opacity-50" />
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center mb-5 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform duration-500">
@@ -394,7 +394,7 @@ export default function Landing() {
             </div>
 
             {/* Wide feature - Rewards */}
-            <div className="lg:col-span-3 group relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 rounded-3xl p-8 lg:p-10 shadow-xl overflow-hidden">
+            <div className="lg:col-span-3 group relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 rounded-3xl p-8 lg:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold-500/20 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary-500/10 to-transparent rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
@@ -433,7 +433,7 @@ export default function Landing() {
 
         <div className="relative max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 border border-primary-100 mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-50 to-primary-100/50 border border-primary-200/60 shadow-md shadow-primary-500/10 mb-6">
               <Zap className="w-4 h-4 text-primary-600" />
               <span className="text-sm font-medium text-primary-700">Simple as 1-2-3</span>
             </div>
@@ -456,10 +456,10 @@ export default function Landing() {
               {/* Step 1 */}
               <div className="relative group text-center">
                 <div className="relative inline-flex mb-8">
-                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-xl shadow-primary-500/25 group-hover:shadow-primary-500/40 group-hover:scale-105 transition-all duration-300">
+                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(124,58,237,0.4)] group-hover:shadow-[0_25px_50px_-15px_rgba(124,58,237,0.5)] group-hover:scale-105 group-hover:-translate-y-1 transition-all duration-300">
                     <QrCode className="w-14 h-14 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-4 ring-primary-100">
+                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] flex items-center justify-center ring-4 ring-primary-100">
                     <span className="text-xl font-bold text-primary-600">1</span>
                   </div>
                 </div>
@@ -477,10 +477,10 @@ export default function Landing() {
               {/* Step 2 */}
               <div className="relative group text-center">
                 <div className="relative inline-flex mb-8">
-                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-xl shadow-gold-500/25 group-hover:shadow-gold-500/40 group-hover:scale-105 transition-all duration-300">
+                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] group-hover:shadow-[0_25px_50px_-15px_rgba(212,175,55,0.5)] group-hover:scale-105 group-hover:-translate-y-1 transition-all duration-300">
                     <Martini className="w-14 h-14 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-4 ring-gold-100">
+                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] flex items-center justify-center ring-4 ring-gold-100">
                     <span className="text-xl font-bold text-gold-600">2</span>
                   </div>
                 </div>
@@ -498,10 +498,10 @@ export default function Landing() {
               {/* Step 3 */}
               <div className="relative group text-center">
                 <div className="relative inline-flex mb-8">
-                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-xl shadow-green-500/25 group-hover:shadow-green-500/40 group-hover:scale-105 transition-all duration-300">
+                  <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(34,197,94,0.4)] group-hover:shadow-[0_25px_50px_-15px_rgba(34,197,94,0.5)] group-hover:scale-105 group-hover:-translate-y-1 transition-all duration-300">
                     <Zap className="w-14 h-14 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-4 ring-green-100">
+                  <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] flex items-center justify-center ring-4 ring-green-100">
                     <span className="text-xl font-bold text-green-600">3</span>
                   </div>
                 </div>
@@ -528,8 +528,11 @@ export default function Landing() {
         </div>
 
         <div className="relative max-w-4xl mx-auto px-6">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-xl ring-1 ring-slate-100 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/20">
+          <div className="relative bg-gradient-to-br from-white via-white to-slate-50 rounded-3xl p-8 lg:p-12 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] text-center overflow-hidden">
+            {/* Subtle inner glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 via-transparent to-gold-50/30 pointer-events-none" />
+            <div className="relative">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary-500/30">
               <Martini className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
@@ -539,13 +542,13 @@ export default function Landing() {
               Join thousands of guests who order smarter. No app to download—just scan and sip.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={isAuthenticated ? "/venues" : "/auth"}>
-                <Button size="lg" className="px-10 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all">
-                  {isAuthenticated ? 'Select a Venue' : 'Create Free Account'}
+              <Link to={isAuthenticated ? "/menu" : "/auth"}>
+                <Button size="lg" className="px-10 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300">
+                  {isAuthenticated ? 'Start Ordering' : 'Create Free Account'}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <button className="flex items-center justify-center gap-2 px-6 h-14 rounded-xl border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-all font-medium">
+              <button className="flex items-center justify-center gap-2 px-6 h-14 rounded-xl border-2 border-slate-200 text-slate-700 shadow-lg shadow-slate-900/5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 font-medium">
                 <QrCode className="w-5 h-5" />
                 <span>Scan to order now</span>
               </button>
@@ -553,6 +556,7 @@ export default function Landing() {
             <p className="text-slate-500 text-sm mt-6">
               No credit card required • Takes 30 seconds • Guest checkout available
             </p>
+            </div>
           </div>
         </div>
       </section>

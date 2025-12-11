@@ -40,7 +40,7 @@ export default function ServiceBars() {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    navigate('/login');
+    navigate('/auth');
     return null;
   }
 
@@ -49,7 +49,7 @@ export default function ServiceBars() {
 
   // Redirect if venue not found
   if (!venue) {
-    navigate('/venues');
+    navigate('/menu');
     return null;
   }
 
@@ -61,22 +61,22 @@ export default function ServiceBars() {
   };
 
   return (
-    <AppLayout showBackButton headerTitle={venue.name}>
-      <div className="px-4 pt-4 pb-8">
+    <AppLayout showBackButton headerTitle={venue.name} showBottomNav={false}>
+      <div className="px-4 pt-6 pb-8">
         {/* Venue info header */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-bold text-slate-900">
             Select a Service Bar
           </h2>
-          <p className="text-gray-600 mt-1">
+          <p className="text-slate-500 mt-1">
             Choose where you'd like to order from
           </p>
         </div>
 
         {/* Real-time info notice */}
-        <div className="mb-4 p-3 rounded-lg bg-primary-50 border border-primary-100">
-          <p className="text-sm text-primary-700">
-            <ClockIcon className="w-4 h-4 inline mr-1.5" />
+        <div className="mb-5 p-3.5 rounded-xl bg-primary-50 ring-1 ring-primary-100">
+          <p className="text-sm text-primary-700 font-medium">
+            <ClockIcon className="w-4 h-4 inline mr-1.5 -mt-0.5" />
             Wait times update in real-time based on current orders
           </p>
         </div>
@@ -87,20 +87,20 @@ export default function ServiceBars() {
             <Card
               key={bar.id}
               onClick={() => handleBarSelect(bar)}
-              className="cursor-pointer hover:shadow-md transition-shadow"
+              className="group"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Bar name and status */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-gray-900">{bar.name}</h3>
+                  <div className="flex items-center gap-2.5 mb-1.5">
+                    <h3 className="font-semibold text-slate-900">{bar.name}</h3>
                     <Badge variant={getStatusColor(bar.status)} size="sm">
                       {getStatusLabel(bar.status)}
                     </Badge>
                   </div>
 
                   {/* Location */}
-                  <div className="flex items-center gap-1.5 text-gray-500 mb-3">
+                  <div className="flex items-center gap-1.5 text-slate-500 mb-3">
                     <MapPinIcon className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm">{bar.location}</span>
                   </div>
@@ -109,8 +109,8 @@ export default function ServiceBars() {
                   <div className="flex items-center gap-4 text-sm">
                     {/* Wait time */}
                     <div className="flex items-center gap-1.5">
-                      <ClockIcon className="w-4 h-4 text-gray-400" />
-                      <span className={`font-medium ${
+                      <ClockIcon className="w-4 h-4 text-slate-400" />
+                      <span className={`font-semibold ${
                         bar.status === 'high' ? 'text-red-600' :
                         bar.status === 'medium' ? 'text-amber-600' :
                         'text-green-600'
@@ -120,12 +120,12 @@ export default function ServiceBars() {
                     </div>
 
                     {/* Active orders */}
-                    <div className="flex items-center gap-1.5 text-gray-500">
+                    <div className="flex items-center gap-1.5 text-slate-500">
                       <span>{bar.activeOrders} orders ahead</span>
                     </div>
 
                     {/* Servers */}
-                    <div className="flex items-center gap-1.5 text-gray-500">
+                    <div className="flex items-center gap-1.5 text-slate-500">
                       <UserGroupIcon className="w-4 h-4" />
                       <span>{bar.availableServers} servers</span>
                     </div>
@@ -133,7 +133,7 @@ export default function ServiceBars() {
                 </div>
 
                 {/* Chevron */}
-                <ChevronRightIcon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+                <ChevronRightIcon className="w-5 h-5 text-slate-400 flex-shrink-0 mt-1 group-hover:text-primary-500 group-hover:translate-x-0.5 transition-all" />
               </div>
             </Card>
           ))}
@@ -141,10 +141,12 @@ export default function ServiceBars() {
 
         {/* Empty state */}
         {serviceBars.length === 0 && (
-          <div className="text-center py-12">
-            <UserGroupIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No service bars available</h3>
-            <p className="text-gray-500 mt-1">
+          <div className="text-center py-16">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
+              <UserGroupIcon className="w-10 h-10 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900">No service bars available</h3>
+            <p className="text-slate-500 mt-1">
               This venue doesn't have any active service bars
             </p>
           </div>
