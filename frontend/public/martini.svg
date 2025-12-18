@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Martini glass bowl -->
+  <path d="M4 6L16 18L28 6H4Z" fill="#7C3AED" stroke="#6D28D9" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Liquid surface -->
+  <path d="M7 9L16 18L25 9H7Z" fill="#A78BFA"/>
+  <!-- Olive -->
+  <circle cx="16" cy="11" r="2.5" fill="#22C55E" stroke="#16A34A" stroke-width="0.5"/>
+  <!-- Olive pimento -->
+  <circle cx="16" cy="11" r="0.8" fill="#EF4444"/>
+  <!-- Stem -->
+  <rect x="15" y="18" width="2" height="8" fill="#7C3AED"/>
+  <!-- Base -->
+  <rect x="10" y="26" width="12" height="2" rx="1" fill="#7C3AED"/>
+</svg>
