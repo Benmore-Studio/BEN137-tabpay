@@ -7,6 +7,7 @@ interface CartState {
   location: string | null;
   venue: Venue | null;
   serviceBar: ServiceBar | null;
+  queuePosition: number | null;
 }
 
 type CartAction =
@@ -17,6 +18,7 @@ type CartAction =
   | { type: 'SET_LOCATION'; payload: string }
   | { type: 'SET_VENUE'; payload: Venue }
   | { type: 'SET_SERVICE_BAR'; payload: ServiceBar }
+  | { type: 'SET_QUEUE_POSITION'; payload: number }
   | { type: 'LOAD_CART'; payload: CartState };
 
 interface CartContextType {
@@ -24,6 +26,7 @@ interface CartContextType {
   location: string | null;
   venue: Venue | null;
   serviceBar: ServiceBar | null;
+  queuePosition: number | null;
   itemCount: number;
   subtotal: number;
   addItem: (
@@ -38,6 +41,7 @@ interface CartContextType {
   setLocation: (location: string) => void;
   setVenue: (venue: Venue) => void;
   setServiceBar: (serviceBar: ServiceBar) => void;
+  setQueuePosition: (position: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -132,6 +136,9 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case 'SET_SERVICE_BAR':
       return { ...state, serviceBar: action.payload };
 
+    case 'SET_QUEUE_POSITION':
+      return { ...state, queuePosition: action.payload };
+
     case 'LOAD_CART':
       return action.payload;
 
@@ -145,6 +152,7 @@ const initialState: CartState = {
   location: null,
   venue: null,
   serviceBar: null,
+  queuePosition: null,
 };
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -211,6 +219,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const setServiceBar = (serviceBar: ServiceBar) => {
     dispatch({ type: 'SET_SERVICE_BAR', payload: serviceBar });
+    // Calculate queue position based on active orders
+    const position = serviceBar.activeOrders + 1;
+    dispatch({ type: 'SET_QUEUE_POSITION', payload: position });
+  };
+
+  const setQueuePosition = (position: number) => {
+    dispatch({ type: 'SET_QUEUE_POSITION', payload: position });
   };
 
   return (
@@ -220,6 +235,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         location: state.location,
         venue: state.venue,
         serviceBar: state.serviceBar,
+        queuePosition: state.queuePosition,
         itemCount,
         subtotal,
         addItem,
@@ -229,6 +245,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setLocation,
         setVenue,
         setServiceBar,
+        setQueuePosition,
       }}
     >
       {children}

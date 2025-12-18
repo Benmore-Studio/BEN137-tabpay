@@ -61,6 +61,8 @@ export interface Order {
   status: OrderStatus;
   createdAt: Date;
   estimatedDeliveryTime?: string;
+  scheduledFor?: Date;
+  isASAP: boolean;
 }
 
 export type OrderStatus = 'received' | 'preparing' | 'delivering' | 'delivered';

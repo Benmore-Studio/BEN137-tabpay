@@ -12,6 +12,9 @@ import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Confirmation from '../pages/Confirmation';
 import ServiceBars from '../pages/ServiceBars';
+import Orders from '../pages/Orders';
+import Favorites from '../pages/Favorites';
+import Profile from '../pages/Profile';
 
 export const router = createBrowserRouter([
   // ================================
@@ -58,6 +61,10 @@ export const router = createBrowserRouter([
         element: <Menu />,
       },
       {
+        path: '/favorites',
+        element: <Favorites />,
+      },
+      {
         path: '/cart',
         element: <Cart />,
       },
@@ -76,15 +83,21 @@ export const router = createBrowserRouter([
         element: <ServiceBars />,
       },
 
-      // Future: Orders history, Account settings
-      // {
-      //   path: '/orders',
-      //   element: <Orders />,
-      // },
-      // {
-      //   path: '/account',
-      //   element: <Account />,
-      // },
+      // Orders history
+      {
+        path: '/orders',
+        element: <Orders />,
+      },
+
+      // Profile/Account
+      {
+        path: '/account',
+        element: <Profile />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
     ],
   },
 

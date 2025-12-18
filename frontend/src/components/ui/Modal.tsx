@@ -79,16 +79,16 @@ export default function Modal({
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h2 id="modal-title" className="text-lg font-semibold text-gray-900">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+            <h2 id="modal-title" className="text-lg font-semibold text-slate-900">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="p-2 -mr-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
               aria-label="Close modal"
             >
-              <XMarkIcon className="w-5 h-5 text-gray-500" />
+              <XMarkIcon className="w-5 h-5 text-slate-500" />
             </button>
           </div>
         )}
@@ -98,10 +98,10 @@ export default function Modal({
           {!title && (
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+              className="absolute top-3 right-3 p-2 rounded-lg hover:bg-slate-100 transition-colors z-10"
               aria-label="Close modal"
             >
-              <XMarkIcon className="w-5 h-5 text-gray-500" />
+              <XMarkIcon className="w-5 h-5 text-slate-500" />
             </button>
           )}
           {children}

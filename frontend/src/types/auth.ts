@@ -50,3 +50,24 @@ export interface LoginCredentials {
   email: string;
   password: string;
 }
+
+export interface SavedLocation {
+  id: string;
+  label: string;
+  venue: Venue;
+  location: string;
+  isDefault: boolean;
+}
+
+export interface UserPreferences {
+  defaultTipPercent: number;
+  notifications: boolean;
+  autoReorder: boolean;
+}
+
+export interface UserProfile {
+  user: User;
+  paymentMethods: PaymentMethod[];
+  savedLocations: SavedLocation[];
+  preferences: UserPreferences;
+}

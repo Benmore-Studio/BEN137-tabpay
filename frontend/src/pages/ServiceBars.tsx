@@ -1,11 +1,12 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ClockIcon,
   MapPinIcon,
-  UserGroupIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
-import { AppLayout, Card, Badge } from '../components';
+import { Users } from 'lucide-react';
+import { AppLayout, Card, Badge, EmptyState } from '../components';
 import { useAuth, useCart } from '../context';
 import { getServiceBarsForVenue, getVenueById } from '../data/mockVenues';
 import type { ServiceBar } from '../types';
@@ -32,6 +33,38 @@ function getStatusLabel(status: ServiceBar['status']): string {
   }
 }
 
+// Simulate natural occupancy fluctuations
+function updateOccupancy(bar: ServiceBar): ServiceBar {
+  // Random walk: +/- 1-3 orders
+  const orderChange = Math.floor(Math.random() * 7) - 3; // -3 to +3
+  const newActiveOrders = Math.max(0, Math.min(30, bar.activeOrders + orderChange));
+
+  // Occasionally adjust server count (10% chance)
+  const serverChange = Math.random() < 0.1 ? (Math.random() < 0.5 ? -1 : 1) : 0;
+  const newServers = Math.max(1, Math.min(5, bar.availableServers + serverChange));
+
+  // Calculate wait time: (orders / servers) * 2.5 minutes
+  const newWaitMinutes = Math.round((newActiveOrders / newServers) * 2.5);
+
+  // Determine status based on active orders
+  let newStatus: ServiceBar['status'];
+  if (newActiveOrders < 10) {
+    newStatus = 'low';
+  } else if (newActiveOrders < 20) {
+    newStatus = 'medium';
+  } else {
+    newStatus = 'high';
+  }
+
+  return {
+    ...bar,
+    activeOrders: newActiveOrders,
+    availableServers: newServers,
+    estimatedWaitMinutes: newWaitMinutes,
+    status: newStatus,
+  };
+}
+
 export default function ServiceBars() {
   const { venueId } = useParams<{ venueId: string }>();
   const navigate = useNavigate();
@@ -45,13 +78,48 @@ export default function ServiceBars() {
   }
 
   const venue = venueId ? getVenueById(venueId) : undefined;
-  const serviceBars = venueId ? getServiceBarsForVenue(venueId) : [];
+  const initialServiceBars = venueId ? getServiceBarsForVenue(venueId) : [];
+
+  // State for real-time updates
+  const [serviceBars, setServiceBars] = useState<ServiceBar[]>(initialServiceBars);
+  const [changedBarIds, setChangedBarIds] = useState<Set<string>>(new Set());
 
   // Redirect if venue not found
   if (!venue) {
     navigate('/menu');
     return null;
   }
+
+  // Real-time occupancy simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setServiceBars((prevBars) => {
+        const updatedBars = prevBars.map((bar) => {
+          const updated = updateOccupancy(bar);
+
+          // Track if status changed for animation
+          if (updated.status !== bar.status) {
+            setChangedBarIds((prev) => new Set(prev).add(bar.id));
+
+            // Remove from changed set after animation
+            setTimeout(() => {
+              setChangedBarIds((prev) => {
+                const next = new Set(prev);
+                next.delete(bar.id);
+                return next;
+              });
+            }, 1000);
+          }
+
+          return updated;
+        });
+
+        return updatedBars;
+      });
+    }, 12000); // Update every 12 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleBarSelect = (bar: ServiceBar) => {
     // Store selected venue and bar in cart context
@@ -94,7 +162,11 @@ export default function ServiceBars() {
                   {/* Bar name and status */}
                   <div className="flex items-center gap-2.5 mb-1.5">
                     <h3 className="font-semibold text-slate-900">{bar.name}</h3>
-                    <Badge variant={getStatusColor(bar.status)} size="sm">
+                    <Badge
+                      variant={getStatusColor(bar.status)}
+                      size="sm"
+                      className={changedBarIds.has(bar.id) ? 'animate-pulse-soft' : ''}
+                    >
                       {getStatusLabel(bar.status)}
                     </Badge>
                   </div>
@@ -106,7 +178,7 @@ export default function ServiceBars() {
                   </div>
 
                   {/* Stats row */}
-                  <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-4 text-sm flex-wrap">
                     {/* Wait time */}
                     <div className="flex items-center gap-1.5">
                       <ClockIcon className="w-4 h-4 text-slate-400" />
@@ -126,9 +198,14 @@ export default function ServiceBars() {
 
                     {/* Servers */}
                     <div className="flex items-center gap-1.5 text-slate-500">
-                      <UserGroupIcon className="w-4 h-4" />
+                      <Users className="w-4 h-4" />
                       <span>{bar.availableServers} servers</span>
                     </div>
+                  </div>
+
+                  {/* Historical average hint */}
+                  <div className="mt-2 text-xs text-slate-400">
+                    Avg today: {Math.max(5, bar.estimatedWaitMinutes - 2)}-{bar.estimatedWaitMinutes + 2} min
                   </div>
                 </div>
 
@@ -141,15 +218,11 @@ export default function ServiceBars() {
 
         {/* Empty state */}
         {serviceBars.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
-              <UserGroupIcon className="w-10 h-10 text-slate-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900">No service bars available</h3>
-            <p className="text-slate-500 mt-1">
-              This venue doesn't have any active service bars
-            </p>
-          </div>
+          <EmptyState
+            icon={Users}
+            title="No service bars available"
+            description="This venue doesn't have any active service bars"
+          />
         )}
       </div>
     </AppLayout>

@@ -36,6 +36,7 @@ export default function Badge({
   // If count is provided, use count-based badge (for cart, notifications)
   if (count !== undefined) {
     const displayCount = count > max ? `${max}+` : count.toString();
+    const ariaLabel = count === 1 ? '1 item' : `${count} items`;
     return (
       <span
         className={`
@@ -45,6 +46,8 @@ export default function Badge({
           bg-primary-600 rounded-full
           ${className}
         `}
+        aria-label={ariaLabel}
+        role="status"
       >
         {displayCount}
       </span>

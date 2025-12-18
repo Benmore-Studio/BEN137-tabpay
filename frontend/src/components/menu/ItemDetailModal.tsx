@@ -1,5 +1,8 @@
 import { useState, useMemo } from 'react';
+import { HeartIcon } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { Modal, Button, QuantitySelector, Price, Input } from '../ui';
+import { useFavorites } from '../../context';
 import type { MenuItem, SelectedModifier, ModifierOption } from '../../types';
 
 interface ItemDetailModalProps {
@@ -22,6 +25,7 @@ export default function ItemDetailModal({
   const [quantity, setQuantity] = useState(1);
   const [selectedModifiers, setSelectedModifiers] = useState<Record<string, ModifierOption[]>>({});
   const [specialInstructions, setSpecialInstructions] = useState('');
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   // Reset state when modal opens with new item
   useMemo(() => {
@@ -109,14 +113,15 @@ export default function ItemDetailModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
-      <div className="space-y-6">
-        {/* Image */}
+      <div className="flex flex-col h-[80vh]">
+        {/* Image - compact aspect ratio */}
         {item.image && (
-          <div className="aspect-video -mx-4 -mt-4 overflow-hidden rounded-t-xl bg-gray-100">
+          <div className="aspect-[3/2] -mx-4 -mt-4 overflow-hidden rounded-t-2xl sm:rounded-t-2xl bg-slate-100 flex-shrink-0">
             <img
               src={item.image}
               alt={item.name}
               className="w-full h-full object-cover"
+              loading="lazy"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}
@@ -124,110 +129,131 @@ export default function ItemDetailModal({
           </div>
         )}
 
-        {/* Header */}
-        <div>
-          <div className="flex items-start justify-between gap-4">
-            <h2 className="text-xl font-bold text-gray-900">{item.name}</h2>
-            <Price amount={item.price} size="lg" />
-          </div>
-          <p className="mt-2 text-gray-600">{item.description}</p>
+        {/* Content - no scrolling */}
+        <div className="flex-1 -mx-4 px-4 overflow-hidden">
+          <div className="space-y-4 pt-4">
+            {/* Header */}
+            <div>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-2 flex-1">
+                  <h2 className="text-lg font-bold text-slate-900">{item.name}</h2>
+                  {/* Favorite Heart */}
+                  <button
+                    onClick={() => toggleFavorite(item)}
+                    className="flex-shrink-0 p-1.5 -m-1.5 rounded-full hover:bg-slate-100 transition-colors"
+                    aria-label={isFavorite(item.id) ? 'Remove from favorites' : 'Add to favorites'}
+                  >
+                    {isFavorite(item.id) ? (
+                      <HeartSolidIcon className="w-5 h-5 text-red-500 animate-scale-in" />
+                    ) : (
+                      <HeartIcon className="w-5 h-5 text-slate-400 hover:text-red-500 transition-colors" />
+                    )}
+                  </button>
+                </div>
+                <Price amount={item.price} size="md" className="flex-shrink-0" />
+              </div>
+              <p className="mt-1 text-sm text-slate-600">{item.description}</p>
 
-          {/* Dietary tags */}
-          {item.dietary && (
-            <div className="mt-3 flex gap-2">
-              {item.dietary.vegetarian && (
-                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-                  Vegetarian
-                </span>
-              )}
-              {item.dietary.vegan && (
-                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-                  Vegan
-                </span>
-              )}
-              {item.dietary.glutenFree && (
-                <span className="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-full">
-                  Gluten Free
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Modifiers */}
-        {item.modifiers && item.modifiers.length > 0 && (
-          <div className="space-y-4">
-            {item.modifiers.map((modifier) => (
-              <div key={modifier.id}>
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-medium text-gray-900">{modifier.name}</h3>
-                  {modifier.required && (
-                    <span className="text-xs text-red-600 font-medium">Required</span>
+              {/* Dietary tags */}
+              {item.dietary && (
+                <div className="mt-2 flex gap-1.5">
+                  {item.dietary.vegetarian && (
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded">
+                      V
+                    </span>
                   )}
-                  {modifier.maxSelections && modifier.maxSelections > 1 && (
-                    <span className="text-xs text-gray-500">
-                      (Choose up to {modifier.maxSelections})
+                  {item.dietary.vegan && (
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded">
+                      VG
+                    </span>
+                  )}
+                  {item.dietary.glutenFree && (
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">
+                      GF
                     </span>
                   )}
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {modifier.options.map((option) => {
-                    const isSelected = isOptionSelected(modifier.id, option.id);
-                    return (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() =>
-                          handleModifierChange(
-                            modifier.id,
-                            option,
-                            modifier.maxSelections || (modifier.required ? 1 : undefined)
-                          )
-                        }
-                        className={`
-                          px-4 py-2 rounded-lg text-sm font-medium
-                          border transition-colors duration-200
-                          ${
-                            isSelected
-                              ? 'bg-primary-600 text-white border-primary-600'
-                              : 'bg-white text-gray-700 border-gray-300 hover:border-primary-400'
-                          }
-                        `}
-                      >
-                        {option.name}
-                        {option.priceAdjustment > 0 && (
-                          <span className={isSelected ? 'text-primary-200' : 'text-gray-500'}>
-                            {' '}
-                            +${option.priceAdjustment.toFixed(2)}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+              )}
+            </div>
+
+            {/* Modifiers */}
+            {item.modifiers && item.modifiers.length > 0 && (
+              <div className="space-y-3">
+                {item.modifiers.map((modifier) => (
+                  <div key={modifier.id}>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <h3 className="text-sm font-medium text-slate-900">{modifier.name}</h3>
+                      {modifier.required && (
+                        <span className="text-xs text-red-600 font-medium">Required</span>
+                      )}
+                      {modifier.maxSelections && modifier.maxSelections > 1 && (
+                        <span className="text-xs text-slate-500">
+                          (Choose up to {modifier.maxSelections})
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {modifier.options.map((option) => {
+                        const isSelected = isOptionSelected(modifier.id, option.id);
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            onClick={() =>
+                              handleModifierChange(
+                                modifier.id,
+                                option,
+                                modifier.maxSelections || (modifier.required ? 1 : undefined)
+                              )
+                            }
+                            className={`
+                              px-4 py-2 rounded-lg text-sm font-medium
+                              border transition-colors duration-200
+                              ${
+                                isSelected
+                                  ? 'bg-primary-600 text-white border-primary-600'
+                                  : 'bg-white text-slate-700 border-slate-300 hover:border-primary-400'
+                              }
+                            `}
+                            aria-pressed={isSelected}
+                            aria-label={`${option.name}${option.priceAdjustment > 0 ? `, add $${option.priceAdjustment.toFixed(2)}` : ''}`}
+                          >
+                            {option.name}
+                            {option.priceAdjustment > 0 && (
+                              <span className={isSelected ? 'text-primary-200' : 'text-slate-500'}>
+                                {' '}
+                                +${option.priceAdjustment.toFixed(2)}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* Special Instructions */}
+            <div>
+              <Input
+                label="Special Instructions"
+                placeholder="Any allergies or requests?"
+                value={specialInstructions}
+                onChange={(e) => setSpecialInstructions(e.target.value)}
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-slate-900">Quantity</span>
+              <QuantitySelector value={quantity} onChange={setQuantity} min={1} max={10} />
+            </div>
           </div>
-        )}
-
-        {/* Special Instructions */}
-        <div>
-          <Input
-            label="Special Instructions"
-            placeholder="Any allergies or special requests?"
-            value={specialInstructions}
-            onChange={(e) => setSpecialInstructions(e.target.value)}
-          />
         </div>
 
-        {/* Quantity */}
-        <div className="flex items-center justify-between">
-          <span className="font-medium text-gray-900">Quantity</span>
-          <QuantitySelector value={quantity} onChange={setQuantity} min={1} max={10} />
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+        {/* Fixed Footer - always visible with bottom nav clearance */}
+        <div className="flex-shrink-0 flex items-center gap-3 pt-3 pb-20 md:pb-4 border-t border-slate-100 bg-white -mx-4 px-4">
           <Button
             variant="secondary"
             onClick={onClose}

@@ -1,6 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { AppLayout, Button, Price, QuantitySelector } from '../components';
+import { ShoppingBag } from 'lucide-react';
+import { AppLayout, Button, Price, QuantitySelector, EmptyState } from '../components';
 import { useCart } from '../context';
 
 export default function Cart() {
@@ -13,30 +14,13 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <AppLayout showBackButton headerTitle="Cart" showBottomNav={false}>
-        <div className="flex flex-col items-center justify-center px-4 py-16">
-          <div className="w-24 h-24 mb-6 rounded-2xl bg-slate-100 flex items-center justify-center">
-            <svg
-              className="w-12 h-12 text-slate-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Your cart is empty</h2>
-          <p className="text-slate-500 mb-6 text-center">
-            Browse our menu and add some delicious items!
-          </p>
-          <Link to="/menu">
-            <Button>Browse Menu</Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title="Your cart is empty"
+          description="Browse our menu and add some delicious items!"
+          actionLabel="Browse Menu"
+          actionTo="/menu"
+        />
       </AppLayout>
     );
   }

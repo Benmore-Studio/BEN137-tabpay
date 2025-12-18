@@ -42,6 +42,21 @@ export default defineConfig({
                 maxAgeSeconds: 300
               }
             }
+          },
+          {
+            // Cache Unsplash images
+            urlPattern: /^https:\/\/(source|images)\.unsplash\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'unsplash-image-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
           }
         ]
       }

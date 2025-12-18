@@ -89,6 +89,16 @@ export default function MobileOnlyLayout() {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
+    // Check for dev mode bypass (?dev=true)
+    const urlParams = new URLSearchParams(window.location.search);
+    const devMode = urlParams.get('dev') === 'true';
+
+    if (devMode) {
+      setIsMobile(true);
+      setIsChecking(false);
+      return; // Skip resize listener in dev mode
+    }
+
     setIsMobile(isMobileDevice());
     setIsChecking(false);
 

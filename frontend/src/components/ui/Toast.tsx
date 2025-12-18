@@ -102,13 +102,13 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       role="alert"
     >
       {icons[toast.type]}
-      <p className="flex-1 text-sm font-medium text-gray-900">{toast.message}</p>
+      <p className="flex-1 text-sm font-medium text-slate-900">{toast.message}</p>
       <button
         onClick={onDismiss}
-        className="p-1 rounded hover:bg-black/5 transition-colors"
+        className="p-3 -m-2 rounded-lg hover:bg-black/5 transition-colors min-w-12 min-h-12 flex items-center justify-center"
         aria-label="Dismiss"
       >
-        <XMarkIcon className="w-4 h-4 text-gray-500" />
+        <XMarkIcon className="w-5 h-5 text-slate-500" />
       </button>
     </div>
   );

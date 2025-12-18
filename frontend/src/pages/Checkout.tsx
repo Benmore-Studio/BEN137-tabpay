@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreditCardIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/outline';
-import { AppLayout, Button, Input, Price, Card } from '../components';
-import { useCart } from '../context';
+import { CreditCardIcon, DevicePhoneMobileIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { AppLayout, Button, Input, Price, Card, TimePicker } from '../components';
+import { useCart, useOrderHistory, useProfile } from '../context';
+import type { Order } from '../types';
 
 type PaymentMethod = 'card' | 'apple-pay' | 'google-pay';
 type TipOption = 0 | 15 | 18 | 20 | 'custom';
@@ -13,12 +14,36 @@ const SERVICE_FEE = 1.50;
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, subtotal, location, setLocation, clearCart } = useCart();
+  const { addOrder } = useOrderHistory();
+  const { profile, isGuest } = useProfile();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
+  const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [tipOption, setTipOption] = useState<TipOption>(18);
   const [customTip, setCustomTip] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [locationInput, setLocationInput] = useState(location || '');
   const [locationError, setLocationError] = useState('');
+  const [scheduledFor, setScheduledFor] = useState<Date | null>(null);
+  const [isASAP, setIsASAP] = useState(true);
+
+  // Initialize default tip from user preferences
+  useEffect(() => {
+    if (!isGuest && profile) {
+      const defaultTip = profile.preferences.defaultTipPercent;
+      if ([0, 15, 18, 20].includes(defaultTip)) {
+        setTipOption(defaultTip as TipOption);
+      }
+    }
+  }, [isGuest, profile]);
+
+  // Initialize default payment method
+  useEffect(() => {
+    if (!isGuest && profile && profile.paymentMethods.length > 0) {
+      const defaultMethod = profile.paymentMethods.find((m) => m.isDefault) || profile.paymentMethods[0];
+      setSelectedPaymentId(defaultMethod.id);
+      setPaymentMethod(defaultMethod.type);
+    }
+  }, [isGuest, profile]);
 
   // Redirect if cart is empty
   if (items.length === 0) {
@@ -55,6 +80,24 @@ export default function Checkout() {
     // Generate mock order ID
     const orderId = `TP${Date.now().toString(36).toUpperCase()}`;
 
+    // Create order object
+    const order: Order = {
+      id: orderId,
+      items: [...items],
+      location: locationInput.trim(),
+      subtotal,
+      tax,
+      tip: tipAmount > 0 ? tipAmount : undefined,
+      total,
+      status: 'received',
+      createdAt: new Date(),
+      scheduledFor: scheduledFor || undefined,
+      isASAP,
+    };
+
+    // Save order to history
+    addOrder(order);
+
     clearCart();
     navigate(`/confirmation/${orderId}`);
   };
@@ -80,6 +123,16 @@ export default function Checkout() {
             onChange={(e) => setLocationInput(e.target.value)}
             error={locationError}
             helperText="Enter your table number or slot machine number"
+          />
+        </Card>
+
+        {/* Order Scheduling */}
+        <Card variant="elevated">
+          <TimePicker
+            value={scheduledFor}
+            onChange={setScheduledFor}
+            isASAP={isASAP}
+            onASAPChange={setIsASAP}
           />
         </Card>
 
@@ -142,55 +195,110 @@ export default function Checkout() {
         {/* Payment Method */}
         <Card variant="elevated">
           <h2 className="font-bold text-slate-900 mb-3">Payment Method</h2>
-          <div className="space-y-2">
-            <button
-              onClick={() => setPaymentMethod('card')}
-              className={`
-                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
-                ${
-                  paymentMethod === 'card'
-                    ? 'ring-2 ring-primary-500 bg-primary-50'
-                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
-                }
-              `}
-            >
-              <CreditCardIcon className="w-6 h-6 text-slate-600" />
-              <span className="font-medium text-slate-900">Credit / Debit Card</span>
-            </button>
 
-            <button
-              onClick={() => setPaymentMethod('apple-pay')}
-              className={`
-                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
-                ${
-                  paymentMethod === 'apple-pay'
-                    ? 'ring-2 ring-primary-500 bg-primary-50'
-                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
-                }
-              `}
-            >
-              <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
-              <span className="font-medium text-slate-900">Apple Pay</span>
-            </button>
+          {/* Show saved payment methods for registered users */}
+          {!isGuest && profile && profile.paymentMethods.length > 0 ? (
+            <div className="space-y-2">
+              {profile.paymentMethods.map((method) => (
+                <button
+                  key={method.id}
+                  onClick={() => {
+                    setSelectedPaymentId(method.id);
+                    setPaymentMethod(method.type);
+                  }}
+                  className={`
+                    w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                    ${
+                      selectedPaymentId === method.id
+                        ? 'ring-2 ring-primary-500 bg-primary-50'
+                        : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
+                    }
+                  `}
+                >
+                  {method.type === 'card' ? (
+                    <CreditCardIcon className="w-6 h-6 text-slate-600" />
+                  ) : (
+                    <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
+                  )}
+                  <div className="flex-1 text-left">
+                    {method.type === 'card' ? (
+                      <>
+                        <p className="font-medium text-slate-900">
+                          {method.brand?.toUpperCase() || 'Card'} •••• {method.last4}
+                        </p>
+                        {method.expiryMonth && method.expiryYear && (
+                          <p className="text-xs text-slate-500">
+                            Expires {method.expiryMonth.toString().padStart(2, '0')}/{method.expiryYear}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="font-medium text-slate-900">
+                        {method.type === 'apple-pay' ? 'Apple Pay' : 'Google Pay'}
+                      </p>
+                    )}
+                  </div>
+                  {method.isDefault && (
+                    <span className="flex items-center gap-1 text-xs font-medium text-primary-600">
+                      <CheckCircleIcon className="w-4 h-4" />
+                      Default
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : (
+            // Guest checkout - show generic payment options
+            <div className="space-y-2">
+              <button
+                onClick={() => setPaymentMethod('card')}
+                className={`
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  ${
+                    paymentMethod === 'card'
+                      ? 'ring-2 ring-primary-500 bg-primary-50'
+                      : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
+                  }
+                `}
+              >
+                <CreditCardIcon className="w-6 h-6 text-slate-600" />
+                <span className="font-medium text-slate-900">Credit / Debit Card</span>
+              </button>
 
-            <button
-              onClick={() => setPaymentMethod('google-pay')}
-              className={`
-                w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
-                ${
-                  paymentMethod === 'google-pay'
-                    ? 'ring-2 ring-primary-500 bg-primary-50'
-                    : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
-                }
-              `}
-            >
-              <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
-              <span className="font-medium text-slate-900">Google Pay</span>
-            </button>
-          </div>
+              <button
+                onClick={() => setPaymentMethod('apple-pay')}
+                className={`
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  ${
+                    paymentMethod === 'apple-pay'
+                      ? 'ring-2 ring-primary-500 bg-primary-50'
+                      : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
+                  }
+                `}
+              >
+                <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
+                <span className="font-medium text-slate-900">Apple Pay</span>
+              </button>
 
-          {/* Mock Card Input */}
-          {paymentMethod === 'card' && (
+              <button
+                onClick={() => setPaymentMethod('google-pay')}
+                className={`
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  ${
+                    paymentMethod === 'google-pay'
+                      ? 'ring-2 ring-primary-500 bg-primary-50'
+                      : 'ring-1 ring-slate-200 hover:ring-slate-300 bg-white'
+                  }
+                `}
+              >
+                <DevicePhoneMobileIcon className="w-6 h-6 text-slate-600" />
+                <span className="font-medium text-slate-900">Google Pay</span>
+              </button>
+            </div>
+          )}
+
+          {/* Mock Card Input for guests only */}
+          {(isGuest || !profile || profile.paymentMethods.length === 0) && paymentMethod === 'card' && (
             <div className="mt-4 space-y-3">
               <Input
                 label="Card Number"

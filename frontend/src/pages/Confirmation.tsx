@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
-import { AppLayout, Button, Card } from '../components';
+import { AlertCircle } from 'lucide-react';
+import { AppLayout, Button, Card, EmptyState } from '../components';
+import { useCart } from '../context';
 import type { OrderStatus } from '../types';
 
 const orderStages: { status: OrderStatus; label: string }[] = [
@@ -15,8 +18,36 @@ const currentStatus: OrderStatus = 'preparing';
 
 export default function Confirmation() {
   const { orderId } = useParams<{ orderId: string }>();
+  const { queuePosition, setQueuePosition, serviceBar } = useCart();
+
+  // Handle missing order ID
+  if (!orderId) {
+    return (
+      <AppLayout showHeader={false} showBottomNav={false}>
+        <EmptyState
+          icon={AlertCircle}
+          title="Order not found"
+          description="We couldn't find this order. Please check your order history."
+          actionLabel="View Orders"
+          actionTo="/orders"
+          variant="error"
+        />
+      </AppLayout>
+    );
+  }
 
   const currentStageIndex = orderStages.findIndex((s) => s.status === currentStatus);
+
+  // Simulate queue position decreasing over time
+  useEffect(() => {
+    if (queuePosition && queuePosition > 1) {
+      const interval = setInterval(() => {
+        setQueuePosition(Math.max(1, queuePosition - 1));
+      }, 150000); // Decrease by 1 every 2.5 minutes
+
+      return () => clearInterval(interval);
+    }
+  }, [queuePosition, setQueuePosition]);
 
   return (
     <AppLayout showHeader={false} showBottomNav={false}>
@@ -43,11 +74,34 @@ export default function Confirmation() {
             </div>
           </div>
 
-          {/* Estimated Time */}
+          {/* Queue Position */}
+          {queuePosition && queuePosition > 0 && (
+            <Card variant="elevated" className="mb-5">
+              <div className="text-center py-2">
+                <p className="text-sm text-slate-500 mb-1">Your Position in Queue</p>
+                <div className="flex items-center justify-center gap-2">
+                  <p className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
+                    #{queuePosition}
+                  </p>
+                  <span className="text-sm text-slate-500">in line</span>
+                </div>
+                {serviceBar && (
+                  <p className="text-xs text-slate-400 mt-1">{serviceBar.name}</p>
+                )}
+              </div>
+            </Card>
+          )}
+
+          {/* Scheduled Time / Estimated Time */}
           <Card variant="elevated" className="mb-5">
             <div className="text-center py-2">
-              <p className="text-sm text-slate-500 mb-1">Estimated Delivery Time</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">15-20 min</p>
+              <p className="text-sm text-slate-500 mb-1">
+                {/* TODO: Get isASAP from order data when available */}
+                Estimated Delivery Time
+              </p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                {serviceBar ? `${serviceBar.estimatedWaitMinutes}-${serviceBar.estimatedWaitMinutes + 5} min` : '15-20 min'}
+              </p>
             </div>
           </Card>
 

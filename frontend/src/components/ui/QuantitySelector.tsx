@@ -29,14 +29,14 @@ export default function QuantitySelector({
 
   const sizes = {
     sm: {
-      button: 'w-8 h-8',
-      icon: 'w-4 h-4',
-      value: 'w-8 text-sm',
+      button: 'w-12 h-12',
+      icon: 'w-5 h-5',
+      value: 'w-10 text-sm',
     },
     md: {
-      button: 'w-10 h-10',
-      icon: 'w-5 h-5',
-      value: 'w-10 text-base',
+      button: 'w-12 h-12',
+      icon: 'w-6 h-6',
+      value: 'w-12 text-base',
     },
   };
 
@@ -52,8 +52,8 @@ export default function QuantitySelector({
           ${s.button}
           flex items-center justify-center
           rounded-full
-          bg-gray-100 text-gray-700
-          hover:bg-gray-200 active:bg-gray-300
+          bg-slate-100 text-slate-700
+          hover:bg-slate-200 active:bg-slate-300
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-colors duration-200
         `}
@@ -63,7 +63,7 @@ export default function QuantitySelector({
       </button>
 
       <span
-        className={`${s.value} text-center font-semibold text-gray-900`}
+        className={`${s.value} text-center font-semibold text-slate-900`}
         aria-label={`Quantity: ${value}`}
       >
         {value}
@@ -77,8 +77,8 @@ export default function QuantitySelector({
           ${s.button}
           flex items-center justify-center
           rounded-full
-          bg-gray-100 text-gray-700
-          hover:bg-gray-200 active:bg-gray-300
+          bg-slate-100 text-slate-700
+          hover:bg-slate-200 active:bg-slate-300
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-colors duration-200
         `}

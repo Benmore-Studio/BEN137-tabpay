@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
+import { AlertTriangle, RotateCcw, Home } from 'lucide-react';
 import Button from './Button';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
@@ -24,10 +26,15 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
+    this.setState({ errorInfo });
   }
 
   handleRetry = () => {
-    this.setState({ hasError: false, error: undefined });
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  };
+
+  handleGoHome = () => {
+    window.location.href = '/';
   };
 
   render() {
@@ -36,31 +43,48 @@ export default class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
+      const isDevelopment = import.meta.env.DEV;
+
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-          <div className="text-center max-w-sm">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
+        <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+          <div className="text-center max-w-md">
+            <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-red-50 flex items-center justify-center">
+              <AlertTriangle className="w-10 h-10 text-red-500" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
               Something went wrong
             </h2>
-            <p className="text-gray-600 mb-6">
-              We're sorry, but something unexpected happened. Please try again.
+            <p className="text-slate-600 mb-6">
+              We're sorry, but something unexpected happened. You can try reloading the page or return home.
             </p>
-            <Button onClick={this.handleRetry}>Try Again</Button>
+
+            {/* Development mode - show error details */}
+            {isDevelopment && this.state.error && (
+              <div className="mb-6 p-4 rounded-xl bg-slate-100 text-left">
+                <p className="text-xs font-mono text-red-600 mb-2">
+                  {this.state.error.toString()}
+                </p>
+                {this.state.errorInfo && (
+                  <details className="text-xs text-slate-600">
+                    <summary className="cursor-pointer font-medium mb-2">Stack trace</summary>
+                    <pre className="overflow-auto text-[10px]">
+                      {this.state.errorInfo.componentStack}
+                    </pre>
+                  </details>
+                )}
+              </div>
+            )}
+
+            <div className="flex gap-3 justify-center">
+              <Button variant="secondary" onClick={this.handleRetry} className="flex items-center gap-2">
+                <RotateCcw className="w-4 h-4" />
+                Try Again
+              </Button>
+              <Button onClick={this.handleGoHome} className="flex items-center gap-2">
+                <Home className="w-4 h-4" />
+                Go Home
+              </Button>
+            </div>
           </div>
         </div>
       );

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Martini, ClipboardList, User, ShoppingCart } from 'lucide-react';
+import { Martini, User, ShoppingCart, Receipt, Heart } from 'lucide-react';
 import { useCart } from '../../context';
 
 interface NavItem {
@@ -10,7 +10,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { path: '/menu', label: 'Menu', icon: Martini },
-  { path: '/orders', label: 'Orders', icon: ClipboardList },
+  { path: '/favorites', label: 'Favorites', icon: Heart },
+  { path: '/orders', label: 'Orders', icon: Receipt },
   { path: '/cart', label: 'Cart', icon: ShoppingCart },
   { path: '/account', label: 'Account', icon: User },
 ];
@@ -35,6 +36,7 @@ export default function BottomNav() {
               className={`
                 relative flex flex-col items-center justify-center flex-1 h-full
                 transition-colors duration-200
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset
                 ${active ? 'text-primary-600' : 'text-slate-500'}
               `}
             >

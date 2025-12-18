@@ -55,7 +55,7 @@ export const menuItems: MenuItem[] = [
     price: 8.5,
     category: 'beer-wine',
     available: true,
-    image: '/images/craft-ipa.jpg',
+    image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=800&h=600&fit=crop',
   },
   {
     id: 'bw-002',
@@ -64,7 +64,7 @@ export const menuItems: MenuItem[] = [
     price: 6.0,
     category: 'beer-wine',
     available: true,
-    image: '/images/house-lager.jpg',
+    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=800&h=600&fit=crop',
   },
   {
     id: 'bw-003',
@@ -73,7 +73,7 @@ export const menuItems: MenuItem[] = [
     price: 12.0,
     category: 'beer-wine',
     available: true,
-    image: '/images/cabernet.jpg',
+    image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&h=600&fit=crop',
   },
   {
     id: 'bw-004',
@@ -82,7 +82,7 @@ export const menuItems: MenuItem[] = [
     price: 11.0,
     category: 'beer-wine',
     available: true,
-    image: '/images/chardonnay.jpg',
+    image: 'https://images.unsplash.com/photo-1474722883778-792e7990302f?w=800&h=600&fit=crop',
   },
   {
     id: 'bw-005',
@@ -91,6 +91,7 @@ export const menuItems: MenuItem[] = [
     price: 10.0,
     category: 'beer-wine',
     available: false,
+    image: 'https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=800&h=600&fit=crop',
   },
 
   // Cocktails
@@ -101,7 +102,7 @@ export const menuItems: MenuItem[] = [
     price: 14.0,
     category: 'cocktails',
     available: true,
-    image: '/images/margarita.jpg',
+    image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&h=600&fit=crop',
     modifiers: [iceModifier, garnishModifier],
   },
   {
@@ -111,7 +112,7 @@ export const menuItems: MenuItem[] = [
     price: 15.0,
     category: 'cocktails',
     available: true,
-    image: '/images/old-fashioned.jpg',
+    image: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=600&fit=crop',
     modifiers: [garnishModifier],
   },
   {
@@ -121,7 +122,7 @@ export const menuItems: MenuItem[] = [
     price: 13.0,
     category: 'cocktails',
     available: true,
-    image: '/images/mojito.jpg',
+    image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&h=600&fit=crop',
     modifiers: [iceModifier],
   },
   {
@@ -131,7 +132,7 @@ export const menuItems: MenuItem[] = [
     price: 16.0,
     category: 'cocktails',
     available: true,
-    image: '/images/espresso-martini.jpg',
+    image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=600&fit=crop',
   },
   {
     id: 'ct-005',
@@ -140,7 +141,7 @@ export const menuItems: MenuItem[] = [
     price: 14.0,
     category: 'cocktails',
     available: true,
-    image: '/images/whiskey-sour.jpg',
+    image: 'https://images.unsplash.com/photo-1536935338788-846bb9981813?w=800&h=600&fit=crop',
     modifiers: [garnishModifier],
   },
 
@@ -152,7 +153,7 @@ export const menuItems: MenuItem[] = [
     price: 5.0,
     category: 'non-alcoholic',
     available: true,
-    image: '/images/lemonade.jpg',
+    image: 'https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9d?w=800&h=600&fit=crop',
     modifiers: [drinkSizeModifier, iceModifier],
     dietary: { vegan: true, glutenFree: true },
   },
@@ -163,7 +164,7 @@ export const menuItems: MenuItem[] = [
     price: 5.5,
     category: 'non-alcoholic',
     available: true,
-    image: '/images/iced-coffee.jpg',
+    image: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=800&h=600&fit=crop',
     modifiers: [drinkSizeModifier, iceModifier],
     dietary: { vegan: true, glutenFree: true },
   },
@@ -174,7 +175,7 @@ export const menuItems: MenuItem[] = [
     price: 7.0,
     category: 'non-alcoholic',
     available: true,
-    image: '/images/virgin-mojito.jpg',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&h=600&fit=crop',
     modifiers: [iceModifier],
     dietary: { vegan: true, glutenFree: true },
   },
@@ -196,7 +197,7 @@ export const menuItems: MenuItem[] = [
     price: 16.0,
     category: 'appetizers',
     available: true,
-    image: '/images/nachos.jpg',
+    image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -206,7 +207,7 @@ export const menuItems: MenuItem[] = [
     price: 18.0,
     category: 'appetizers',
     available: true,
-    image: '/images/wings.jpg',
+    image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&h=600&fit=crop',
     modifiers: [
       {
         id: 'wing-sauce',
@@ -228,7 +229,7 @@ export const menuItems: MenuItem[] = [
     price: 14.0,
     category: 'appetizers',
     available: true,
-    image: '/images/spinach-dip.jpg',
+    image: 'https://images.unsplash.com/photo-1541529086526-db283c563270?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -238,7 +239,7 @@ export const menuItems: MenuItem[] = [
     price: 12.0,
     category: 'appetizers',
     available: true,
-    image: '/images/mozz-sticks.jpg',
+    image: 'https://images.unsplash.com/photo-1531749668029-2db88e4276c7?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
 
@@ -250,7 +251,7 @@ export const menuItems: MenuItem[] = [
     price: 10.0,
     category: 'snacks',
     available: true,
-    image: '/images/truffle-fries.jpg',
+    image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -260,7 +261,7 @@ export const menuItems: MenuItem[] = [
     price: 9.0,
     category: 'snacks',
     available: true,
-    image: '/images/pretzel-bites.jpg',
+    image: 'https://images.unsplash.com/photo-1534420807854-4a69d945a918?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -270,6 +271,7 @@ export const menuItems: MenuItem[] = [
     price: 6.0,
     category: 'snacks',
     available: true,
+    image: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=800&h=600&fit=crop',
     dietary: { vegan: true, glutenFree: true },
   },
   {
@@ -279,7 +281,7 @@ export const menuItems: MenuItem[] = [
     price: 7.0,
     category: 'snacks',
     available: true,
-    image: '/images/edamame.jpg',
+    image: 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=800&h=600&fit=crop',
     dietary: { vegan: true, glutenFree: true },
   },
 
@@ -291,7 +293,7 @@ export const menuItems: MenuItem[] = [
     price: 12.0,
     category: 'desserts',
     available: true,
-    image: '/images/lava-cake.jpg',
+    image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -301,7 +303,7 @@ export const menuItems: MenuItem[] = [
     price: 10.0,
     category: 'desserts',
     available: true,
-    image: '/images/cheesecake.jpg',
+    image: 'https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
   {
@@ -311,7 +313,7 @@ export const menuItems: MenuItem[] = [
     price: 8.0,
     category: 'desserts',
     available: true,
-    image: '/images/sundae.jpg',
+    image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&h=600&fit=crop',
     dietary: { vegetarian: true, glutenFree: true },
   },
   {
@@ -321,7 +323,7 @@ export const menuItems: MenuItem[] = [
     price: 7.0,
     category: 'desserts',
     available: true,
-    image: '/images/brownie-bites.jpg',
+    image: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=800&h=600&fit=crop',
     dietary: { vegetarian: true },
   },
 ];
