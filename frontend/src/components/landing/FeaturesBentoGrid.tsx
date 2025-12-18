@@ -13,10 +13,10 @@ export default function FeaturesBentoGrid() {
             icon={<Heart className="w-4 h-4 text-primary-600" />}
             text="Why guests love us"
           />
-          <h2 className="text-3xl sm:text-4xl lg:text-[3rem] leading-[1.2] font-bold text-slate-900 tracking-tight mb-6">
-            The <span className="text-primary-600">TabPay</span> difference
+          <h2 className="text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] font-bold text-slate-900 tracking-tight mb-8">
+            The <span className="text-gradient-gold">TabPay</span> difference
           </h2>
-          <p className="text-lg text-slate-600 leading-[1.6] max-w-2xl mx-auto">
+          <p className="text-xl text-slate-600 leading-[1.6] max-w-2xl mx-auto">
             We're not just another ordering app. We built TabPay for the casino floor.
           </p>
         </div>
@@ -24,7 +24,7 @@ export default function FeaturesBentoGrid() {
         {/* Bento-style feature grid */}
         <div className="grid lg:grid-cols-6 gap-6">
           {/* Large feature - Never leave your seat */}
-          <div className="lg:col-span-4 group relative bg-white rounded-3xl p-8 lg:p-10 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+          <div className="lg:col-span-4 group relative bg-white rounded-3xl p-8 lg:p-10 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 overflow-hidden border-t-[6px] border-primary-500">
             <div className="relative">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-6 shadow-xl shadow-primary-500/20 group-hover:scale-110 transition-transform duration-500">
                 <Clock className="w-8 h-8 text-white" />
@@ -47,7 +47,7 @@ export default function FeaturesBentoGrid() {
           </div>
 
           {/* Feature - GPS delivery */}
-          <div className="lg:col-span-2 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
+          <div className="lg:col-span-2 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 border-t-[6px] border-gold-500">
             <div className="relative">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mb-5 shadow-lg shadow-gold-500/20 group-hover:scale-110 transition-transform duration-500">
                 <MapPin className="w-7 h-7 text-white" />
@@ -60,7 +60,7 @@ export default function FeaturesBentoGrid() {
           </div>
 
           {/* Feature - Secure payments */}
-          <div className="lg:col-span-3 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
+          <div className="lg:col-span-3 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 border-t-[6px] border-green-500">
             <div className="relative">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center mb-5 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform duration-500">
                 <CreditCard className="w-7 h-7 text-white" />

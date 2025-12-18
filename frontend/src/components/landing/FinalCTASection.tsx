@@ -20,10 +20,10 @@ export default function FinalCTASection({ isAuthenticated }: FinalCTASectionProp
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary-500/30">
               <Martini className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-[3rem] leading-[1.2] font-bold text-slate-900 tracking-tight mb-6">
+            <h2 className="text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] font-bold text-slate-900 tracking-tight mb-8">
               Ready to skip the wait?
             </h2>
-            <p className="text-lg text-slate-600 leading-[1.6] mb-10 max-w-xl mx-auto">
+            <p className="text-xl text-slate-600 leading-[1.6] mb-10 max-w-xl mx-auto">
               Join thousands of guests who order smarter. No app to download—just scan and sip.
             </p>
             <div className="mb-6">

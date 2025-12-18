@@ -61,9 +61,25 @@ export default function Landing() {
       </nav>
 
       <HeroSection isAuthenticated={isAuthenticated} />
+
+      {/* Accent bar */}
+      <div className="h-1 bg-gradient-to-r from-primary-500 via-gold-500 to-primary-500" />
+
       <FeaturesBentoGrid />
+
+      {/* Accent bar */}
+      <div className="h-1 bg-gradient-to-r from-primary-500 via-gold-500 to-primary-500" />
+
       <HowItWorksSection />
+
+      {/* Accent bar */}
+      <div className="h-1 bg-gradient-to-r from-primary-500 via-gold-500 to-primary-500" />
+
       <FinalCTASection isAuthenticated={isAuthenticated} />
+
+      {/* Accent bar */}
+      <div className="h-1 bg-gradient-to-r from-primary-500 via-gold-500 to-primary-500" />
+
       <LandingFooter />
     </div>
   );

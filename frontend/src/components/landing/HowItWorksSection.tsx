@@ -16,10 +16,10 @@ export default function HowItWorksSection() {
             text="Simple as 1-2-3"
             variant="purple"
           />
-          <h2 className="text-3xl sm:text-4xl lg:text-[3rem] leading-[1.2] font-bold text-slate-900 tracking-tight mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] font-bold text-slate-900 tracking-tight mb-8">
             How TabPay works
           </h2>
-          <p className="text-lg text-slate-600 leading-[1.6] max-w-2xl mx-auto">
+          <p className="text-xl text-slate-600 leading-[1.6] max-w-2xl mx-auto">
             From scan to sip in under 10 minutes. No app download required.
           </p>
         </div>
