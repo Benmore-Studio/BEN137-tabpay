@@ -23,10 +23,13 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
   return (
     <div
       className={`
-        flex gap-4 p-4 bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-sm
-        ${item.available ? 'cursor-pointer hover:shadow-lg hover:ring-slate-200 hover:-translate-y-0.5' : 'opacity-60'}
-        transition-all duration-200
+        relative flex gap-4 p-5 bg-white rounded-2xl
+        shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08)]
+        border-t-[3px] border-primary-500
+        ${item.available ? 'cursor-pointer hover:shadow-[0_8px_16px_-4px_rgba(124,58,237,0.15)] hover:-translate-y-0.5' : 'opacity-60'}
+        transition-all duration-300
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2
+        overflow-hidden
       `}
       onClick={item.available ? onViewDetails : undefined}
       tabIndex={item.available ? 0 : undefined}
@@ -39,8 +42,11 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
       role="button"
       aria-label={`View details for ${item.name}`}
     >
+      {/* Subtle gradient accent */}
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary-500 via-gold-400 to-primary-500" />
+
       {/* Image */}
-      <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-slate-100">
+      <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-slate-100 ring-1 ring-slate-200/50">
         {item.image ? (
           <img
             src={item.image}
@@ -66,11 +72,11 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-slate-900 truncate">{item.name}</h3>
+      <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="font-bold text-base text-slate-900 truncate">{item.name}</h3>
               {/* Favorite Heart */}
               <button
                 onClick={handleFavoriteClick}
@@ -88,26 +94,26 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
               <span className="text-xs text-red-600 font-medium">Unavailable</span>
             )}
           </div>
-          <Price amount={item.price} className="flex-shrink-0" />
+          <Price amount={item.price} className="flex-shrink-0 text-base font-bold" />
         </div>
 
-        <p className="mt-1 text-sm text-slate-500 line-clamp-2">{item.description}</p>
+        <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-auto">{item.description}</p>
 
         {/* Dietary tags */}
         {item.dietary && (
-          <div className="mt-2 flex gap-1.5">
+          <div className="mt-3 flex gap-2">
             {item.dietary.vegetarian && (
-              <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded">
+              <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-md ring-1 ring-green-200">
                 V
               </span>
             )}
             {item.dietary.vegan && (
-              <span className="px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded">
+              <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-md ring-1 ring-green-200">
                 VG
               </span>
             )}
             {item.dietary.glutenFree && (
-              <span className="px-1.5 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">
+              <span className="px-2 py-1 text-xs font-semibold bg-amber-100 text-amber-700 rounded-md ring-1 ring-amber-200">
                 GF
               </span>
             )}
@@ -124,19 +130,19 @@ export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuIt
           }}
           className="
             flex-shrink-0 self-center
-            w-10 h-10
+            w-12 h-12
             flex items-center justify-center
             rounded-full
-            bg-gradient-to-br from-primary-500 to-primary-600 text-white
-            shadow-md shadow-primary-500/25
-            hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105
+            bg-gradient-to-br from-primary-500 to-primary-700 text-white
+            shadow-lg shadow-primary-500/30
+            hover:shadow-xl hover:shadow-primary-500/40 hover:scale-110
             active:scale-95
             transition-all duration-200
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2
           "
           aria-label={`Add ${item.name} to cart`}
         >
-          <PlusIcon className="w-5 h-5" />
+          <PlusIcon className="w-6 h-6" />
         </button>
       )}
     </div>

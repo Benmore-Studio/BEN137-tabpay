@@ -87,14 +87,14 @@ export default function Menu() {
       />
 
       <div className="pb-24 md:pb-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {isLoading ? (
             // Loading skeletons
-            <div className="px-4 pt-6 space-y-8">
+            <div className="pt-6 space-y-8">
               {categories.slice(0, 2).map((category) => (
                 <section key={category.id}>
                   <div className="h-7 w-32 bg-slate-200 rounded animate-pulse mb-4" />
-                  <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {[...Array(4)].map((_, i) => (
                       <MenuItemSkeleton key={i} />
                     ))}
@@ -114,10 +114,10 @@ export default function Menu() {
                   ref={(el) => {
                     sectionRefs.current[category.id] = el;
                   }}
-                  className="px-4 pt-6"
+                  className="pt-6"
                 >
-                  <h2 className="text-lg font-bold text-slate-900 mb-4">{category.name}</h2>
-                  <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
+                  <h2 className="text-xl font-bold text-slate-900 mb-6">{category.name}</h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {items.map((item) => (
                       <MenuItemCard
                         key={item.id}
