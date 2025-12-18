@@ -18,7 +18,7 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16">
           {/* Left: Text content */}
           <div className="text-center lg:text-left">
             {/* Badge */}
@@ -38,7 +38,7 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
             </p>
 
             {/* CTA Button */}
-            <div className="flex justify-center lg:justify-start mb-10">
+            <div className="flex justify-center lg:justify-start">
               <Link to={isAuthenticated ? "/menu" : "/auth"}>
                 <Button size="lg" className="sm:w-auto sm:px-10 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300">
                   {isAuthenticated ? 'Start Ordering' : 'Get Started Free'}
@@ -46,44 +46,44 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
                 </Button>
               </Link>
             </div>
-
-            {/* Trust indicators - Bold colored pills */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-              {/* Rating */}
-              <div className="flex items-center gap-3 bg-gradient-to-br from-gold-400 to-gold-600 text-white px-8 py-4 rounded-full shadow-2xl">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-6 h-6 fill-white" />
-                  ))}
-                </div>
-                <div className="border-l border-white/30 pl-3">
-                  <div className="text-3xl font-bold">4.9</div>
-                </div>
-              </div>
-
-              {/* User count */}
-              <div className="flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-full shadow-2xl">
-                <Users className="w-6 h-6" />
-                <div>
-                  <div className="text-3xl font-bold">10K+</div>
-                  <div className="text-xs opacity-90">guests</div>
-                </div>
-              </div>
-
-              {/* Orders */}
-              <div className="flex items-center gap-3 bg-slate-800 text-white px-8 py-4 rounded-full shadow-2xl">
-                <TrendingUp className="w-6 h-6 text-green-400" />
-                <div>
-                  <div className="text-3xl font-bold">50K+</div>
-                  <div className="text-xs opacity-90">orders</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right: Phone mockup / Visual */}
           <div className="relative flex justify-center lg:justify-end pt-8 lg:pt-0">
             <PhoneMockup />
+          </div>
+        </div>
+
+        {/* Trust indicators - Centered at bottom */}
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {/* Rating */}
+          <div className="flex items-center gap-3 bg-gradient-to-br from-gold-400 to-gold-600 text-white px-8 py-4 rounded-full shadow-2xl">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-6 h-6 fill-white" />
+              ))}
+            </div>
+            <div className="border-l border-white/30 pl-3">
+              <div className="text-3xl font-bold">4.9</div>
+            </div>
+          </div>
+
+          {/* User count */}
+          <div className="flex items-center gap-3 bg-primary-600 text-white px-8 py-4 rounded-full shadow-2xl">
+            <Users className="w-6 h-6" />
+            <div>
+              <div className="text-3xl font-bold">10K+</div>
+              <div className="text-xs opacity-90">guests</div>
+            </div>
+          </div>
+
+          {/* Orders */}
+          <div className="flex items-center gap-3 bg-slate-800 text-white px-8 py-4 rounded-full shadow-2xl">
+            <TrendingUp className="w-6 h-6 text-green-400" />
+            <div>
+              <div className="text-3xl font-bold">50K+</div>
+              <div className="text-xs opacity-90">orders</div>
+            </div>
           </div>
         </div>
       </div>
