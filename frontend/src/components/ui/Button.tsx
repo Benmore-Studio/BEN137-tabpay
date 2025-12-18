@@ -33,14 +33,12 @@ export default function Button({
       bg-gradient-to-r from-primary-600 to-primary-700 text-white
       hover:from-primary-700 hover:to-primary-800
       shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30
-      hover:-translate-y-0.5
     `,
     secondary: `
       bg-white text-slate-900
       ring-1 ring-slate-200
       hover:bg-slate-50 hover:ring-slate-300
       shadow-sm hover:shadow-md
-      hover:-translate-y-0.5
     `,
     ghost: `
       bg-transparent text-slate-600
@@ -51,7 +49,6 @@ export default function Button({
       text-slate-900 font-bold
       shadow-lg shadow-gold-500/25 hover:shadow-xl hover:shadow-gold-500/30
       hover:from-gold-500 hover:to-gold-600
-      hover:-translate-y-0.5
     `,
   };
 

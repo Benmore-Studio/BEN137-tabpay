@@ -14,13 +14,15 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <AppLayout showBackButton headerTitle="Cart" showBottomNav={false}>
-        <EmptyState
-          icon={ShoppingBag}
-          title="Your cart is empty"
-          description="Browse our menu and add some delicious items!"
-          actionLabel="Browse Menu"
-          actionTo="/menu"
-        />
+        <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+          <EmptyState
+            icon={ShoppingBag}
+            title="Your cart is empty"
+            description="Browse our menu and add some delicious items!"
+            actionLabel="Browse Menu"
+            actionTo="/menu"
+          />
+        </div>
       </AppLayout>
     );
   }

@@ -257,16 +257,16 @@ export default function ItemDetailModal({
           <Button
             variant="secondary"
             onClick={onClose}
-            className="flex-1"
+            className="flex-1 !bg-red-50 !text-red-700 !ring-red-200 hover:!bg-red-100 hover:!ring-red-300"
           >
             Cancel
           </Button>
           <Button
             onClick={handleAddToCart}
             disabled={!isValid}
-            className="flex-1"
+            className="flex-1 whitespace-nowrap"
           >
-            Add to Cart - ${totalPrice.toFixed(2)}
+            Add ${totalPrice.toFixed(2)}
           </Button>
         </div>
       </div>

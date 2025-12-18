@@ -47,7 +47,7 @@ export default function Card({
         ${variants[variant]}
         ${onClick ? `
           cursor-pointer
-          hover:shadow-lg hover:ring-slate-200 hover:-translate-y-0.5
+          hover:shadow-lg hover:ring-slate-200
           active:scale-[0.99]
           text-left w-full
         ` : ''}

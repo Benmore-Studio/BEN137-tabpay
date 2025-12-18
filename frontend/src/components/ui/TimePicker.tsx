@@ -111,9 +111,9 @@ export default function TimePicker({ value, onChange, isASAP, onASAPChange }: Ti
                 type="button"
                 onClick={() => handleTimeSlotClick(slot)}
                 className={`
-                  px-3 py-2.5 rounded-lg text-sm font-medium
+                  px-2 py-2.5 rounded-lg text-sm font-medium
                   border transition-all duration-200
-                  min-h-[48px] flex items-center justify-center
+                  min-h-[48px] flex items-center justify-center whitespace-nowrap
                   ${
                     isSelected
                       ? 'bg-primary-600 text-white border-primary-600 shadow-md'
@@ -121,8 +121,8 @@ export default function TimePicker({ value, onChange, isASAP, onASAPChange }: Ti
                   }
                 `}
               >
-                <ClockIcon className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                {formatTimeSlot(slot)}
+                <ClockIcon className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
+                <span className="text-xs">{formatTimeSlot(slot)}</span>
               </button>
             );
           })}

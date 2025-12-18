@@ -112,7 +112,7 @@ export default function Checkout() {
 
   return (
     <AppLayout showBackButton headerTitle="Checkout" showBottomNav={false}>
-      <div className="pb-48 px-4 pt-6 space-y-5">
+      <div className="pb-64 px-4 pt-6 space-y-5">
         {/* Location Confirmation */}
         <Card variant="elevated">
           <h2 className="font-bold text-slate-900 mb-3">Delivery Location</h2>
@@ -334,7 +334,7 @@ export default function Checkout() {
       </div>
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/50 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-40">
         {/* Price Breakdown */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-sm">

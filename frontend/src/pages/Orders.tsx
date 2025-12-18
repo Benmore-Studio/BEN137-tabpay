@@ -212,17 +212,19 @@ export default function Orders() {
 
         {/* Empty State */}
         {!loading && orders.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
-              <ShoppingBagIcon className="w-10 h-10 text-slate-400" />
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center py-16">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
+                <ShoppingBagIcon className="w-10 h-10 text-slate-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900">No orders yet</h3>
+              <p className="text-slate-500 mt-1 mb-6">
+                Your order history will appear here
+              </p>
+              <Link to="/menu">
+                <Button>Browse Menu</Button>
+              </Link>
             </div>
-            <h3 className="text-lg font-semibold text-slate-900">No orders yet</h3>
-            <p className="text-slate-500 mt-1 mb-6">
-              Your order history will appear here
-            </p>
-            <Link to="/menu">
-              <Button>Browse Menu</Button>
-            </Link>
           </div>
         )}
       </div>
