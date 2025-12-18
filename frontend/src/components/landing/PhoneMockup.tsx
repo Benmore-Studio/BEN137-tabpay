@@ -20,13 +20,10 @@ export default function PhoneMockup() {
         <div className="absolute inset-2 rounded-[2.5rem] bg-gradient-to-b from-primary-500/20 to-transparent opacity-50" />
 
         {/* Screen */}
-        <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden">
-          {/* App background - light with subtle texture */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
-
-          {/* Decorative background blobs */}
-          <div className="absolute top-20 -right-10 w-32 h-32 bg-primary-200/40 rounded-full blur-2xl" />
-          <div className="absolute bottom-32 -left-10 w-28 h-28 bg-gold-200/40 rounded-full blur-2xl" />
+        <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-gradient-to-b from-slate-50/80 via-white/90 to-slate-50/80">
+          {/* Decorative background blobs - more subtle */}
+          <div className="absolute top-20 -right-10 w-32 h-32 bg-primary-200/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-32 -left-10 w-28 h-28 bg-gold-200/20 rounded-full blur-3xl" />
 
           {/* Screen glare overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent pointer-events-none" />

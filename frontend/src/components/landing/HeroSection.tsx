@@ -10,11 +10,11 @@ interface HeroSectionProps {
 export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
   return (
     <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
-      {/* Background - bold diagonal gradient */}
+      {/* Background - subtle gradient */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 via-gold-500/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-gold-500/5 to-transparent" />
         {/* Accent blob for depth */}
-        <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-gold-400/30 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-gold-400/15 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6">
