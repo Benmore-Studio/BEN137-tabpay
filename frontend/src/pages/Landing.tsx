@@ -120,7 +120,7 @@ export default function Landing() {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-400/30 to-gold-400/30 rounded-[4rem] blur-3xl scale-110 group-hover/phone:scale-125 group-hover/phone:opacity-80 transition-all duration-700" />
 
                 {/* Phone frame */}
-                <div className="relative w-[280px] sm:w-[300px] h-[560px] sm:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(100,100,120,0.1)] ring-1 ring-white/10 group-hover/phone:shadow-[0_30px_60px_-15px_rgba(124,58,237,0.3),0_0_0_1px_rgba(100,100,120,0.1)] transition-all duration-500">
+                <div className="relative w-[320px] sm:w-[340px] lg:w-[300px] h-[640px] sm:h-[680px] lg:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(100,100,120,0.1)] ring-1 ring-white/10 group-hover/phone:shadow-[0_30px_60px_-15px_rgba(124,58,237,0.3),0_0_0_1px_rgba(100,100,120,0.1)] transition-all duration-500">
                   {/* Highlight edge - top */}
                   <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
 
@@ -279,7 +279,7 @@ export default function Landing() {
                 </div>
 
                 {/* Floating notification card - top left */}
-                <div className="absolute left-0 sm:-left-6 top-12 -translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute left-0 sm:-left-6 top-16 -translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/30">
                       <Shield className="w-4 h-4 text-white" />
@@ -292,7 +292,7 @@ export default function Landing() {
                 </div>
 
                 {/* Floating stat card - bottom right */}
-                <div className="absolute right-0 sm:-right-6 bottom-24 translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute right-0 sm:-right-6 bottom-28 translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/30">
                       <Zap className="w-4 h-4 text-white" />
@@ -301,14 +301,6 @@ export default function Landing() {
                       <p className="text-lg font-bold text-slate-900">~8 min</p>
                       <p className="text-[10px] text-slate-500">Avg. delivery</p>
                     </div>
-                  </div>
-                </div>
-
-                {/* Floating reward card - top right */}
-                <div className="absolute right-0 sm:-right-4 top-32 translate-x-1/3 bg-gradient-to-r from-gold-500 to-gold-600 rounded-lg shadow-[0_15px_30px_-10px_rgba(212,175,55,0.5)] px-2.5 py-1.5 ring-1 ring-gold-400/50 hover:scale-110 hover:shadow-[0_20px_40px_-10px_rgba(212,175,55,0.6)] transition-all duration-300">
-                  <div className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-white" />
-                    <span className="text-[10px] font-bold text-white">+50 pts!</span>
                   </div>
                 </div>
               </div>
@@ -337,9 +329,9 @@ export default function Landing() {
           </div>
 
           {/* Bento-style feature grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-6 gap-6">
             {/* Large feature - Never leave your seat */}
-            <div className="lg:col-span-2 lg:row-span-2 group relative bg-white rounded-3xl p-8 lg:p-10 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+            <div className="lg:col-span-4 group relative bg-white rounded-3xl p-8 lg:p-10 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="relative">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-6 shadow-xl shadow-primary-500/20 group-hover:scale-110 transition-transform duration-500">
                   <Clock className="w-8 h-8 text-white" />
@@ -353,16 +345,16 @@ export default function Landing() {
                     <span className="text-2xl font-bold text-primary-600">~8</span>
                     <span className="text-sm text-primary-700">min delivery</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gold-50 border border-gold-100">
-                    <span className="text-2xl font-bold text-gold-600">0</span>
-                    <span className="text-sm text-gold-700">hands missed</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200">
+                    <span className="text-2xl font-bold text-slate-700">0</span>
+                    <span className="text-sm text-slate-600">hands missed</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Feature - GPS delivery */}
-            <div className="group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
+            <div className="lg:col-span-2 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mb-5 shadow-lg shadow-gold-500/20 group-hover:scale-110 transition-transform duration-500">
                   <MapPin className="w-7 h-7 text-white" />
@@ -375,7 +367,7 @@ export default function Landing() {
             </div>
 
             {/* Feature - Secure payments */}
-            <div className="group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
+            <div className="lg:col-span-3 group relative bg-white rounded-3xl p-6 lg:p-8 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500">
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center mb-5 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform duration-500">
                   <CreditCard className="w-7 h-7 text-white" />
@@ -557,9 +549,9 @@ export default function Landing() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-12">
             {/* Brand column */}
-            <div className="sm:col-span-2 lg:col-span-1">
+            <div className="sm:col-span-2 lg:col-span-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg">
                   <Martini className="w-6 h-6 text-white" strokeWidth={1.5} />
@@ -578,45 +570,28 @@ export default function Landing() {
               <p className="text-xs text-slate-500">Rated by 10K+ guests</p>
             </div>
 
-            {/* Quick links */}
-            <div>
+            {/* Product links */}
+            <div className="lg:col-span-4">
               <h4 className="font-semibold text-white mb-4">Product</h4>
               <ul className="space-y-3">
-                {['How it works', 'Features', 'Pricing', 'Rewards'].map((item) => (
+                {['How it works', 'Features', 'Pricing'].map((item) => (
                   <li key={item}>
-                    <button className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1 group">
+                    <button className="text-sm text-slate-400 hover:text-white transition-colors">
                       {item}
-                      <ChevronRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Company */}
-            <div>
-              <h4 className="font-semibold text-white mb-4">Company</h4>
-              <ul className="space-y-3">
-                {['About us', 'Careers', 'Partner with us', 'Press'].map((item) => (
-                  <li key={item}>
-                    <button className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1 group">
-                      {item}
-                      <ChevronRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
+            {/* Support links */}
+            <div className="lg:col-span-4">
               <h4 className="font-semibold text-white mb-4">Support</h4>
               <ul className="space-y-3">
-                {['Help center', 'Contact us', 'Privacy policy', 'Terms of service'].map((item) => (
+                {['Help center', 'Contact us', 'Privacy', 'Terms'].map((item) => (
                   <li key={item}>
-                    <button className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1 group">
+                    <button className="text-sm text-slate-400 hover:text-white transition-colors">
                       {item}
-                      <ChevronRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </button>
                   </li>
                 ))}
