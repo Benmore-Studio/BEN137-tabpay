@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Martini, ArrowRight, ArrowLeft } from 'lucide-react';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../context';
@@ -26,7 +27,6 @@ export default function Auth() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const isLogin = mode === 'login';
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const resetForm = () => {
     setEmail('');
@@ -41,15 +41,8 @@ export default function Auth() {
 
   const toggleMode = () => {
     const newMode = isLogin ? 'register' : 'login';
-    setIsTransitioning(true);
-
-    setTimeout(() => {
-      setMode(newMode);
-      resetForm();
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 50);
-    }, 150);
+    setMode(newMode);
+    resetForm();
   };
 
   const validateRegister = (): boolean => {
@@ -195,15 +188,21 @@ export default function Auth() {
 
                 {/* Mode Toggle */}
                 <div className="relative flex bg-slate-100 rounded-xl p-1 mb-5">
-                  <div
-                    className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm ring-1 ring-slate-200/50 transition-all duration-200 ease-out ${
-                      isLogin ? 'left-1' : 'left-[calc(50%+2px)]'
-                    }`}
+                  <motion.div
+                    animate={{
+                      x: isLogin ? 0 : 'calc(100% + 4px)'
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30
+                    }}
+                    className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm ring-1 ring-slate-200/50"
                   />
                   <button
                     type="button"
                     onClick={() => mode !== 'login' && toggleMode()}
-                    className={`relative flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors z-10 ${
+                    className={`relative flex-1 py-2.5 text-sm font-medium rounded-lg z-10 ${
                       isLogin ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
                     }`}
                   >
@@ -212,7 +211,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={() => mode !== 'register' && toggleMode()}
-                    className={`relative flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors z-10 ${
+                    className={`relative flex-1 py-2.5 text-sm font-medium rounded-lg z-10 ${
                       !isLogin ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
                     }`}
                   >
@@ -230,7 +229,29 @@ export default function Auth() {
                       )}
 
                       {/* Register: Name fields */}
-                      <div className={`grid grid-cols-2 gap-3 transition-all duration-150 ease-out ${!isLogin ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {!isLogin && (
+                      <motion.div
+                        key="name-fields"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}
+                        className="grid grid-cols-2 gap-3">
                         <div>
                           <input
                             type="text"
@@ -241,7 +262,7 @@ export default function Auth() {
                               clearFieldError('firstName');
                             }}
                             tabIndex={isLogin ? -1 : 0}
-                            className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                           />
                           {fieldErrors.firstName && (
                             <p className="text-red-500 text-xs mt-1">{fieldErrors.firstName}</p>
@@ -257,12 +278,15 @@ export default function Auth() {
                               clearFieldError('lastName');
                             }}
                             tabIndex={isLogin ? -1 : 0}
-                            className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                           />
                           {fieldErrors.lastName && (
                             <p className="text-red-500 text-xs mt-1">{fieldErrors.lastName}</p>
                           )}
                         </div>
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
 
                       {/* Email */}
@@ -276,7 +300,7 @@ export default function Auth() {
                             clearFieldError('email');
                           }}
                           autoComplete="email"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                         />
                         {fieldErrors.email && (
                           <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>
@@ -284,7 +308,28 @@ export default function Auth() {
                       </div>
 
                       {/* Register: Phone */}
-                      <div className={`transition-all duration-150 ease-out ${!isLogin ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {!isLogin && (
+                      <motion.div
+                        key="phone-field"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}>
                         <input
                           type="tel"
                           placeholder="Phone number"
@@ -295,11 +340,14 @@ export default function Auth() {
                           }}
                           autoComplete="tel"
                           tabIndex={isLogin ? -1 : 0}
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                         />
                         {fieldErrors.phone && (
                           <p className="text-red-500 text-xs mt-1">{fieldErrors.phone}</p>
                         )}
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
 
                       {/* Password */}
@@ -313,12 +361,12 @@ export default function Auth() {
                             clearFieldError('password');
                           }}
                           autoComplete={isLogin ? 'current-password' : 'new-password'}
-                          className="w-full px-4 py-3 pr-12 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                          className="w-full px-4 py-3 pr-12 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 transition-colors"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600"
                         >
                           {showPassword ? (
                             <EyeSlashIcon className="w-5 h-5" />
@@ -332,7 +380,29 @@ export default function Auth() {
                       </div>
 
                       {/* Register: Password strength */}
-                      <div className={`flex flex-wrap gap-3 transition-all duration-150 ease-out ${!isLogin && password ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {!isLogin && password && (
+                      <motion.div
+                        key="password-strength"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}
+                        className="flex flex-wrap gap-3">
                         {[
                           { check: passwordStrength.hasLength, label: '8+ chars' },
                           { check: passwordStrength.hasNumber, label: 'Number' },
@@ -351,10 +421,34 @@ export default function Auth() {
                             </span>
                           </div>
                         ))}
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
 
                       {/* Register: Confirm password */}
-                      <div className={`transition-all duration-150 ease-out ${!isLogin ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {!isLogin && (
+                      <motion.div
+                        key="confirm-password"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}>
                         <input
                           type={showPassword ? 'text' : 'password'}
                           placeholder="Confirm password"
@@ -365,26 +459,75 @@ export default function Auth() {
                           }}
                           autoComplete="new-password"
                           tabIndex={isLogin ? -1 : 0}
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 placeholder-slate-400 ring-1 ring-slate-200 focus:ring-2 focus:ring-primary-500 focus:bg-white focus:outline-none"
                         />
                         {fieldErrors.confirmPassword && (
                           <p className="text-red-500 text-xs mt-1">{fieldErrors.confirmPassword}</p>
                         )}
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
 
                       {/* Login: Forgot password */}
-                      <div className={`flex justify-end transition-all duration-150 ease-out ${isLogin ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {isLogin && (
+                      <motion.div
+                        key="forgot-password"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}
+                        className="flex justify-end">
                         <button
                           type="button"
                           tabIndex={isLogin ? 0 : -1}
-                          className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                          className="text-sm font-medium text-primary-600 hover:text-primary-700"
                         >
                           Forgot password?
                         </button>
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
 
                       {/* Register: Terms */}
-                      <div className={`transition-all duration-150 ease-out ${!isLogin ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                      <div className="relative">
+                      <AnimatePresence initial={false} mode="popLayout">
+                      {!isLogin && (
+                      <motion.div
+                        key="terms"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: 1,
+                          transition: {
+                            duration: 0.12,
+                            ease: 'easeOut'
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          transition: {
+                            duration: 0.08,
+                            ease: 'easeIn'
+                          }
+                        }}>
                         <p className="text-xs text-slate-500 text-center">
                           By creating an account, you agree to our{' '}
                           <button type="button" tabIndex={isLogin ? -1 : 0} className="text-primary-600 hover:underline">
@@ -395,17 +538,20 @@ export default function Auth() {
                             Privacy Policy
                           </button>
                         </p>
+                      </motion.div>
+                      )}
+                      </AnimatePresence>
                       </div>
                     </div>
 
                   {/* Submit button */}
                   <button
                     type="submit"
-                    disabled={isLoading || isTransitioning}
+                    disabled={isLoading}
                     className="w-full relative group mt-6"
                   >
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 via-primary-400 to-primary-500 rounded-xl opacity-75 blur group-hover:opacity-100 transition-opacity" />
-                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl text-white font-semibold shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/40 transition-[color,background-color,border-color,box-shadow] duration-150">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 via-primary-400 to-primary-500 rounded-xl opacity-75 blur group-hover:opacity-100 duration-200" />
+                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl text-white font-semibold shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/40 duration-200">
                       {isLoading ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
@@ -427,7 +573,7 @@ export default function Auth() {
 
                 {/* Social logins */}
                 <div className="grid grid-cols-2 gap-3">
-                  <button className="group relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 ring-1 ring-slate-200 hover:bg-slate-100 hover:ring-slate-300 transition-[color,background-color,border-color,box-shadow] duration-150">
+                  <button className="group relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 ring-1 ring-slate-200 hover:bg-slate-100 hover:ring-slate-300 duration-150">
                     <svg className="w-4 h-4 text-slate-700" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -436,7 +582,7 @@ export default function Auth() {
                     </svg>
                     <span className="text-slate-600 text-sm font-medium">Apple</span>
                   </button>
-                  <button className="group relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 ring-1 ring-slate-200 hover:bg-slate-100 hover:ring-slate-300 transition-[color,background-color,border-color,box-shadow] duration-150">
+                  <button className="group relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 ring-1 ring-slate-200 hover:bg-slate-100 hover:ring-slate-300 duration-150">
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -455,7 +601,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={toggleMode}
-                    className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                    className="font-semibold text-primary-600 hover:text-primary-700"
                   >
                     {isLogin ? 'Create one' : 'Sign in'}
                   </button>

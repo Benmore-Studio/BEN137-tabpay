@@ -337,6 +337,36 @@
   animation: checkmark 0.6s ease-out forwards;
 }
 
+/* Smooth form field animations (GPU-accelerated) */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: slideInFromTop;
+}
+
+.slide-in-from-top-2 {
+  /* Included in slideInFromTop animation */
+}
+
+.duration-200 {
+  animation-duration: 200ms;
+}
+
 /* ===========================================
    COMPONENT BASE STYLES (CSS-only for Tailwind v4 compatibility)
    =========================================== */
