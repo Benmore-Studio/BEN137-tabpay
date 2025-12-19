@@ -20,19 +20,19 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.25,
-      delayChildren: 0.4,
+      staggerChildren: 0.1,   // Reduced from 0.25s - 60% faster
+      delayChildren: 0.15,     // Reduced from 0.4s - 62% faster
     },
   },
 };
 
 const stepVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },  // Reduced from y: 30
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.9,
+      duration: 0.4,  // Reduced from 0.9s - 55% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -43,8 +43,8 @@ const lineVariants = {
   visible: {
     scaleX: 1,
     transition: {
-      duration: 1.4,
-      delay: 0.6,
+      duration: 0.6,  // Reduced from 1.4s - 57% faster
+      delay: 0.2,     // Reduced from 0.6s - 67% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -55,9 +55,9 @@ export default function HowItWorksSection() {
 
   return (
     <section ref={ref} className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background gradient */}
+      {/* Background gradient (reduced blur for performance) */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-primary-50 via-transparent to-gold-50 rounded-full blur-3xl opacity-60" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-primary-50 via-transparent to-gold-50 rounded-full blur-xl opacity-60" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-6">
@@ -102,8 +102,8 @@ export default function HowItWorksSection() {
             <motion.div variants={stepVariants} className="relative text-center">
               <div className="relative inline-flex mb-8">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -4, boxShadow: '0 25px 50px -15px rgba(124,58,237,0.5)' }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  transition={{ duration: 0.2 }}
                   className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(124,58,237,0.4)]"
                 >
                   <QrCode className="w-14 h-14 text-white" />
@@ -127,8 +127,8 @@ export default function HowItWorksSection() {
             <motion.div variants={stepVariants} className="relative text-center">
               <div className="relative inline-flex mb-8">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -4, boxShadow: '0 25px 50px -15px rgba(212,175,55,0.5)' }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  transition={{ duration: 0.2 }}
                   className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)]"
                 >
                   <Martini className="w-14 h-14 text-white" />
@@ -152,8 +152,8 @@ export default function HowItWorksSection() {
             <motion.div variants={stepVariants} className="relative text-center">
               <div className="relative inline-flex mb-8">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -4, boxShadow: '0 25px 50px -15px rgba(34,197,94,0.5)' }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  transition={{ duration: 0.2 }}
                   className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(34,197,94,0.4)]"
                 >
                   <Zap className="w-14 h-14 text-white" />

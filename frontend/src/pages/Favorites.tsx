@@ -78,7 +78,7 @@ export default function Favorites() {
 
       {/* Sticky Checkout Bar - appears when cart has items */}
       {itemCount > 0 && (
-        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 p-4 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-40">
+        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-40">
           <div className="max-w-md mx-auto flex items-center gap-3">
             {/* Cart Summary */}
             <div className="flex-1 flex items-center gap-3">

@@ -190,12 +190,17 @@
     background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-600) 100%);
   }
 
-  /* Glassmorphism */
+  /* Glassmorphism - GPU Accelerated */
   .glass {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
+    /* GPU acceleration for smooth blur */
+    will-change: backdrop-filter, transform;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   .glass-dark {
@@ -203,6 +208,19 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    /* GPU acceleration for smooth blur */
+    will-change: backdrop-filter, transform;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* GPU acceleration utility for animated elements */
+  .gpu-accelerate {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   /* Glow effects */
@@ -374,6 +392,65 @@
 /* Note: Component styling is handled in React components
    using Tailwind utility classes directly. These base styles
    provide CSS custom properties and fallbacks. */
+
+/* ===========================================
+   REDUCED MOTION SUPPORT (Accessibility - WCAG 2.1)
+   =========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable expensive GPU effects for users with motion sensitivity */
+  .glass,
+  .glass-dark {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .glass-dark {
+    background: rgba(26, 22, 37, 0.95);
+  }
+
+  /* Remove blur decorations */
+  [class*="blur-"] {
+    filter: none !important;
+  }
+
+  /* Disable transforms that could cause motion sickness */
+  [class*="translate-"],
+  [class*="scale-"],
+  [class*="rotate-"] {
+    transform: none !important;
+  }
+}
+
+/* ===========================================
+   MOBILE OPTIMIZATIONS
+   =========================================== */
+
+@media (max-width: 768px) {
+  /* Faster animations on mobile for snappier feel */
+  :root {
+    --duration-fast: 100ms;
+    --duration-normal: 150ms;
+    --duration-slow: 200ms;
+  }
+
+  /* Reduce blur radius on mobile for better performance */
+  .glass,
+  .glass-dark {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
 
 /* ===========================================
    DARK MODE SUPPORT (Future)

@@ -16,7 +16,7 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm shadow-slate-900/5">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200/50 shadow-sm shadow-slate-900/5">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* Left section - Logo */}
         <div className="flex items-center gap-3">

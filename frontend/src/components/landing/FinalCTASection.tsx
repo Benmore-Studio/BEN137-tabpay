@@ -8,13 +8,12 @@ interface FinalCTASectionProps {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 30 },  // Removed scale, reduced y from 40
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.9,
+      duration: 0.5,  // Reduced from 0.9s - 44% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -25,19 +24,19 @@ const contentVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3,
+      staggerChildren: 0.08,  // Reduced from 0.2s - 60% faster
+      delayChildren: 0.15,     // Reduced from 0.3s - 50% faster
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 15 },  // Reduced from 20
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.4,  // Reduced from 0.7s - 43% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -49,18 +48,9 @@ export default function FinalCTASection({ isAuthenticated }: FinalCTASectionProp
   return (
     <section ref={ref} className="py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={isVisible ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0.8 }}
-          transition={{ duration: 1 }}
-          className="absolute -top-24 -left-24 w-96 h-96 bg-primary-100 rounded-full blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={isVisible ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0.8 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="absolute -bottom-24 -right-24 w-96 h-96 bg-gold-100 rounded-full blur-3xl"
-        />
+        {/* Static decorative blobs - no animation for performance */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary-100 rounded-full blur-xl opacity-40" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-gold-100 rounded-full blur-xl opacity-40" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-6">

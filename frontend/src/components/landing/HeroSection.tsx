@@ -12,8 +12,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.15,
+      staggerChildren: 0.08,  // Reduced from 0.2s - much snappier
+      delayChildren: 0.05,     // Reduced from 0.15s
     },
   },
 };
@@ -24,22 +24,21 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.9,
+      duration: 0.4,  // Reduced from 0.9s - 55% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
 
 const phoneVariants = {
-  hidden: { opacity: 0, x: 50, scale: 0.9 },
+  hidden: { opacity: 0, x: 30 },  // Removed scale for simpler animation
   visible: {
     opacity: 1,
     x: 0,
-    scale: 1,
     transition: {
-      duration: 1.2,
+      duration: 0.5,  // Reduced from 1.2s - 60% faster
       ease: [0.22, 1, 0.36, 1] as const,
-      delay: 0.3,
+      delay: 0.15,    // Reduced from 0.3s
     },
   },
 };
@@ -47,16 +46,11 @@ const phoneVariants = {
 export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
   return (
     <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
-      {/* Background - subtle gradient */}
+      {/* Background - subtle gradient (blur removed for performance) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-gold-500/5 to-transparent" />
-        {/* Accent blob for depth */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-gold-400/15 rounded-full blur-3xl"
-        />
+        {/* Accent blob - static, no animation, reduced blur */}
+        <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-gold-400/15 rounded-full blur-xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
@@ -122,16 +116,16 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
 
         {/* Trust indicators - Centered at bottom */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
+          transition={{ duration: 0.4, delay: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
           className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           {/* Rating */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
             className="flex items-center gap-2 sm:gap-3 bg-gradient-to-br from-gold-400 to-gold-600 text-white px-4 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl"
           >
             <div className="flex gap-0.5">
@@ -146,9 +140,9 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
 
           {/* User count */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 1.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
             className="flex items-center gap-2 sm:gap-3 bg-primary-600 text-white px-4 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl"
           >
             <Users className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -160,9 +154,9 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
 
           {/* Orders */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 1.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
             className="flex items-center gap-2 sm:gap-3 bg-slate-800 text-white px-4 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl"
           >
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />

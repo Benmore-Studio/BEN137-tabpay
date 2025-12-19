@@ -8,20 +8,19 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.3,
+      staggerChildren: 0.08,  // Reduced from 0.15s - 47% faster
+      delayChildren: 0.15,     // Reduced from 0.3s - 50% faster
     },
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },  // Removed scale, reduced y from 30
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.9,
+      duration: 0.4,  // Reduced from 0.9s - 55% faster
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -76,7 +75,7 @@ export default function FeaturesBentoGrid() {
           {/* HUGE primary feature - 7 columns, 2 rows */}
           <motion.div
             variants={cardVariants}
-            whileHover={{ y: -4, boxShadow: '0 20px 40px -15px rgba(0,0,0,0.12)' }}
+            whileHover={{ y: -2 }}
             transition={{ duration: 0.3 }}
             className="lg:col-span-7 lg:row-span-2 group relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] overflow-hidden border-t-[6px] border-primary-500"
           >
@@ -110,7 +109,7 @@ export default function FeaturesBentoGrid() {
             {/* GPS delivery */}
             <motion.div
               variants={cardVariants}
-              whileHover={{ y: -4, boxShadow: '0 20px 40px -15px rgba(0,0,0,0.12)' }}
+              whileHover={{ y: -2 }}
               transition={{ duration: 0.3 }}
               className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-gold-500"
             >
@@ -132,7 +131,7 @@ export default function FeaturesBentoGrid() {
             {/* Secure payments */}
             <motion.div
               variants={cardVariants}
-              whileHover={{ y: -4, boxShadow: '0 20px 40px -15px rgba(0,0,0,0.12)' }}
+              whileHover={{ y: -2 }}
               transition={{ duration: 0.3 }}
               className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-green-500"
             >
@@ -155,12 +154,12 @@ export default function FeaturesBentoGrid() {
           {/* Full-width rewards card */}
           <motion.div
             variants={cardVariants}
-            whileHover={{ y: -4, boxShadow: '0 30px 60px -15px rgba(0,0,0,0.5), inset 0 1px 0 0 rgba(255,255,255,0.05)' }}
+            whileHover={{ y: -2 }}
             transition={{ duration: 0.3 }}
             className="lg:col-span-10 group relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.05)] overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold-500/20 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary-500/10 to-transparent rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold-500/20 to-transparent rounded-full blur-xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary-500/10 to-transparent rounded-full blur-xl translate-y-1/2 -translate-x-1/2" />
 
             <div className="relative flex flex-col lg:flex-row lg:items-center gap-6 sm:gap-8">
               <div className="flex-1">
