@@ -2,12 +2,12 @@ import { Martini, Sparkles, Zap, Shield, Clock, MapPin, Bell, ChevronRight, Hear
 
 export default function PhoneMockup() {
   return (
-    <div className="relative mx-8 sm:mx-16 group/phone">
-      {/* Glow behind phone - animates on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-400/30 to-gold-400/30 rounded-[4rem] blur-3xl scale-110 group-hover/phone:scale-125 group-hover/phone:opacity-80 transition-all duration-700" />
+    <div className="relative mx-auto sm:mx-8 lg:mx-16 group/phone">
+      {/* Glow behind phone */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-400/30 to-gold-400/30 rounded-[4rem] blur-3xl scale-110" />
 
       {/* Phone frame */}
-      <div className="relative w-[320px] sm:w-[340px] lg:w-[300px] h-[640px] sm:h-[680px] lg:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(100,100,120,0.1)] ring-1 ring-white/10 group-hover/phone:shadow-[0_30px_60px_-15px_rgba(124,58,237,0.3),0_0_0_1px_rgba(100,100,120,0.1)] transition-all duration-500">
+      <div className="relative w-[280px] sm:w-[340px] lg:w-[300px] h-[560px] sm:h-[680px] lg:h-[600px] bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 rounded-[3rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(100,100,120,0.1)] ring-1 ring-white/10">
         {/* Highlight edge - top */}
         <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
 
@@ -163,7 +163,7 @@ export default function PhoneMockup() {
       </div>
 
       {/* Floating notification card - top left */}
-      <div className="absolute left-0 sm:-left-6 top-16 -translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
+      <div className="hidden sm:block absolute -left-6 top-16 -translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/30">
             <Shield className="w-4 h-4 text-white" />
@@ -176,13 +176,13 @@ export default function PhoneMockup() {
       </div>
 
       {/* Floating stat card - bottom right */}
-      <div className="absolute right-0 sm:-right-6 bottom-28 translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3 hover:scale-105 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-300">
+      <div className="hidden sm:block absolute -right-6 bottom-28 translate-x-1/2 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] p-3">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/30">
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-lg font-bold text-slate-900">~8 min</p>
+            <p className="text-lg font-bold text-slate-900 tabular-nums">~8 min</p>
             <p className="text-[10px] text-slate-500">Avg. delivery</p>
           </div>
         </div>

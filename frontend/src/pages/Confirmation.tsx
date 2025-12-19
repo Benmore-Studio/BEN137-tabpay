@@ -68,7 +68,7 @@ export default function Confirmation() {
             <p className="text-slate-500 mt-1">Thank you for your order</p>
             <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 ring-1 ring-slate-200">
               <span className="text-sm text-slate-500">Order</span>
-              <span className="text-base font-mono font-bold text-primary-600">
+              <span className="text-base tabular-nums font-bold text-primary-600 tracking-tight">
                 #{orderId}
               </span>
             </div>

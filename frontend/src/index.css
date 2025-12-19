@@ -67,8 +67,6 @@
 
   /* Typography */
   --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-display: 'DM Sans', var(--font-family-sans);
-  --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
   --font-family-script: 'Dancing Script', cursive;
 
   /* Shadows - Warm tinted */
@@ -123,21 +121,19 @@
     }
   }
 
-  /* Display font for headings */
+  /* Headings - use Inter with tighter tracking */
   h1, h2, h3 {
-    font-family: var(--font-family-display);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     color: var(--color-slate-900);
   }
 
-  h1 { font-size: 2.25rem; line-height: 1.2; }
-  h2 { font-size: 1.5rem; line-height: 1.3; }
-  h3 { font-size: 1.25rem; line-height: 1.4; }
+  h1 { font-size: 2.25rem; line-height: 1.15; }
+  h2 { font-size: 1.5rem; line-height: 1.25; }
+  h3 { font-size: 1.25rem; line-height: 1.35; }
 
-  /* Monospace for prices */
-  .font-mono, .price {
-    font-family: var(--font-family-mono);
+  /* Tabular nums for prices - keeps numbers aligned */
+  .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 }

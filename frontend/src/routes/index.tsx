@@ -14,7 +14,12 @@ import Confirmation from '../pages/Confirmation';
 import ServiceBars from '../pages/ServiceBars';
 import Orders from '../pages/Orders';
 import Favorites from '../pages/Favorites';
-import Profile from '../pages/Profile';
+
+// Account pages
+import AccountSettings from '../pages/AccountSettings';
+
+// Error pages
+import NotFound from '../pages/NotFound';
 
 export const router = createBrowserRouter([
   // ================================
@@ -89,14 +94,14 @@ export const router = createBrowserRouter([
         element: <Orders />,
       },
 
-      // Profile/Account
+      // Account/Settings
       {
         path: '/account',
-        element: <Profile />,
+        element: <AccountSettings />,
       },
       {
         path: '/profile',
-        element: <Profile />,
+        element: <Navigate to="/account" replace />,
       },
     ],
   },
@@ -111,4 +116,12 @@ export const router = createBrowserRouter([
   //     { path: '/admin', element: <Dashboard /> },
   //   ],
   // },
+
+  // ================================
+  // 404 Catch-all
+  // ================================
+  {
+    path: '*',
+    element: <NotFound />,
+  },
 ]);

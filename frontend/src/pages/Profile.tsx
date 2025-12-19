@@ -152,7 +152,7 @@ export default function Profile() {
                         key={percent}
                         onClick={() => handleTipChange(percent)}
                         className={`
-                          px-4 py-2.5 rounded-lg text-sm font-medium transition-all min-h-[48px]
+                          px-4 py-2.5 rounded-lg text-sm font-medium transition-[color,background-color,border-color,box-shadow] duration-150 min-h-[48px]
                           ${
                             profile.preferences.defaultTipPercent === percent
                               ? 'bg-primary-600 text-white shadow-md'

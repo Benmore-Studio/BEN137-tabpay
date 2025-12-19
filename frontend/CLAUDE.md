@@ -99,14 +99,14 @@ Premium warmth, casino luxury, rewards/success states
 #### Font Stack
 ```css
 --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
---font-display: 'DM Sans', var(--font-sans);
---font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 ```
 
 #### Usage
-- **Headlines:** DM Sans (Bold/Semibold) - confident, modern
-- **Body:** Inter - exceptional legibility
-- **Prices/Numbers:** JetBrains Mono - precise, trustworthy
+- **Everything:** Inter with weight hierarchy
+- **Headlines:** Inter Bold (700) with tight letter-spacing (-0.025em)
+- **Body:** Inter Regular (400) and Medium (500)
+- **Prices/Numbers:** Inter Semibold (600) with `tabular-nums` for alignment
+- **Emphasis:** Use font-weight for hierarchy, not different typefaces
 
 #### Type Scale
 ```css

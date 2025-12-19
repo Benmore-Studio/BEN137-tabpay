@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Martini } from 'lucide-react';
 import Badge from '../ui/Badge';
@@ -11,6 +11,7 @@ interface HeaderProps {
 
 export default function Header({ cartCount = 0, showBackButton = false, title }: HeaderProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -20,10 +21,10 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
         {/* Left section - Logo */}
         <div className="flex items-center gap-3">
           {showBackButton ? (
-            <Link
-              to="/menu"
+            <button
+              onClick={() => navigate(-1)}
               className="p-2 -ml-2 rounded-xl hover:bg-slate-100 transition-colors"
-              aria-label="Go back to menu"
+              aria-label="Go back"
             >
               <svg
                 className="w-6 h-6 text-slate-700"
@@ -38,7 +39,7 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-            </Link>
+            </button>
           ) : null}
           {title ? (
             <h1 className="text-lg font-semibold text-slate-900">{title}</h1>

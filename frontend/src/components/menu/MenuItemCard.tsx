@@ -3,11 +3,10 @@ import type { MenuItem } from '../../types';
 
 interface MenuItemCardProps {
   item: MenuItem;
-  onQuickAdd: () => void;
   onViewDetails: () => void;
 }
 
-export default function MenuItemCard({ item, onQuickAdd, onViewDetails }: MenuItemCardProps) {
+export default function MenuItemCard({ item, onViewDetails }: MenuItemCardProps) {
   return (
     <div
       className={`

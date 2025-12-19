@@ -207,7 +207,7 @@ export default function Checkout() {
                     setPaymentMethod(method.type);
                   }}
                   className={`
-                    w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                    w-full flex items-center gap-3 p-3.5 rounded-xl transition-[color,background-color,border-color,box-shadow] duration-150
                     ${
                       selectedPaymentId === method.id
                         ? 'ring-2 ring-primary-500 bg-primary-50'
@@ -253,7 +253,7 @@ export default function Checkout() {
               <button
                 onClick={() => setPaymentMethod('card')}
                 className={`
-                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-[color,background-color,border-color,box-shadow] duration-150
                   ${
                     paymentMethod === 'card'
                       ? 'ring-2 ring-primary-500 bg-primary-50'
@@ -268,7 +268,7 @@ export default function Checkout() {
               <button
                 onClick={() => setPaymentMethod('apple-pay')}
                 className={`
-                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-[color,background-color,border-color,box-shadow] duration-150
                   ${
                     paymentMethod === 'apple-pay'
                       ? 'ring-2 ring-primary-500 bg-primary-50'
@@ -283,7 +283,7 @@ export default function Checkout() {
               <button
                 onClick={() => setPaymentMethod('google-pay')}
                 className={`
-                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-all
+                  w-full flex items-center gap-3 p-3.5 rounded-xl transition-[color,background-color,border-color,box-shadow] duration-150
                   ${
                     paymentMethod === 'google-pay'
                       ? 'ring-2 ring-primary-500 bg-primary-50'

@@ -24,7 +24,7 @@ export default function Price({
   return (
     <span
       className={`
-        font-semibold
+        font-semibold tabular-nums
         ${sizes[size]}
         ${strikethrough ? 'line-through text-gray-400' : 'text-gray-900'}
         ${className}

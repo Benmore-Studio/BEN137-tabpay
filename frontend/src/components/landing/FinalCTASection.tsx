@@ -28,7 +28,7 @@ export default function FinalCTASection({ isAuthenticated }: FinalCTASectionProp
             </p>
             <div className="mb-6">
               <Link to={isAuthenticated ? "/menu" : "/auth"}>
-                <Button size="lg" className="px-12 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300">
+                <Button size="lg" className="px-12 h-14 text-lg bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-[color,background-color,border-color,box-shadow,transform] duration-300">
                   {isAuthenticated ? 'Start Ordering' : 'Get Started Free'}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>

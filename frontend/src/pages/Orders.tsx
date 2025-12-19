@@ -72,7 +72,7 @@ function OrderCard({ order }: { order: Order }) {
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold text-primary-600">#{order.id}</span>
+              <span className="text-xs tabular-nums font-bold text-primary-600 tracking-tight">#{order.id}</span>
               <span className={`
                 px-2 py-0.5 text-xs font-medium rounded-full
                 ${order.status === 'delivered' ? 'bg-green-100 text-green-700' :
@@ -188,7 +188,7 @@ export default function Orders() {
 
   return (
     <AppLayout cartCount={0} showBackButton={false}>
-      <div className="px-4 pt-6 pb-24 md:pb-8">
+      <div className="px-4 pt-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Order History</h1>
           <p className="text-slate-500 mt-1">View your past orders</p>

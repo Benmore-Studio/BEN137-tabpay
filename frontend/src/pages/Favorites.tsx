@@ -22,7 +22,7 @@ export default function Favorites() {
 
   return (
     <AppLayout cartCount={0} showBackButton={false}>
-      <div className="px-4 pt-6 pb-24 md:pb-8">
+      <div className="px-4 pt-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Favorites</h1>
           <p className="text-slate-500 mt-1">Your saved menu items</p>

@@ -32,30 +32,36 @@ export default function CategoryNav({
   }, [activeCategory]);
 
   return (
-    <nav
-      ref={navRef}
-      className="sticky top-14 z-40 bg-slate-50/80 backdrop-blur-lg border-b border-slate-200/50 overflow-x-auto scrollbar-hide"
-      aria-label="Menu categories"
-    >
-      <div className="max-w-7xl mx-auto flex gap-2 px-4 py-3 min-w-max">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            ref={category.id === activeCategory ? (el) => {
-              if (el) {
-                activeButtonRef.current = el.querySelector('button');
-              }
-            } : undefined}
-          >
-            <CategoryChip
-              label={category.name}
-              active={category.id === activeCategory}
-              count={getCategoryItemCount(category.id)}
-              onClick={() => onCategoryChange(category.id)}
-            />
-          </div>
-        ))}
-      </div>
-    </nav>
+    <div className="sticky top-14 z-40 bg-slate-50/80 backdrop-blur-lg border-b border-slate-200/50 relative">
+      {/* Fade indicators for scroll */}
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-slate-50/80 to-transparent pointer-events-none z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50/80 to-transparent pointer-events-none z-10" />
+
+      <nav
+        ref={navRef}
+        className="overflow-x-auto overflow-y-hidden scrollbar-hide"
+        aria-label="Menu categories"
+      >
+        <div className="flex gap-2 px-4 py-3 min-w-max">
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              ref={category.id === activeCategory ? (el) => {
+                if (el) {
+                  activeButtonRef.current = el.querySelector('button');
+                }
+              } : undefined}
+            >
+              <CategoryChip
+                label={category.name}
+                active={category.id === activeCategory}
+                count={getCategoryItemCount(category.id)}
+                onClick={() => onCategoryChange(category.id)}
+              />
+            </div>
+          ))}
+        </div>
+      </nav>
+    </div>
   );
 }
