@@ -100,7 +100,7 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
                   whileHover={{ y: -2, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:px-10 h-14 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40"
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-10 h-14 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40"
                 >
                   {isAuthenticated ? 'Start Ordering' : 'Get Started'}
                   <ArrowRight className="w-5 h-5" />
