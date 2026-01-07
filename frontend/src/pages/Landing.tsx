@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Martini, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context';
 import { Button } from '../components';
@@ -8,10 +9,28 @@ import HowItWorksSection from '../components/landing/HowItWorksSection';
 import FinalCTASection from '../components/landing/FinalCTASection';
 import LandingFooter from '../components/landing/LandingFooter';
 
+function isAppInstalled(): boolean {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as unknown as { standalone?: boolean }).standalone === true
+  );
+}
+
 export default function Landing() {
   const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const [isStandalone, setIsStandalone] = useState(false);
 
-  if (isLoading) {
+  // Check if running as installed PWA and redirect to menu
+  useEffect(() => {
+    if (isAppInstalled()) {
+      setIsStandalone(true);
+      navigate('/menu', { replace: true });
+    }
+  }, [navigate]);
+
+  // Show loading state while checking auth or redirecting PWA users
+  if (isLoading || isStandalone) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="relative">

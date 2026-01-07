@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['martini.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: ['martini.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon-180x180.png', 'pwa-icon-source.svg'],
       manifest: {
         name: 'TabPay - Casino Ordering',
         short_name: 'TabPay',
@@ -18,6 +18,11 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
+            type: 'image/png'
+          },
+          {
             src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png'
@@ -26,6 +31,12 @@ export default defineConfig({
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       },

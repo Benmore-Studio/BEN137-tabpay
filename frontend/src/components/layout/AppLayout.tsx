@@ -33,7 +33,7 @@ export default function AppLayout({
       <main
         className={`
           ${showHeader ? 'pt-14' : ''}
-          ${showBottomNav ? 'pb-20 md:pb-0' : ''}
+          ${showBottomNav ? 'pb-24 md:pb-0' : ''}
           ${className}
         `}
       >

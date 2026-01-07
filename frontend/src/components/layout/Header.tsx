@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Martini } from 'lucide-react';
 import Badge from '../ui/Badge';
+import { useProfile } from '../../context';
 
 interface HeaderProps {
   cartCount?: number;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export default function Header({ cartCount = 0, showBackButton = false, title }: HeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isGuest } = useProfile();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -65,26 +67,31 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
           >
             Menu
           </Link>
-          <Link
-            to="/orders"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/orders')
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            Orders
-          </Link>
-          <Link
-            to="/account"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/account')
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            Account
-          </Link>
+          {/* Only show Orders and Account for logged-in users */}
+          {!isGuest && (
+            <>
+              <Link
+                to="/orders"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/orders')
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                Orders
+              </Link>
+              <Link
+                to="/account"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/account')
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                Account
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Right section - Cart */}

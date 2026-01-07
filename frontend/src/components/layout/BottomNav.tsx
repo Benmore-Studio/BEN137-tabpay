@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Martini, User, ShoppingCart, Receipt, Heart } from 'lucide-react';
 import { motion, LayoutGroup } from 'framer-motion';
-import { useCart } from '../../context';
+import { useCart, useProfile } from '../../context';
 
 interface NavItem {
   path: string;
@@ -21,8 +21,14 @@ const navItems: NavItem[] = [
 export default function BottomNav() {
   const location = useLocation();
   const { itemCount } = useCart();
+  const { isGuest } = useProfile();
   const [badgeAnimating, setBadgeAnimating] = useState(false);
   const prevItemCount = useRef(itemCount);
+
+  // Guests don't need bottom nav - they access cart via header
+  if (isGuest) {
+    return null;
+  }
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -39,7 +45,7 @@ export default function BottomNav() {
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-slate-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] safe-bottom">
       <LayoutGroup>
-        <div className="flex items-center justify-around h-16 px-2">
+        <div className="flex items-center justify-around h-20 px-2 pb-2">
           {navItems.map(({ path, label, icon: Icon }) => {
             const active = isActive(path);
             const isCart = path === '/cart';

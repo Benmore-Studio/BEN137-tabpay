@@ -3,7 +3,7 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppLayout, Button, Price, QuantitySelector, EmptyState } from '../components';
-import { useCart } from '../context';
+import { useCart, useProfile } from '../context';
 
 const cartItemVariants = {
   initial: { opacity: 0, x: -20, height: 0 },
@@ -24,14 +24,18 @@ const cartItemVariants = {
 export default function Cart() {
   const navigate = useNavigate();
   const { items, itemCount, subtotal, updateQuantity, removeItem, clearCart } = useCart();
+  const { isGuest } = useProfile();
 
   const tax = subtotal * 0.0875; // 8.75% tax
   const total = subtotal + tax;
 
+  // Show bottom nav for logged-in users, hide for guests
+  const showBottomNav = !isGuest;
+
   if (items.length === 0) {
     return (
-      <AppLayout showBackButton headerTitle="Cart" showBottomNav={false}>
-        <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <AppLayout showBackButton headerTitle="Cart" showBottomNav={showBottomNav}>
+        <div className={`flex items-center justify-center ${showBottomNav ? 'h-[calc(100vh-4rem-5rem)]' : 'h-[calc(100vh-4rem)]'}`}>
           <EmptyState
             icon={ShoppingBag}
             title="Your cart is empty"
@@ -45,8 +49,9 @@ export default function Cart() {
   }
 
   return (
-    <AppLayout showBackButton headerTitle="Cart" cartCount={itemCount} showBottomNav={false}>
-      <div className="pb-48 pt-2">
+    <AppLayout showBackButton headerTitle="Cart" cartCount={itemCount} showBottomNav={showBottomNav}>
+      {/* Extra padding at bottom for footer + bottom nav if showing */}
+      <div className={`pt-2 ${showBottomNav ? 'pb-64' : 'pb-48'}`}>
         {/* Cart Items */}
         <div className="px-4 space-y-3">
           <AnimatePresence mode="popLayout">
@@ -143,8 +148,8 @@ export default function Cart() {
         </div>
       </div>
 
-      {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200/50 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
+      {/* Fixed Footer - position above bottom nav when showing */}
+      <div className={`fixed left-0 right-0 bg-white border-t border-slate-200/50 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-40 ${showBottomNav ? 'bottom-20' : 'bottom-0'}`}>
         {/* Price Breakdown */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-sm">

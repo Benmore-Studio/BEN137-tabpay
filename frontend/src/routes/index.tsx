@@ -5,6 +5,7 @@ import { MobileOnlyLayout } from '../components';
 import Landing from '../pages/Landing';
 import Auth from '../pages/Auth';
 import Install from '../pages/Install';
+import GuestEntry from '../pages/GuestEntry';
 
 // Mobile-only ordering flow
 import Menu from '../pages/Menu';
@@ -37,6 +38,12 @@ export const router = createBrowserRouter([
   {
     path: '/install',
     element: <Install />,
+  },
+  // Guest entry point - simulates QR code scan
+  // Usage: /order?venue=venue-001&bar=bar-001&location=Table-42
+  {
+    path: '/order',
+    element: <GuestEntry />,
   },
 
   // Legacy routes redirect to /auth
