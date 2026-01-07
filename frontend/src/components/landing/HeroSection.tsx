@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, Star, Users, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 
 interface HeroSectionProps {
@@ -19,42 +20,81 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center mb-12 sm:mb-16">
           {/* Left: Text content */}
-          <div className="text-center lg:text-left">
+          <motion.div
+            className="text-center lg:text-left"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-primary-50 to-primary-100/50 border border-primary-200/60 mb-4 sm:mb-6 shadow-sm shadow-primary-500/10">
+            <motion.div
+              className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-primary-50 to-primary-100/50 border border-primary-200/60 mb-4 sm:mb-6 shadow-sm shadow-primary-500/10"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600" />
               <span className="text-xs sm:text-sm font-medium text-primary-700">Casino drink ordering, reimagined</span>
-            </div>
+            </motion.div>
 
-            <h1 className="text-[2rem] leading-[1.1] sm:text-[3rem] sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[0.95] font-extrabold text-slate-900 tracking-tighter mb-6 sm:mb-8">
+            <motion.h1
+              className="text-[2rem] leading-[1.1] sm:text-[3rem] sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[0.95] font-extrabold text-slate-900 tracking-tighter mb-6 sm:mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
               Order drinks.{' '}
               <span className="text-gradient-gold">Skip the wait.</span>{' '}
               Stay in the game.
-            </h1>
+            </motion.h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0">
+            <motion.p
+              className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               Get drinks delivered right to your table or slot machine. No waiting, no missing a beat.
-            </p>
+            </motion.p>
 
             {/* CTA Button */}
-            <div className="flex justify-center lg:justify-start">
+            <motion.div
+              className="flex justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
               <Link to={isAuthenticated ? "/menu" : "/auth"}>
-                <button className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-10 h-14 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-xl shadow-primary-500/30 hover:shadow-primary-500/40 hover:from-primary-700 hover:to-primary-800">
+                <motion.button
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-10 h-14 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-xl shadow-primary-500/30 hover:shadow-primary-500/40 hover:from-primary-700 hover:to-primary-800"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
                   {isAuthenticated ? 'Start Ordering' : 'Get Started'}
                   <ArrowRight className="w-5 h-5" />
-                </button>
+                </motion.button>
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right: Phone mockup */}
-          <div className="relative flex justify-center lg:justify-end pt-8 lg:pt-0">
+          <motion.div
+            className="relative flex justify-center lg:justify-end pt-8 lg:pt-0"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+          >
             <PhoneMockup />
-          </div>
+          </motion.div>
         </div>
 
         {/* Trust indicators */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+        >
           {/* Rating */}
           <div className="flex items-center gap-2 sm:gap-3 bg-gradient-to-br from-gold-400 to-gold-600 text-white px-4 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl">
             <div className="flex gap-0.5">
@@ -84,7 +124,7 @@ export default function HeroSection({ isAuthenticated }: HeroSectionProps) {
               <div className="text-[10px] sm:text-xs opacity-90">orders</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

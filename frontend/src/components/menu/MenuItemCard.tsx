@@ -1,5 +1,6 @@
 import { Price } from '../ui';
 import type { MenuItem } from '../../types';
+import { getDisplayPrice } from '../../utils/pricing';
 
 interface MenuItemCardProps {
   item: MenuItem;
@@ -27,7 +28,7 @@ export default function MenuItemCard({ item, onViewDetails }: MenuItemCardProps)
         }
       }}
       role="button"
-      aria-label={`${item.name} - ${item.price}. Click to view details and add to cart`}
+      aria-label={`${item.name} - $${getDisplayPrice(item.price).toFixed(2)}. Click to view details and add to cart`}
     >
       {/* Subtle gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary-500 via-gold-400 to-primary-500" />
@@ -68,7 +69,7 @@ export default function MenuItemCard({ item, onViewDetails }: MenuItemCardProps)
               <span className="text-xs text-red-600 font-medium mt-1 inline-block">Unavailable</span>
             )}
           </div>
-          <Price amount={item.price} className="flex-shrink-0 text-lg font-bold text-primary-600" />
+          <Price amount={getDisplayPrice(item.price)} className="flex-shrink-0 text-lg font-bold text-primary-600" />
         </div>
 
         <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-auto">{item.description}</p>

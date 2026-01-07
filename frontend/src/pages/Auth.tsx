@@ -6,6 +6,16 @@ import { useAuth } from '../context';
 
 type AuthMode = 'login' | 'register';
 
+/**
+ * Check if the app is already installed as a PWA (standalone mode)
+ */
+function isAppInstalled(): boolean {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as unknown as { standalone?: boolean }).standalone === true
+  );
+}
+
 export default function Auth() {
   const navigate = useNavigate();
   const { login, register } = useAuth();
@@ -82,7 +92,8 @@ export default function Auth() {
       try {
         const success = await login({ email, password });
         if (success) {
-          navigate('/menu');
+          // If app is already installed as PWA, go to menu; otherwise show install instructions
+          navigate(isAppInstalled() ? '/menu' : '/install');
         } else {
           setError('Invalid email or password');
         }
@@ -104,7 +115,8 @@ export default function Auth() {
           password,
         });
         if (success) {
-          navigate('/install');
+          // If app is already installed as PWA, go to menu; otherwise show install instructions
+          navigate(isAppInstalled() ? '/menu' : '/install');
         }
       } finally {
         setIsLoading(false);

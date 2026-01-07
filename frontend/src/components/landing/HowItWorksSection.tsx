@@ -1,5 +1,19 @@
 import { Zap, QrCode, Martini, Clock, CreditCard, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionBadge from './SectionBadge';
+
+const stepVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.5,
+      ease: 'easeOut' as const,
+    },
+  }),
+};
 
 export default function HowItWorksSection() {
   return (
@@ -10,7 +24,13 @@ export default function HowItWorksSection() {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+        >
           <SectionBadge
             icon={<Zap className="w-4 h-4 text-primary-600" />}
             text="Simple as 1-2-3"
@@ -22,18 +42,32 @@ export default function HowItWorksSection() {
           <p className="text-xl text-slate-600 leading-[1.6] max-w-2xl mx-auto">
             From scan to sip in under 10 minutes. No app download required.
           </p>
-        </div>
+        </motion.div>
 
         {/* Steps */}
         <div className="relative max-w-4xl mx-auto">
           {/* Connecting line - desktop only */}
-          <div className="hidden lg:block absolute top-[60px] left-[calc(16.67%+48px)] right-[calc(16.67%+48px)] h-[2px]">
+          <motion.div
+            className="hidden lg:block absolute top-[60px] left-[calc(16.67%+48px)] right-[calc(16.67%+48px)] h-[2px]"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            style={{ transformOrigin: 'left' }}
+          >
             <div className="h-full bg-gradient-to-r from-primary-300 via-gold-300 to-green-300 rounded-full" />
-          </div>
+          </motion.div>
 
           <div className="grid sm:grid-cols-3 gap-12 lg:gap-8">
             {/* Step 1 */}
-            <div className="relative text-center">
+            <motion.div
+              className="relative text-center"
+              variants={stepVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              custom={0}
+            >
               <div className="relative inline-flex mb-8">
                 <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(124,58,237,0.4)]">
                   <QrCode className="w-14 h-14 text-white" />
@@ -51,10 +85,17 @@ export default function HowItWorksSection() {
                 <Clock className="w-3.5 h-3.5" />
                 <span>2 seconds</span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Step 2 */}
-            <div className="relative text-center">
+            <motion.div
+              className="relative text-center"
+              variants={stepVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              custom={1}
+            >
               <div className="relative inline-flex mb-8">
                 <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)]">
                   <Martini className="w-14 h-14 text-white" />
@@ -72,10 +113,17 @@ export default function HowItWorksSection() {
                 <CreditCard className="w-3.5 h-3.5" />
                 <span>One-tap checkout</span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Step 3 */}
-            <div className="relative text-center">
+            <motion.div
+              className="relative text-center"
+              variants={stepVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              custom={2}
+            >
               <div className="relative inline-flex mb-8">
                 <div className="w-[120px] h-[120px] rounded-[2rem] bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-[0_20px_40px_-15px_rgba(34,197,94,0.4)]">
                   <Zap className="w-14 h-14 text-white" />
@@ -93,7 +141,7 @@ export default function HowItWorksSection() {
                 <MapPin className="w-3.5 h-3.5" />
                 <span>~8 min delivery</span>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

@@ -1,10 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import { AlertCircle } from 'lucide-react';
-import { AppLayout, Button, Card, EmptyState } from '../components';
-import { useCart } from '../context';
+import { motion } from 'framer-motion';
+import { AppLayout, Button, Card, EmptyState, NotificationPrompt } from '../components';
+import { useCart, useNotifications } from '../context';
 import type { OrderStatus } from '../types';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: 'easeOut' as const },
+  },
+};
 
 const orderStages: { status: OrderStatus; label: string }[] = [
   { status: 'received', label: 'Order Received' },
@@ -18,7 +39,31 @@ const currentStatus: OrderStatus = 'preparing';
 
 export default function Confirmation() {
   const { orderId } = useParams<{ orderId: string }>();
-  const { queuePosition, setQueuePosition, serviceBar } = useCart();
+  const { queuePosition, setQueuePosition, serviceBar, location } = useCart();
+  const {
+    permissionState,
+    notifyOrderStatus,
+    hasPromptedForPermission,
+    setHasPromptedForPermission,
+  } = useNotifications();
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
+
+  // Show notification prompt after initial delay (if not previously prompted)
+  useEffect(() => {
+    if (!hasPromptedForPermission && permissionState.isSupported && permissionState.permission !== 'granted') {
+      const timer = setTimeout(() => {
+        setShowNotificationPrompt(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasPromptedForPermission, permissionState.isSupported, permissionState.permission]);
+
+  // Notify on status changes (when permission granted)
+  useEffect(() => {
+    if (permissionState.permission === 'granted' && orderId) {
+      notifyOrderStatus(orderId, currentStatus);
+    }
+  }, [currentStatus, orderId, notifyOrderStatus, permissionState.permission]);
 
   // Handle missing order ID
   if (!orderId) {
@@ -58,12 +103,22 @@ export default function Confirmation() {
           <div className="absolute -bottom-40 -left-40 w-[300px] h-[300px] bg-primary-100 rounded-full blur-3xl opacity-40" />
         </div>
 
-        <div className="relative">
+        <motion.div
+          className="relative"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Success Header */}
-          <div className="text-center mb-8">
-            <div className="w-24 h-24 mx-auto mb-5 rounded-full bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-500/30 animate-scale-in">
+          <motion.div className="text-center mb-8" variants={itemVariants}>
+            <motion.div
+              className="w-24 h-24 mx-auto mb-5 rounded-full bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-500/30"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', duration: 0.6, delay: 0.1 }}
+            >
               <CheckCircleIcon className="w-14 h-14 text-white" />
-            </div>
+            </motion.div>
             <h1 className="text-2xl font-bold text-slate-900">Order Confirmed!</h1>
             <p className="text-slate-500 mt-1">Thank you for your order</p>
             <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 ring-1 ring-slate-200">
@@ -72,41 +127,63 @@ export default function Confirmation() {
                 #{orderId}
               </span>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Delivery Location */}
+          {location && (
+            <motion.div variants={itemVariants}>
+              <Card variant="elevated" className="mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-md shadow-green-500/20">
+                    <MapPinIcon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-500">Delivering to</p>
+                    <p className="text-lg font-bold text-slate-900">{location}</p>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Queue Position */}
           {queuePosition && queuePosition > 0 && (
-            <Card variant="elevated" className="mb-5">
-              <div className="text-center py-2">
-                <p className="text-sm text-slate-500 mb-1">Your Position in Queue</p>
-                <div className="flex items-center justify-center gap-2">
-                  <p className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
-                    #{queuePosition}
-                  </p>
-                  <span className="text-sm text-slate-500">in line</span>
+            <motion.div variants={itemVariants}>
+              <Card variant="elevated" className="mb-5">
+                <div className="text-center py-2">
+                  <p className="text-sm text-slate-500 mb-1">Your Position in Queue</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
+                      #{queuePosition}
+                    </p>
+                    <span className="text-sm text-slate-500">in line</span>
+                  </div>
+                  {serviceBar && (
+                    <p className="text-xs text-slate-400 mt-1">{serviceBar.name}</p>
+                  )}
                 </div>
-                {serviceBar && (
-                  <p className="text-xs text-slate-400 mt-1">{serviceBar.name}</p>
-                )}
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           )}
 
           {/* Scheduled Time / Estimated Time */}
-          <Card variant="elevated" className="mb-5">
-            <div className="text-center py-2">
-              <p className="text-sm text-slate-500 mb-1">
-                {/* TODO: Get isASAP from order data when available */}
-                Estimated Delivery Time
-              </p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-                {serviceBar ? `${serviceBar.estimatedWaitMinutes}-${serviceBar.estimatedWaitMinutes + 5} min` : '15-20 min'}
-              </p>
-            </div>
-          </Card>
+          <motion.div variants={itemVariants}>
+            <Card variant="elevated" className="mb-5">
+              <div className="text-center py-2">
+                <p className="text-sm text-slate-500 mb-1">
+                  {/* TODO: Get isASAP from order data when available */}
+                  Estimated Delivery Time
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                  {serviceBar ? `${serviceBar.estimatedWaitMinutes}-${serviceBar.estimatedWaitMinutes + 5} min` : '15-20 min'}
+                </p>
+              </div>
+            </Card>
+          </motion.div>
 
           {/* Order Status Tracker */}
-          <Card variant="elevated" className="mb-5">
+          <motion.div variants={itemVariants}>
+            <Card variant="elevated" className="mb-5">
             <h2 className="font-bold text-slate-900 mb-4">Order Status</h2>
             <div className="relative">
               {/* Progress Line */}
@@ -178,32 +255,50 @@ export default function Confirmation() {
                 })}
               </div>
             </div>
-          </Card>
+            </Card>
+          </motion.div>
 
           {/* Help Text */}
-          <div className="mb-6 p-4 rounded-xl bg-slate-100 ring-1 ring-slate-200 text-center">
+          <motion.div
+            className="mb-6 p-4 rounded-xl bg-slate-100 ring-1 ring-slate-200 text-center"
+            variants={itemVariants}
+          >
             <p className="text-sm text-slate-600">
               A server will bring your order to your location.
               <br />
               <span className="font-medium text-slate-700">Please stay nearby to receive your order.</span>
             </p>
-          </div>
+          </motion.div>
 
           {/* Actions */}
-          <div className="mt-auto space-y-3">
+          <motion.div className="mt-auto space-y-3" variants={itemVariants}>
             <Link to="/menu" className="block">
-              <Button variant="primary" className="w-full">
-                Order More
-              </Button>
+              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Button variant="primary" className="w-full">
+                  Order More
+                </Button>
+              </motion.div>
             </Link>
             <Link to="/" className="block">
-              <Button variant="secondary" className="w-full">
-                Back to Home
-              </Button>
+              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Button variant="secondary" className="w-full">
+                  Back to Home
+                </Button>
+              </motion.div>
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
+
+      {/* Notification Permission Prompt */}
+      {showNotificationPrompt && (
+        <NotificationPrompt
+          onDismiss={() => {
+            setShowNotificationPrompt(false);
+            setHasPromptedForPermission(true);
+          }}
+        />
+      )}
     </AppLayout>
   );
 }

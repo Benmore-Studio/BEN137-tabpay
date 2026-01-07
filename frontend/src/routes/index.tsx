@@ -10,6 +10,7 @@ import Install from '../pages/Install';
 import Menu from '../pages/Menu';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
+import CheckoutSuccess from '../pages/CheckoutSuccess';
 import Confirmation from '../pages/Confirmation';
 import ServiceBars from '../pages/ServiceBars';
 import Orders from '../pages/Orders';
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
       {
         path: '/checkout',
         element: <Checkout />,
+      },
+      {
+        path: '/checkout-success/:orderId',
+        element: <CheckoutSuccess />,
       },
       {
         path: '/confirmation/:orderId',

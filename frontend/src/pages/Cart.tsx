@@ -1,8 +1,25 @@
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { ShoppingBag } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AppLayout, Button, Price, QuantitySelector, EmptyState } from '../components';
 import { useCart } from '../context';
+
+const cartItemVariants = {
+  initial: { opacity: 0, x: -20, height: 0 },
+  animate: {
+    opacity: 1,
+    x: 0,
+    height: 'auto',
+    transition: { duration: 0.3, ease: 'easeOut' as const },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    height: 0,
+    transition: { duration: 0.2, ease: 'easeIn' as const },
+  },
+};
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -32,8 +49,17 @@ export default function Cart() {
       <div className="pb-48 pt-2">
         {/* Cart Items */}
         <div className="px-4 space-y-3">
-          {items.map((item) => (
-            <div key={item.id} className="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-4">
+          <AnimatePresence mode="popLayout">
+            {items.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                variants={cartItemVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-4"
+              >
               <div className="flex gap-3">
                 {/* Item Image */}
                 <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-slate-100">
@@ -101,8 +127,9 @@ export default function Cart() {
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Clear Cart */}

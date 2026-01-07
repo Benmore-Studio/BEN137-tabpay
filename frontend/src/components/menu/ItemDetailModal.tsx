@@ -4,6 +4,7 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { Modal, Button, QuantitySelector, Price, Input } from '../ui';
 import { useFavorites } from '../../context';
 import type { MenuItem, SelectedModifier, ModifierOption } from '../../types';
+import { getDisplayPrice, getModifierPrice } from '../../utils/pricing';
 
 interface ItemDetailModalProps {
   item: MenuItem | null;
@@ -82,9 +83,9 @@ export default function ItemDetailModal({
 
   const modifierTotal = Object.values(selectedModifiers)
     .flat()
-    .reduce((sum, opt) => sum + opt.priceAdjustment, 0);
+    .reduce((sum, opt) => sum + getModifierPrice(opt.priceAdjustment), 0);
 
-  const totalPrice = (item.price + modifierTotal) * quantity;
+  const totalPrice = (getDisplayPrice(item.price) + modifierTotal) * quantity;
 
   // Check if all required modifiers are selected
   const isValid = item.modifiers?.every(
@@ -150,7 +151,7 @@ export default function ItemDetailModal({
                     )}
                   </button>
                 </div>
-                <Price amount={item.price} size="md" className="flex-shrink-0" />
+                <Price amount={getDisplayPrice(item.price)} size="md" className="flex-shrink-0" />
               </div>
               <p className="mt-1 text-sm text-slate-600">{item.description}</p>
 
@@ -216,13 +217,13 @@ export default function ItemDetailModal({
                               }
                             `}
                             aria-pressed={isSelected}
-                            aria-label={`${option.name}${option.priceAdjustment > 0 ? `, add $${option.priceAdjustment.toFixed(2)}` : ''}`}
+                            aria-label={`${option.name}${option.priceAdjustment > 0 ? `, add $${getModifierPrice(option.priceAdjustment).toFixed(2)}` : ''}`}
                           >
                             {option.name}
                             {option.priceAdjustment > 0 && (
                               <span className={isSelected ? 'text-primary-200' : 'text-slate-500'}>
                                 {' '}
-                                +${option.priceAdjustment.toFixed(2)}
+                                +${getModifierPrice(option.priceAdjustment).toFixed(2)}
                               </span>
                             )}
                           </button>

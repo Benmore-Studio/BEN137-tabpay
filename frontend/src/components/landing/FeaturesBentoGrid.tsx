@@ -1,5 +1,26 @@
 import { Heart, Clock, MapPin, CreditCard, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionBadge from './SectionBadge';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: 'easeOut' as const },
+  },
+};
 
 export default function FeaturesBentoGrid() {
   return (
@@ -8,7 +29,13 @@ export default function FeaturesBentoGrid() {
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
+        <motion.div
+          className="text-center mb-12 sm:mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+        >
           <SectionBadge
             icon={<Heart className="w-4 h-4 text-primary-600" />}
             text="Why guests love us"
@@ -19,12 +46,21 @@ export default function FeaturesBentoGrid() {
           <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
             We're not just another ordering app. We built TabPay for the casino floor.
           </p>
-        </div>
+        </motion.div>
 
         {/* Asymmetric bento grid */}
-        <div className="grid lg:grid-cols-10 gap-6">
+        <motion.div
+          className="grid lg:grid-cols-10 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+        >
           {/* HUGE primary feature */}
-          <div className="lg:col-span-7 lg:row-span-2 group relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] overflow-hidden border-t-[6px] border-primary-500">
+          <motion.div
+            className="lg:col-span-7 lg:row-span-2 group relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] overflow-hidden border-t-[6px] border-primary-500"
+            variants={itemVariants}
+          >
             <div className="relative h-full flex flex-col justify-center">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-6 sm:mb-8 shadow-xl shadow-primary-500/20">
                 <Clock className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -44,12 +80,15 @@ export default function FeaturesBentoGrid() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Vertical stack of smaller cards */}
           <div className="lg:col-span-3 space-y-6">
             {/* GPS delivery */}
-            <div className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-gold-500">
+            <motion.div
+              className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-gold-500"
+              variants={itemVariants}
+            >
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/20">
                   <MapPin className="w-7 h-7 text-white" />
@@ -59,10 +98,13 @@ export default function FeaturesBentoGrid() {
                   Table 7? Slot #432? The penny machines in the back corner? Just tell us where you are.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Secure payments */}
-            <div className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-green-500">
+            <motion.div
+              className="group relative bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.08)] border-t-[6px] border-green-500"
+              variants={itemVariants}
+            >
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center mb-4 shadow-lg shadow-green-500/20">
                   <CreditCard className="w-7 h-7 text-white" />
@@ -72,11 +114,14 @@ export default function FeaturesBentoGrid() {
                   Apple Pay, Google Pay, or card. One tap checkout. Secure and fast.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Full-width rewards card */}
-          <div className="lg:col-span-10 group relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.05)] overflow-hidden">
+          <motion.div
+            className="lg:col-span-10 group relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.05)] overflow-hidden"
+            variants={itemVariants}
+          >
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold-500/20 to-transparent rounded-full blur-xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary-500/10 to-transparent rounded-full blur-xl translate-y-1/2 -translate-x-1/2" />
 
@@ -101,8 +146,8 @@ export default function FeaturesBentoGrid() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

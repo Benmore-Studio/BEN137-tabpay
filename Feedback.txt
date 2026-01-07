@@ -1,0 +1,30 @@
+Hello, just wanted to share our thoughts on the prototype, we really love it!!
+Overall, the core flow is very strong. Across a few  testers, it took roughly 30–40 seconds to fully understand the flow and complete an order, which is a great signal from a user-experience standpoint—especially for first-time users.
+Just a few thoughts on Connor and my end,
+Guest Flow
+	•	Getting the guest checkout experience to feel just as smooth and intuitive as the signed-in flow will be important as we scale.
+Delivery Location / ID Confirmation
+	•	For delivery location, it may be worth reframing this as a location confirmation step rather than a simple input at the top.
+	•	Using language like “Seat / Location ID” (or similar) could help make it feel more concrete.
+	•	Adding helper text such as “You’ll see this number next to the QR code” could reduce confusion.
+	•	After submission, that ID would be locked and attached to the order for:
+	•	Order confirmation
+	•	Order history
+	•	Runner view
+Would love to discuss this idea in the next time we all meet.
+Post-Checkout Clarity
+	•	After checkout, a brief transition screen stating something like
+“Your items will be delivered directly to your seat”
+could provide reassurance and close the loop for the user.
+Pricing Presentation
+	• removing a visible service fee and instead embedding the convenience cost directly into item pricing (similar to DoorDash).
+	Example:
+	•	$10 drink at the bar
+	•	$10.60(tbd on markup) for the same drink via TabPay
+	From what we’ve seen on other platforms like DoorDash, this approach can reduce friction and hesitation during checkout. Would love to hear Jacob's thoughts on this, and potentially build on that idea before we lock in the offical strategy
+Other Notes
+	•	Transitions and subtle animations (as mentioned) would add nice polish where appropriate.
+	•	Notifications for order status will be important as volume increases.
+	•	Bookmarking / “add to home screen” works perfectly.
+	•	Really excited to see the branding layered in when the time comes—everything is shaping up great.
+Thanks again—this is looking really great

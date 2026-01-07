@@ -1,10 +1,12 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, MenuItem, SelectedModifier, Venue, ServiceBar } from '../types';
+import { applyMarkup, PRICING_CONFIG } from '../utils/pricing';
 
 interface CartState {
   items: CartItem[];
   location: string | null;
+  locationConfirmed: boolean;
   venue: Venue | null;
   serviceBar: ServiceBar | null;
   queuePosition: number | null;
@@ -16,6 +18,8 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'SET_LOCATION'; payload: string }
+  | { type: 'CONFIRM_LOCATION' }
+  | { type: 'RESET_LOCATION_CONFIRMATION' }
   | { type: 'SET_VENUE'; payload: Venue }
   | { type: 'SET_SERVICE_BAR'; payload: ServiceBar }
   | { type: 'SET_QUEUE_POSITION'; payload: number }
@@ -24,6 +28,7 @@ type CartAction =
 interface CartContextType {
   items: CartItem[];
   location: string | null;
+  locationConfirmed: boolean;
   venue: Venue | null;
   serviceBar: ServiceBar | null;
   queuePosition: number | null;
@@ -39,6 +44,8 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   setLocation: (location: string) => void;
+  confirmLocation: () => void;
+  resetLocationConfirmation: () => void;
   setVenue: (venue: Venue) => void;
   setServiceBar: (serviceBar: ServiceBar) => void;
   setQueuePosition: (position: number) => void;
@@ -53,13 +60,23 @@ function calculateItemPrice(
   quantity: number,
   selectedModifiers: SelectedModifier[]
 ): number {
+  // Apply markup to base price
+  const markedUpBasePrice = applyMarkup(basePrice);
+
+  // Apply markup to modifiers if configured
   const modifierTotal = selectedModifiers.reduce((total, modifier) => {
     return (
       total +
-      modifier.selectedOptions.reduce((optTotal, opt) => optTotal + opt.priceAdjustment, 0)
+      modifier.selectedOptions.reduce((optTotal, opt) => {
+        const modPrice = PRICING_CONFIG.applyToModifiers
+          ? applyMarkup(opt.priceAdjustment)
+          : opt.priceAdjustment;
+        return optTotal + modPrice;
+      }, 0)
     );
   }, 0);
-  return (basePrice + modifierTotal) * quantity;
+
+  return (markedUpBasePrice + modifierTotal) * quantity;
 }
 
 function cartReducer(state: CartState, action: CartAction): CartState {
@@ -130,6 +147,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case 'SET_LOCATION':
       return { ...state, location: action.payload };
 
+    case 'CONFIRM_LOCATION':
+      return { ...state, locationConfirmed: true };
+
+    case 'RESET_LOCATION_CONFIRMATION':
+      return { ...state, locationConfirmed: false };
+
     case 'SET_VENUE':
       return { ...state, venue: action.payload };
 
@@ -150,6 +173,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 const initialState: CartState = {
   items: [],
   location: null,
+  locationConfirmed: false,
   venue: null,
   serviceBar: null,
   queuePosition: null,
@@ -213,6 +237,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_LOCATION', payload: location });
   };
 
+  const confirmLocation = () => {
+    dispatch({ type: 'CONFIRM_LOCATION' });
+  };
+
+  const resetLocationConfirmation = () => {
+    dispatch({ type: 'RESET_LOCATION_CONFIRMATION' });
+  };
+
   const setVenue = (venue: Venue) => {
     dispatch({ type: 'SET_VENUE', payload: venue });
   };
@@ -233,6 +265,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         items: state.items,
         location: state.location,
+        locationConfirmed: state.locationConfirmed,
         venue: state.venue,
         serviceBar: state.serviceBar,
         queuePosition: state.queuePosition,
@@ -243,6 +276,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateQuantity,
         clearCart,
         setLocation,
+        confirmLocation,
+        resetLocationConfirmation,
         setVenue,
         setServiceBar,
         setQueuePosition,

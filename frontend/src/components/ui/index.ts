@@ -6,6 +6,7 @@ export { default as EmptyState } from './EmptyState';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Input } from './Input';
 export { default as Modal } from './Modal';
+export { default as NotificationPrompt } from './NotificationPrompt';
 export { default as Price } from './Price';
 export { default as QuantitySelector } from './QuantitySelector';
 export { default as Skeleton, MenuItemSkeleton, CartItemSkeleton, OrderCardSkeleton, ServiceBarSkeleton, ProfileSkeleton } from './Skeleton';

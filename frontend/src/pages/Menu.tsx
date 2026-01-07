@@ -1,8 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { AppLayout, CategoryNav, MenuItemCard, ItemDetailModal, useToast } from '../components';
 import { useCart } from '../context';
 import { categories, getMenuItemsByCategory } from '../data/mockMenu';
 import type { MenuItem, SelectedModifier } from '../types';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: 'easeOut' as const },
+  },
+};
 
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
@@ -85,16 +105,31 @@ export default function Menu() {
                 }}
                 className="pt-6"
               >
-                <h2 className="text-xl font-bold text-slate-900 mb-6">{category.name}</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <motion.h2
+                  className="text-xl font-bold text-slate-900 mb-6"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {category.name}
+                </motion.h2>
+                <motion.div
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+                  variants={containerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: '-50px' }}
+                >
                   {items.map((item) => (
-                    <MenuItemCard
-                      key={item.id}
-                      item={item}
-                      onViewDetails={() => handleViewDetails(item)}
-                    />
+                    <motion.div key={item.id} variants={itemVariants}>
+                      <MenuItemCard
+                        item={item}
+                        onViewDetails={() => handleViewDetails(item)}
+                      />
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </section>
             );
           })}

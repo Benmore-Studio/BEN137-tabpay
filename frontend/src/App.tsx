@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
-import { AuthProvider, CartProvider, OrderHistoryProvider, FavoritesProvider, ProfileProvider } from './context';
+import { AuthProvider, CartProvider, OrderHistoryProvider, FavoritesProvider, ProfileProvider, NotificationProvider } from './context';
 import { ToastProvider, ErrorBoundary } from './components';
 
 function App() {
@@ -11,9 +11,11 @@ function App() {
           <CartProvider>
             <OrderHistoryProvider>
               <FavoritesProvider>
-                <ToastProvider>
-                  <RouterProvider router={router} />
-                </ToastProvider>
+                <NotificationProvider>
+                  <ToastProvider>
+                    <RouterProvider router={router} />
+                  </ToastProvider>
+                </NotificationProvider>
               </FavoritesProvider>
             </OrderHistoryProvider>
           </CartProvider>

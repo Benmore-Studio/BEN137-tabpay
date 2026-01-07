@@ -3,6 +3,7 @@ import { HeartIcon } from '@heroicons/react/24/solid';
 import { Price } from '../ui';
 import { useFavorites } from '../../context';
 import type { MenuItem } from '../../types';
+import { getDisplayPrice } from '../../utils/pricing';
 
 interface FavoriteItemCardProps {
   item: MenuItem;
@@ -61,7 +62,7 @@ export default function FavoriteItemCard({ item, onAddToCart }: FavoriteItemCard
       <div className="flex-1 min-w-0">
         <h3 className="font-semibold text-slate-900 text-sm leading-tight mb-1">{item.name}</h3>
         <div className="flex items-center gap-2">
-          <Price amount={item.price} size="sm" className="font-medium" />
+          <Price amount={getDisplayPrice(item.price)} size="sm" className="font-medium" />
           {item.dietary && (
             <div className="flex gap-1">
               {item.dietary.vegetarian && (

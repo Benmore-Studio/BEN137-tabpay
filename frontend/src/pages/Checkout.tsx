@@ -1,21 +1,42 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCardIcon, DevicePhoneMobileIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { AppLayout, Button, Input, Price, Card, TimePicker } from '../components';
+import { motion } from 'framer-motion';
+import { AppLayout, Button, Input, Price, Card, TimePicker, LocationConfirmationStep, ConfirmedLocationBadge } from '../components';
 import { useCart, useOrderHistory, useProfile } from '../context';
 import type { Order } from '../types';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: 'easeOut' as const },
+  },
+};
+
+type CheckoutStep = 'location' | 'review';
 
 type PaymentMethod = 'card' | 'apple-pay' | 'google-pay';
 type TipOption = 0 | 15 | 18 | 20 | 'custom';
 
-// Service fee charged by TabPay (via Stripe Connect)
-const SERVICE_FEE = 1.50;
-
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, subtotal, location, setLocation, clearCart } = useCart();
+  const { items, subtotal, location, locationConfirmed, setLocation, confirmLocation, resetLocationConfirmation, clearCart } = useCart();
   const { addOrder } = useOrderHistory();
   const { profile, isGuest } = useProfile();
+  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>(locationConfirmed ? 'review' : 'location');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [tipOption, setTipOption] = useState<TipOption>(18);
@@ -56,16 +77,27 @@ export default function Checkout() {
     ? parseFloat(customTip) || 0
     : subtotal * (tipPercent / 100);
   const tax = subtotal * 0.0875;
-  const orderTotal = subtotal + tax + tipAmount; // Goes to casino
-  const total = orderTotal + SERVICE_FEE; // Total charged to customer
+  const total = subtotal + tax + tipAmount; // Total charged to customer (markup already embedded in subtotal)
 
   const validateLocation = () => {
     if (!locationInput.trim()) {
-      setLocationError('Please enter your table or machine number');
+      setLocationError('Please enter your Seat / Location ID');
       return false;
     }
     setLocationError('');
     return true;
+  };
+
+  const handleConfirmLocation = () => {
+    if (!validateLocation()) return;
+    setLocation(locationInput.trim());
+    confirmLocation();
+    setCheckoutStep('review');
+  };
+
+  const handleEditLocation = () => {
+    resetLocationConfirmation();
+    setCheckoutStep('location');
   };
 
   const handleSubmit = async () => {
@@ -99,7 +131,7 @@ export default function Checkout() {
     addOrder(order);
 
     clearCart();
-    navigate(`/confirmation/${orderId}`);
+    navigate(`/checkout-success/${orderId}`);
   };
 
   const tipOptions: { value: TipOption; label: string }[] = [
@@ -110,91 +142,117 @@ export default function Checkout() {
     { value: 'custom', label: 'Custom' },
   ];
 
+  // Location confirmation step
+  if (checkoutStep === 'location') {
+    return (
+      <AppLayout showHeader={false} showBottomNav={false}>
+        <LocationConfirmationStep
+          locationInput={locationInput}
+          onLocationChange={setLocationInput}
+          onConfirm={handleConfirmLocation}
+          error={locationError}
+        />
+      </AppLayout>
+    );
+  }
+
+  // Review & pay step
   return (
-    <AppLayout showBackButton headerTitle="Checkout" showBottomNav={false}>
-      <div className="pb-64 px-4 pt-6 space-y-5">
-        {/* Location Confirmation */}
-        <Card variant="elevated">
-          <h2 className="font-bold text-slate-900 mb-3">Delivery Location</h2>
-          <Input
-            label="Table or Machine Number"
-            placeholder="e.g., Table 42 or Machine 123"
-            value={locationInput}
-            onChange={(e) => setLocationInput(e.target.value)}
-            error={locationError}
-            helperText="Enter your table number or slot machine number"
-          />
-        </Card>
+    <AppLayout showBackButton headerTitle="Review & Pay" showBottomNav={false}>
+      <motion.div
+        className="pb-64 px-4 pt-6 space-y-5"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Confirmed Location */}
+        <motion.div variants={cardVariants}>
+          <Card variant="elevated">
+            <h2 className="font-bold text-slate-900 mb-3">Delivery Location</h2>
+            <ConfirmedLocationBadge
+              location={locationInput}
+              onEdit={handleEditLocation}
+              showEditButton={true}
+            />
+          </Card>
+        </motion.div>
 
         {/* Order Scheduling */}
-        <Card variant="elevated">
-          <TimePicker
-            value={scheduledFor}
-            onChange={setScheduledFor}
-            isASAP={isASAP}
-            onASAPChange={setIsASAP}
-          />
-        </Card>
+        <motion.div variants={cardVariants}>
+          <Card variant="elevated">
+            <TimePicker
+              value={scheduledFor}
+              onChange={setScheduledFor}
+              isASAP={isASAP}
+              onASAPChange={setIsASAP}
+            />
+          </Card>
+        </motion.div>
 
         {/* Order Summary */}
-        <Card variant="elevated">
-          <h2 className="font-bold text-slate-900 mb-3">Order Summary</h2>
-          <div className="space-y-2">
-            {items.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm">
-                <span className="text-slate-600">
-                  {item.quantity}x {item.menuItem.name}
-                </span>
-                <Price amount={item.totalPrice} size="sm" />
-              </div>
-            ))}
-          </div>
-        </Card>
+        <motion.div variants={cardVariants}>
+          <Card variant="elevated">
+            <h2 className="font-bold text-slate-900 mb-3">Order Summary</h2>
+            <div className="space-y-2">
+              {items.map((item) => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span className="text-slate-600">
+                    {item.quantity}x {item.menuItem.name}
+                  </span>
+                  <Price amount={item.totalPrice} size="sm" />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
 
         {/* Tip Selection */}
-        <Card variant="elevated">
-          <h2 className="font-bold text-slate-900 mb-3">Add a Tip</h2>
-          <div className="grid grid-cols-5 gap-2">
-            {tipOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setTipOption(option.value)}
-                className={`
-                  py-2.5 px-1 rounded-xl text-sm font-semibold
-                  transition-all duration-200
-                  ${
-                    tipOption === option.value
-                      ? 'bg-gradient-to-r from-gold-400 to-gold-500 text-slate-900 shadow-md shadow-gold-500/25'
-                      : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-300'
-                  }
-                `}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-          {tipOption === 'custom' && (
-            <div className="mt-3">
-              <Input
-                type="number"
-                placeholder="Enter tip amount"
-                value={customTip}
-                onChange={(e) => setCustomTip(e.target.value)}
-                min="0"
-                step="0.01"
-              />
+        <motion.div variants={cardVariants}>
+          <Card variant="elevated">
+            <h2 className="font-bold text-slate-900 mb-3">Add a Tip</h2>
+            <div className="grid grid-cols-5 gap-2">
+              {tipOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setTipOption(option.value)}
+                  className={`
+                    py-2.5 px-1 rounded-xl text-sm font-semibold
+                    transition-all duration-200
+                    ${
+                      tipOption === option.value
+                        ? 'bg-gradient-to-r from-gold-400 to-gold-500 text-slate-900 shadow-md shadow-gold-500/25'
+                        : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-300'
+                    }
+                  `}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
-          )}
-          {tipAmount > 0 && (
-            <p className="mt-2 text-sm text-slate-500">
-              Tip amount: <span className="font-semibold text-gold-600">${tipAmount.toFixed(2)}</span>
-            </p>
-          )}
-        </Card>
+            {tipOption === 'custom' && (
+              <div className="mt-3">
+                <Input
+                  type="number"
+                  placeholder="Enter tip amount"
+                  value={customTip}
+                  onChange={(e) => setCustomTip(e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            )}
+            {tipAmount > 0 && (
+              <p className="mt-2 text-sm text-slate-500">
+                Tip amount: <span className="font-semibold text-gold-600">${tipAmount.toFixed(2)}</span>
+              </p>
+            )}
+          </Card>
+        </motion.div>
 
         {/* Payment Method */}
-        <Card variant="elevated">
-          <h2 className="font-bold text-slate-900 mb-3">Payment Method</h2>
+        <motion.div variants={cardVariants}>
+          <Card variant="elevated">
+            <h2 className="font-bold text-slate-900 mb-3">Payment Method</h2>
 
           {/* Show saved payment methods for registered users */}
           {!isGuest && profile && profile.paymentMethods.length > 0 ? (
@@ -322,16 +380,17 @@ export default function Checkout() {
               </p>
             </div>
           )}
-        </Card>
+          </Card>
+        </motion.div>
 
         {/* Terms */}
-        <p className="text-xs text-slate-500 text-center">
+        <motion.p variants={cardVariants} className="text-xs text-slate-500 text-center">
           By placing this order, you agree to our{' '}
           <button className="text-primary-600 hover:underline">Terms of Service</button>
           {' '}and{' '}
           <button className="text-primary-600 hover:underline">Privacy Policy</button>.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 space-y-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-40">
@@ -351,10 +410,6 @@ export default function Checkout() {
               <span className="font-medium text-gold-600">${tipAmount.toFixed(2)}</span>
             </div>
           )}
-          <div className="flex justify-between text-sm">
-            <span className="text-slate-500">Service Fee</span>
-            <Price amount={SERVICE_FEE} size="sm" />
-          </div>
           <div className="flex justify-between font-bold pt-2 border-t border-slate-200">
             <span className="text-slate-900">Total</span>
             <Price amount={total} size="lg" />
