@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Martini, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context';
 import { Button } from '../components';
+import FullLogo from '../assets/Full_Logo.png';
+import Logo from '../assets/Logo.png';
 import HeroSection from '../components/landing/HeroSection';
 import FeaturesBentoGrid from '../components/landing/FeaturesBentoGrid';
 import HowItWorksSection from '../components/landing/HowItWorksSection';
@@ -21,11 +23,11 @@ export default function Landing() {
   const navigate = useNavigate();
   const [isStandalone, setIsStandalone] = useState(false);
 
-  // Check if running as installed PWA and redirect to menu
+  // Check if running as installed PWA and redirect to home
   useEffect(() => {
     if (isAppInstalled()) {
       setIsStandalone(true);
-      navigate('/menu', { replace: true });
+      navigate('/home', { replace: true });
     }
   }, [navigate]);
 
@@ -34,8 +36,8 @@ export default function Landing() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="relative">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center animate-pulse-soft">
-            <Martini className="w-10 h-10 text-white" strokeWidth={1.5} />
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center animate-pulse-soft">
+            <img src={Logo} alt="TabPay" className="w-16 h-16 object-contain" />
           </div>
         </div>
       </div>
@@ -47,14 +49,9 @@ export default function Landing() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200/50 shadow-sm shadow-slate-900/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/30">
-              <Martini className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-white" strokeWidth={1.5} />
-            </div>
-            <div className="flex flex-col justify-center">
-              <span className="font-bold text-lg sm:text-xl text-slate-900 leading-tight">TabPay</span>
-            </div>
-          </div>
+          <Link to="/" className="flex items-center">
+            <img src={FullLogo} alt="TabPay" className="h-20 sm:h-[90px]" />
+          </Link>
           <div className="flex items-center gap-3">
             {!isAuthenticated ? (
               <>

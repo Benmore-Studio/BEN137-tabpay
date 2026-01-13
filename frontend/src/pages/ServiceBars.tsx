@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ClockIcon,
@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Users } from 'lucide-react';
 import { AppLayout, Card, Badge, EmptyState } from '../components';
-import { useAuth, useCart } from '../context';
+import { useCart, useProfile } from '../context';
 import { getServiceBarsForVenue, getVenueById } from '../data/mockVenues';
 import type { ServiceBar } from '../types';
 
@@ -68,21 +68,44 @@ function updateOccupancy(bar: ServiceBar): ServiceBar {
 export default function ServiceBars() {
   const { venueId } = useParams<{ venueId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { setServiceBar, setVenue } = useCart();
-
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    navigate('/auth');
-    return null;
-  }
+  const { setServiceBar, setVenue, serviceBar: currentBar } = useCart();
+  const { isGuest, profile } = useProfile();
 
   const venue = venueId ? getVenueById(venueId) : undefined;
   const initialServiceBars = venueId ? getServiceBarsForVenue(venueId) : [];
 
+  // Get default saved location for logged-in users
+  const defaultLocation = !isGuest && profile?.savedLocations?.find(l => l.isDefault);
+
   // State for real-time updates
   const [serviceBars, setServiceBars] = useState<ServiceBar[]>(initialServiceBars);
   const [changedBarIds, setChangedBarIds] = useState<Set<string>>(new Set());
+
+  // Helper to check if a bar is recommended for the user
+  const isBarRecommended = (bar: ServiceBar): boolean => {
+    if (isGuest || !defaultLocation) return false;
+    // Match if bar location contains part of saved location or vice versa
+    const barLoc = bar.location.toLowerCase();
+    const savedLoc = defaultLocation.location.toLowerCase();
+    return barLoc.includes(savedLoc) || savedLoc.includes(barLoc);
+  };
+
+  // Sort bars: recommended first, then by wait time
+  const sortedBars = useMemo(() => {
+    if (isGuest || !defaultLocation) {
+      // For guests, sort by wait time only
+      return [...serviceBars].sort((a, b) => a.estimatedWaitMinutes - b.estimatedWaitMinutes);
+    }
+
+    // For logged-in users, recommended bars first, then by wait time
+    return [...serviceBars].sort((a, b) => {
+      const aRecommended = isBarRecommended(a);
+      const bRecommended = isBarRecommended(b);
+      if (aRecommended && !bRecommended) return -1;
+      if (!aRecommended && bRecommended) return 1;
+      return a.estimatedWaitMinutes - b.estimatedWaitMinutes;
+    });
+  }, [serviceBars, isGuest, defaultLocation]);
 
   // Redirect if venue not found
   if (!venue) {
@@ -151,17 +174,27 @@ export default function ServiceBars() {
 
         {/* Service bars list */}
         <div className="space-y-3">
-          {serviceBars.map((bar) => (
+          {sortedBars.map((bar) => (
             <Card
               key={bar.id}
               onClick={() => handleBarSelect(bar)}
-              className="group"
+              className={`group ${currentBar?.id === bar.id ? 'ring-2 ring-primary-500' : ''}`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Bar name and status */}
-                  <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
                     <h3 className="font-semibold text-slate-900">{bar.name}</h3>
+                    {isBarRecommended(bar) && (
+                      <Badge variant="primary" size="sm">
+                        Recommended
+                      </Badge>
+                    )}
+                    {currentBar?.id === bar.id && (
+                      <Badge variant="success" size="sm">
+                        Current
+                      </Badge>
+                    )}
                     <Badge
                       variant={getStatusColor(bar.status)}
                       size="sm"
@@ -217,7 +250,7 @@ export default function ServiceBars() {
         </div>
 
         {/* Empty state */}
-        {serviceBars.length === 0 && (
+        {sortedBars.length === 0 && (
           <EmptyState
             icon={Users}
             title="No service bars available"

@@ -84,7 +84,7 @@ export default function Menu() {
   }, [activeCategory]);
 
   return (
-    <AppLayout cartCount={itemCount}>
+    <AppLayout cartCount={itemCount} showBarSelector>
       <CategoryNav
         categories={categories}
         activeCategory={activeCategory}

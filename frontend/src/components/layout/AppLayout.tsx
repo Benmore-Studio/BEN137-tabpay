@@ -9,6 +9,7 @@ interface AppLayoutProps {
   showBackButton?: boolean;
   headerTitle?: string;
   showBottomNav?: boolean;
+  showBarSelector?: boolean;
   className?: string;
 }
 
@@ -19,6 +20,7 @@ export default function AppLayout({
   showBackButton = false,
   headerTitle,
   showBottomNav = true,
+  showBarSelector = false,
   className = '',
 }: AppLayoutProps) {
   return (
@@ -28,6 +30,7 @@ export default function AppLayout({
           cartCount={cartCount}
           showBackButton={showBackButton}
           title={headerTitle}
+          showBarSelector={showBarSelector}
         />
       )}
       <main

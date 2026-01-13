@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Martini, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Logo from '../../assets/Logo.png';
 
 interface FinalCTASectionProps {
   isAuthenticated: boolean;
@@ -24,13 +25,13 @@ export default function FinalCTASection({ isAuthenticated }: FinalCTASectionProp
         >
           <div className="p-8 sm:p-12 lg:p-16 text-center">
             <motion.div
-              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary-500/30"
+              className="w-20 h-20 mx-auto mb-6"
               initial={{ scale: 0, rotate: -180 }}
               whileInView={{ scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', duration: 0.6, delay: 0.2 }}
             >
-              <Martini className="w-8 h-8 text-white" strokeWidth={1.5} />
+              <img src={Logo} alt="TabPay" className="w-full h-full object-contain" />
             </motion.div>
             <h2 className="text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] font-bold text-slate-900 tracking-tight mb-8">
               Ready to skip the wait?

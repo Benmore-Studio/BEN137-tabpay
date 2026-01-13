@@ -1,0 +1,384 @@
+// TabPay Backend - Prisma Schema
+// Casino ordering PWA for mobile beverage and food ordering
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// USER & AUTHENTICATION
+// =============================================================================
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  password        String
+  firstName       String
+  lastName        String
+  phone           String
+  dateOfBirth     DateTime?
+  isAgeVerified   Boolean   @default(false)
+  hasPaymentMethod Boolean  @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  sessions        Session[]
+  paymentMethods  PaymentMethod[]
+  savedLocations  SavedLocation[]
+  preferences     UserPreferences?
+  orders          Order[]
+  favoriteItems   FavoriteItem[]
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([userId])
+}
+
+model PaymentMethod {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        PaymentMethodType
+  last4       String?  // Last 4 digits for cards
+  brand       String?  // visa, mastercard, amex, etc.
+  expiryMonth Int?
+  expiryYear  Int?
+  isDefault   Boolean  @default(false)
+  stripePaymentMethodId String? @unique // Stripe integration
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  orders      Order[]
+
+  @@index([userId])
+}
+
+enum PaymentMethodType {
+  card
+  apple_pay
+  google_pay
+}
+
+model SavedLocation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venueId   String
+  venue     Venue    @relation(fields: [venueId], references: [id])
+  label     String   // e.g., "My usual spot", "Poker table"
+  location  String   // Slot machine number, table ID, etc.
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model UserPreferences {
+  id                String  @id @default(uuid())
+  userId            String  @unique
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultTipPercent Int     @default(18) // 0, 15, 18, 20
+  notifications     Boolean @default(true)
+  autoReorder       Boolean @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// =============================================================================
+// VENUES & SERVICE BARS
+// =============================================================================
+
+model Venue {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  address     String
+  description String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  timezone    String   @default("America/Chicago")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  serviceBars    ServiceBar[]
+  orders         Order[]
+  savedLocations SavedLocation[]
+
+  @@index([name])
+}
+
+model ServiceBar {
+  id                   String           @id @default(uuid())
+  venueId              String
+  venue                Venue            @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  name                 String
+  location             String           // e.g., "Main Floor - Near Poker Tables"
+  isActive             Boolean          @default(true)
+
+  // Real-time status fields (updated periodically)
+  activeOrders         Int              @default(0)
+  availableServers     Int              @default(1)
+  estimatedWaitMinutes Int              @default(10)
+  status               ServiceBarStatus @default(low)
+
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  // Relations
+  menuItems            MenuItem[]
+  orders               Order[]
+
+  @@unique([venueId, name])
+  @@index([venueId])
+}
+
+enum ServiceBarStatus {
+  low
+  medium
+  high
+}
+
+// =============================================================================
+// MENU SYSTEM
+// =============================================================================
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  icon      String?  // Icon identifier
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  menuItems MenuItem[]
+
+  @@index([sortOrder])
+}
+
+model MenuItem {
+  id           String      @id @default(uuid())
+  serviceBarId String
+  serviceBar   ServiceBar  @relation(fields: [serviceBarId], references: [id], onDelete: Cascade)
+  categoryId   String
+  category     Category    @relation(fields: [categoryId], references: [id])
+  name         String
+  description  String?
+  price        Decimal     @db.Decimal(10, 2)
+  imageUrl     String?
+  available    Boolean     @default(true)
+
+  // Dietary information
+  isVegetarian Boolean     @default(false)
+  isVegan      Boolean     @default(false)
+  isGlutenFree Boolean     @default(false)
+
+  sortOrder    Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relations
+  modifiers     MenuItemModifier[]
+  orderItems    OrderItem[]
+  favoriteItems FavoriteItem[]
+
+  @@index([serviceBarId])
+  @@index([categoryId])
+  @@index([available])
+}
+
+// Junction table for MenuItem to Modifier (many-to-many)
+model MenuItemModifier {
+  id         String   @id @default(uuid())
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  modifierId String
+  modifier   Modifier @relation(fields: [modifierId], references: [id], onDelete: Cascade)
+  sortOrder  Int      @default(0)
+
+  @@unique([menuItemId, modifierId])
+  @@index([menuItemId])
+}
+
+model Modifier {
+  id            String   @id @default(uuid())
+  name          String   // e.g., "Size", "Ice", "Garnish"
+  required      Boolean  @default(false)
+  maxSelections Int?     // null = unlimited selections
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  options       ModifierOption[]
+  menuItems     MenuItemModifier[]
+
+  @@index([name])
+}
+
+model ModifierOption {
+  id              String   @id @default(uuid())
+  modifierId      String
+  modifier        Modifier @relation(fields: [modifierId], references: [id], onDelete: Cascade)
+  name            String   // e.g., "Small", "Medium", "Large"
+  priceAdjustment Decimal  @default(0) @db.Decimal(10, 2)
+  sortOrder       Int      @default(0)
+  isDefault       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  orderItemModifiers OrderItemModifier[]
+
+  @@index([modifierId])
+}
+
+// User's favorite menu items
+model FavoriteItem {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, menuItemId])
+  @@index([userId])
+}
+
+// =============================================================================
+// ORDERS
+// =============================================================================
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique // Human-readable order number (e.g., "TP1ABC2D")
+
+  // Customer info (userId is null for guest orders)
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  guestEmail      String?     // For guest checkout
+  guestPhone      String?     // For guest checkout
+
+  // Location
+  venueId         String
+  venue           Venue       @relation(fields: [venueId], references: [id])
+  serviceBarId    String
+  serviceBar      ServiceBar  @relation(fields: [serviceBarId], references: [id])
+  deliveryLocation String     // Slot machine number, table ID, etc.
+
+  // Pricing
+  subtotal        Decimal     @db.Decimal(10, 2)
+  tax             Decimal     @db.Decimal(10, 2)
+  tip             Decimal     @default(0) @db.Decimal(10, 2)
+  serviceFee      Decimal     @default(1.50) @db.Decimal(10, 2) // TabPay service fee
+  total           Decimal     @db.Decimal(10, 2)
+
+  // Payment
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  stripePaymentIntentId String? @unique
+
+  // Status & Timing
+  status          OrderStatus @default(received)
+  isASAP          Boolean     @default(true)
+  scheduledFor    DateTime?   // If not ASAP, when they want it
+  estimatedDeliveryTime DateTime?
+
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  preparedAt      DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+
+  // Cancellation
+  cancellationReason String?
+
+  // Relations
+  items           OrderItem[]
+
+  @@index([userId])
+  @@index([venueId])
+  @@index([serviceBarId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+}
+
+enum OrderStatus {
+  received    // Order received, pending preparation
+  preparing   // Being prepared by staff
+  delivering  // Server is delivering
+  delivered   // Successfully delivered
+  cancelled   // Order was cancelled
+  refunded    // Order was refunded
+}
+
+model OrderItem {
+  id                  String   @id @default(uuid())
+  orderId             String
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId          String
+  menuItem            MenuItem @relation(fields: [menuItemId], references: [id])
+  quantity            Int      @default(1)
+  unitPrice           Decimal  @db.Decimal(10, 2) // Price at time of order (base)
+  totalPrice          Decimal  @db.Decimal(10, 2) // (unitPrice + modifiers) * quantity
+  specialInstructions String?
+  createdAt           DateTime @default(now())
+
+  // Relations
+  modifiers           OrderItemModifier[]
+
+  @@index([orderId])
+  @@index([menuItemId])
+}
+
+model OrderItemModifier {
+  id               String         @id @default(uuid())
+  orderItemId      String
+  orderItem        OrderItem      @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  modifierOptionId String
+  modifierOption   ModifierOption @relation(fields: [modifierOptionId], references: [id])
+  modifierName     String         // Denormalized for order history display
+  optionName       String         // Denormalized for order history display
+  priceAdjustment  Decimal        @db.Decimal(10, 2) // Price at time of order
+
+  @@index([orderItemId])
+}
+
+// =============================================================================
+// AUDIT & ANALYTICS (Optional - for Premium/Enterprise tiers)
+// =============================================================================
+
+model OrderStatusHistory {
+  id        String      @id @default(uuid())
+  orderId   String
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+  createdBy String?     // Staff member ID if applicable
+
+  @@index([orderId])
+  @@index([createdAt])
+}

@@ -1,19 +1,24 @@
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { Martini } from 'lucide-react';
+import { ShoppingCartIcon, MapPinIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Badge from '../ui/Badge';
-import { useProfile } from '../../context';
+import { BarSelectorModal } from '../bar';
+import { useProfile, useCart } from '../../context';
+import FullLogo from '../../assets/Full_Logo.png';
 
 interface HeaderProps {
   cartCount?: number;
   showBackButton?: boolean;
   title?: string;
+  showBarSelector?: boolean;
 }
 
-export default function Header({ cartCount = 0, showBackButton = false, title }: HeaderProps) {
+export default function Header({ cartCount = 0, showBackButton = false, title, showBarSelector = false }: HeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isGuest } = useProfile();
+  const { serviceBar } = useCart();
+  const [isBarModalOpen, setIsBarModalOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -47,13 +52,25 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
             <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
           ) : (
             <Link to="/menu" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md shadow-primary-500/20">
-                <Martini className="w-4 h-4 text-white" strokeWidth={1.5} />
-              </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">TabPay</span>
+              <img src={FullLogo} alt="TabPay Logo" className="h-10" />
             </Link>
           )}
         </div>
+
+        {/* Bar selector - shows current bar with option to change */}
+        {showBarSelector && serviceBar && (
+          <button
+            onClick={() => setIsBarModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors max-w-[180px]"
+            aria-label="Change service bar"
+          >
+            <MapPinIcon className="w-4 h-4 text-slate-500 flex-shrink-0" />
+            <span className="text-sm font-medium text-slate-700 truncate">
+              {serviceBar.name}
+            </span>
+            <ChevronDownIcon className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          </button>
+        )}
 
         {/* Center section - Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
@@ -109,6 +126,12 @@ export default function Header({ cartCount = 0, showBackButton = false, title }:
           )}
         </Link>
       </div>
+
+      {/* Bar selector modal */}
+      <BarSelectorModal
+        isOpen={isBarModalOpen}
+        onClose={() => setIsBarModalOpen(false)}
+      />
     </header>
   );
 }

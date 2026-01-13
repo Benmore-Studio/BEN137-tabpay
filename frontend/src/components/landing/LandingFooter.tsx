@@ -1,4 +1,5 @@
-import { Martini, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
+import FullLogo from '../../assets/Full_Logo.png';
 
 export default function LandingFooter() {
   return (
@@ -12,11 +13,8 @@ export default function LandingFooter() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-12">
           {/* Brand column */}
           <div className="sm:col-span-2 lg:col-span-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg">
-                <Martini className="w-6 h-6 text-white" strokeWidth={1.5} />
-              </div>
-              <span className="font-bold text-xl">TabPay</span>
+            <div className="flex items-center mb-4">
+              <img src={FullLogo} alt="TabPay" className="h-[102px] brightness-0 invert" />
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Casino drink ordering, reimagined. Skip the wait and stay in the game.

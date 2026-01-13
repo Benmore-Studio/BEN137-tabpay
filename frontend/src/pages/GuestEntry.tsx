@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Martini, QrCode } from 'lucide-react';
+import { QrCode, ArrowRight, MapPin } from 'lucide-react';
 import { useCart } from '../context';
 import { mockVenues, mockServiceBars, getVenueById } from '../data/mockVenues';
+import { Button } from '../components';
+import Logo from '../assets/Logo.png';
 
 /**
  * GuestEntry - Simulates scanning a QR code at a casino table/slot machine
@@ -15,12 +17,14 @@ import { mockVenues, mockServiceBars, getVenueById } from '../data/mockVenues';
  * - bar: Service bar ID (defaults to first bar at venue)
  * - location: Seat/table ID (optional, can be entered at checkout)
  *
- * This page sets up the guest session and redirects to the menu.
+ * This page sets up the guest session and shows options before redirecting.
  */
 export default function GuestEntry() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { setVenue, setServiceBar, setLocation } = useCart();
+  const { setVenue, setServiceBar, setLocation, venue, serviceBar } = useCart();
+  const [isReady, setIsReady] = useState(false);
+  const hasInteracted = useRef(false);
 
   useEffect(() => {
     // Get params from URL (simulating QR code data)
@@ -29,17 +33,17 @@ export default function GuestEntry() {
     const locationId = searchParams.get('location');
 
     // Find venue
-    const venue = getVenueById(venueId) || mockVenues[0];
-    setVenue(venue);
+    const foundVenue = getVenueById(venueId) || mockVenues[0];
+    setVenue(foundVenue);
 
     // Find service bar (or default to first bar at venue)
-    const venueBars = mockServiceBars.filter((b) => b.venueId === venue.id);
-    const serviceBar = barId
+    const venueBars = mockServiceBars.filter((b) => b.venueId === foundVenue.id);
+    const foundBar = barId
       ? mockServiceBars.find((b) => b.id === barId) || venueBars[0]
       : venueBars[0];
 
-    if (serviceBar) {
-      setServiceBar(serviceBar);
+    if (foundBar) {
+      setServiceBar(foundBar);
     }
 
     // Set location if provided (e.g., Table-42, Slot-A15)
@@ -47,13 +51,35 @@ export default function GuestEntry() {
       setLocation(locationId);
     }
 
-    // Redirect to menu after brief loading animation
-    const timer = setTimeout(() => {
-      navigate('/menu', { replace: true });
-    }, 1500);
+    // Show options after brief loading
+    const readyTimer = setTimeout(() => {
+      setIsReady(true);
+    }, 1000);
 
-    return () => clearTimeout(timer);
+    // Auto-redirect after 4 seconds if no interaction
+    const redirectTimer = setTimeout(() => {
+      if (!hasInteracted.current) {
+        navigate('/menu', { replace: true });
+      }
+    }, 4000);
+
+    return () => {
+      clearTimeout(readyTimer);
+      clearTimeout(redirectTimer);
+    };
   }, [searchParams, setVenue, setServiceBar, setLocation, navigate]);
+
+  const handleContinue = () => {
+    hasInteracted.current = true;
+    navigate('/menu', { replace: true });
+  };
+
+  const handleViewBars = () => {
+    hasInteracted.current = true;
+    if (venue) {
+      navigate(`/venues/${venue.id}/bars`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col items-center justify-center px-6">
@@ -64,17 +90,16 @@ export default function GuestEntry() {
       </div>
 
       <motion.div
-        className="relative text-center"
+        className="relative text-center max-w-sm"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
       >
         {/* Animated logo */}
         <motion.div
-          className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/25"
+          className="w-20 h-20 mx-auto mb-6"
           animate={{
             scale: [1, 1.05, 1],
-            rotate: [0, 2, -2, 0]
           }}
           transition={{
             duration: 2,
@@ -82,31 +107,78 @@ export default function GuestEntry() {
             ease: 'easeInOut'
           }}
         >
-          <Martini className="w-10 h-10 text-white" strokeWidth={1.5} />
+          <img src={Logo} alt="TabPay" className="w-full h-full object-contain" />
         </motion.div>
 
         <h1 className="text-2xl font-bold text-slate-900 mb-2">
           Welcome to TabPay
         </h1>
-        <p className="text-base text-slate-500 mb-8">
-          Setting up your session...
-        </p>
 
-        {/* Loading dots */}
-        <div className="flex items-center justify-center gap-2">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2.5 h-2.5 rounded-full bg-primary-500"
-              animate={{ opacity: [0.3, 1, 0.3] }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-            />
-          ))}
-        </div>
+        {!isReady ? (
+          <>
+            <p className="text-base text-slate-500 mb-8">
+              Setting up your session...
+            </p>
+            {/* Loading dots */}
+            <div className="flex items-center justify-center gap-2">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-2.5 h-2.5 rounded-full bg-primary-500"
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Show selected bar info */}
+            {serviceBar && (
+              <div className="mb-6 p-3 rounded-xl bg-slate-100 ring-1 ring-slate-200">
+                <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
+                  <MapPin className="w-4 h-4" />
+                  <span>Ordering from: <span className="font-semibold text-slate-900">{serviceBar.name}</span></span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  ~{serviceBar.estimatedWaitMinutes} min wait
+                </p>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="space-y-3">
+              <Button
+                onClick={handleContinue}
+                className="w-full"
+                size="lg"
+              >
+                Continue to Menu
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+
+              <button
+                onClick={handleViewBars}
+                className="w-full text-sm text-primary-600 hover:text-primary-700 hover:underline py-2 transition-colors"
+              >
+                View other service bars
+              </button>
+            </div>
+
+            {/* Auto-redirect notice */}
+            <p className="mt-4 text-xs text-slate-400">
+              Auto-continuing in a few seconds...
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* QR simulation note */}

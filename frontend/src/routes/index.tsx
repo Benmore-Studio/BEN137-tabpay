@@ -8,6 +8,7 @@ import Install from '../pages/Install';
 import GuestEntry from '../pages/GuestEntry';
 
 // Mobile-only ordering flow
+import Dashboard from '../pages/Dashboard';
 import Menu from '../pages/Menu';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
@@ -68,6 +69,11 @@ export const router = createBrowserRouter([
   {
     element: <MobileOnlyLayout />,
     children: [
+      // Dashboard/Home
+      {
+        path: '/home',
+        element: <Dashboard />,
+      },
       // Ordering flow
       {
         path: '/menu',

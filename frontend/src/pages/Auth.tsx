@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Martini, ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../context';
+import Logo from '../assets/Logo.png';
 
 type AuthMode = 'login' | 'register';
 
@@ -176,10 +177,7 @@ export default function Auth() {
 
                 {/* Logo and brand centered */}
                 <div className="flex flex-col items-center pt-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/25 mb-2">
-                    <Martini className="w-6 h-6 text-white" strokeWidth={1.5} />
-                  </div>
-                  <h1 className="text-lg font-bold text-slate-900 tracking-tight">TabPay</h1>
+                  <img src={Logo} alt="TabPay" className="h-16" />
                 </div>
               </div>
 
