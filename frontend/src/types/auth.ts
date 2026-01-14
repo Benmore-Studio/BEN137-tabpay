@@ -35,7 +35,7 @@ export interface ServiceBar {
   activeOrders: number;
   availableServers: number;
   estimatedWaitMinutes: number;
-  status: 'low' | 'medium' | 'high';
+  status: 'low' | 'medium' | 'high' | 'closed';
 }
 
 export interface RegistrationData {

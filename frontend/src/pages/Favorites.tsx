@@ -21,7 +21,7 @@ export default function Favorites() {
   };
 
   return (
-    <AppLayout cartCount={0} showBackButton={false}>
+    <AppLayout cartCount={0} showBackButton={false} showBarSelector>
       <div className="px-4 pt-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Favorites</h1>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCardIcon, DevicePhoneMobileIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
@@ -34,7 +34,7 @@ type TipOption = 0 | 15 | 18 | 20 | 'custom';
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, subtotal, location, locationConfirmed, setLocation, confirmLocation, resetLocationConfirmation, clearCart } = useCart();
-  const { addOrder } = useOrderHistory();
+  const { addOrder, addActiveOrderId } = useOrderHistory();
   const { profile, isGuest } = useProfile();
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>(locationConfirmed ? 'review' : 'location');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
@@ -46,6 +46,7 @@ export default function Checkout() {
   const [locationError, setLocationError] = useState('');
   const [scheduledFor, setScheduledFor] = useState<Date | null>(null);
   const [isASAP, setIsASAP] = useState(true);
+  const isCheckoutCompleteRef = useRef(false);
 
   // Initialize default tip from user preferences
   useEffect(() => {
@@ -66,9 +67,15 @@ export default function Checkout() {
     }
   }, [isGuest, profile]);
 
-  // Redirect if cart is empty
-  if (items.length === 0) {
-    navigate('/menu');
+  // Redirect if cart is empty (but not after successful checkout)
+  useEffect(() => {
+    if (items.length === 0 && !isCheckoutCompleteRef.current) {
+      navigate('/menu');
+    }
+  }, [items.length, navigate]);
+
+  // Show nothing while redirecting (but not after successful checkout)
+  if (items.length === 0 && !isCheckoutCompleteRef.current) {
     return null;
   }
 
@@ -127,9 +134,12 @@ export default function Checkout() {
       isASAP,
     };
 
-    // Save order to history
+    // Save order to history and add to active orders
     addOrder(order);
+    addActiveOrderId(orderId);
 
+    // Mark checkout as complete to prevent empty cart redirect
+    isCheckoutCompleteRef.current = true;
     clearCart();
     navigate(`/checkout-success/${orderId}`);
   };

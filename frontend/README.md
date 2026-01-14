@@ -1,3 +1,13 @@
+# TabPay Frontend
+
+Casino ordering PWA that allows guests to order drinks and food directly from their table or slot machine.
+
+## Tech Debt / Chores
+
+- **Default Venue**: Currently hardcoded to "The Grand Casino" (`venue-001`) in `CartContext.tsx`. In production, this should be determined automatically via GPS/geofencing based on the user's physical location within the casino property.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

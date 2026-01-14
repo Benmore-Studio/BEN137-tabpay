@@ -1,7 +1,13 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, MenuItem, SelectedModifier, Venue, ServiceBar } from '../types';
 import { applyMarkup, PRICING_CONFIG } from '../utils/pricing';
+import { mockVenues, mockServiceBars } from '../data/mockVenues';
+
+// Default venue and service bar for demo purposes
+// TODO: In production, venue will be determined by user's physical location (GPS/geofencing)
+const DEFAULT_VENUE = mockVenues[0]; // The Grand Casino
+const DEFAULT_SERVICE_BAR = mockServiceBars[0]; // High Roller Lounge
 
 interface CartState {
   items: CartItem[];
@@ -182,16 +188,33 @@ const initialState: CartState = {
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  // Load cart from localStorage on mount
+  // Load cart from localStorage on mount, with defaults for venue/serviceBar
   useEffect(() => {
     const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
       try {
         const parsed = JSON.parse(savedCart);
-        dispatch({ type: 'LOAD_CART', payload: parsed });
+        // Ensure venue and serviceBar have defaults if not saved
+        const cartWithDefaults: CartState = {
+          ...parsed,
+          venue: parsed.venue || DEFAULT_VENUE,
+          serviceBar: parsed.serviceBar || DEFAULT_SERVICE_BAR,
+        };
+        dispatch({ type: 'LOAD_CART', payload: cartWithDefaults });
       } catch (e) {
         console.error('Failed to parse saved cart:', e);
+        // On parse error, load defaults
+        dispatch({
+          type: 'LOAD_CART',
+          payload: { ...initialState, venue: DEFAULT_VENUE, serviceBar: DEFAULT_SERVICE_BAR },
+        });
       }
+    } else {
+      // No saved cart, initialize with defaults
+      dispatch({
+        type: 'LOAD_CART',
+        payload: { ...initialState, venue: DEFAULT_VENUE, serviceBar: DEFAULT_SERVICE_BAR },
+      });
     }
   }, []);
 
@@ -233,9 +256,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'CLEAR_CART' });
   };
 
-  const setLocation = (location: string) => {
+  // Memoize functions used in consumer useEffect dependencies to prevent infinite loops
+  const setLocation = useCallback((location: string) => {
     dispatch({ type: 'SET_LOCATION', payload: location });
-  };
+  }, []);
+
+  const setVenue = useCallback((venue: Venue) => {
+    dispatch({ type: 'SET_VENUE', payload: venue });
+  }, []);
+
+  const setServiceBar = useCallback((serviceBar: ServiceBar) => {
+    dispatch({ type: 'SET_SERVICE_BAR', payload: serviceBar });
+    // Calculate queue position based on active orders
+    const position = serviceBar.activeOrders + 1;
+    dispatch({ type: 'SET_QUEUE_POSITION', payload: position });
+  }, []);
 
   const confirmLocation = () => {
     dispatch({ type: 'CONFIRM_LOCATION' });
@@ -243,17 +278,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const resetLocationConfirmation = () => {
     dispatch({ type: 'RESET_LOCATION_CONFIRMATION' });
-  };
-
-  const setVenue = (venue: Venue) => {
-    dispatch({ type: 'SET_VENUE', payload: venue });
-  };
-
-  const setServiceBar = (serviceBar: ServiceBar) => {
-    dispatch({ type: 'SET_SERVICE_BAR', payload: serviceBar });
-    // Calculate queue position based on active orders
-    const position = serviceBar.activeOrders + 1;
-    dispatch({ type: 'SET_QUEUE_POSITION', payload: position });
   };
 
   const setQueuePosition = (position: number) => {

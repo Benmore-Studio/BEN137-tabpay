@@ -11,7 +11,7 @@ import { useCart, useProfile } from '../context';
 import { getServiceBarsForVenue, getVenueById } from '../data/mockVenues';
 import type { ServiceBar } from '../types';
 
-function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | 'error' {
+function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | 'error' | 'gray' {
   switch (status) {
     case 'low':
       return 'success';
@@ -19,6 +19,8 @@ function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | '
       return 'warning';
     case 'high':
       return 'error';
+    case 'closed':
+      return 'gray';
   }
 }
 
@@ -30,6 +32,8 @@ function getStatusLabel(status: ServiceBar['status']): string {
       return 'Moderate';
     case 'high':
       return 'Busy';
+    case 'closed':
+      return 'Closed';
   }
 }
 

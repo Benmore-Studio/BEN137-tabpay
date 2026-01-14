@@ -15,7 +15,7 @@ interface BarSelectorModalProps {
   onClose: () => void;
 }
 
-function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | 'error' {
+function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | 'error' | 'gray' {
   switch (status) {
     case 'low':
       return 'success';
@@ -23,6 +23,8 @@ function getStatusColor(status: ServiceBar['status']): 'success' | 'warning' | '
       return 'warning';
     case 'high':
       return 'error';
+    case 'closed':
+      return 'gray';
   }
 }
 
@@ -34,6 +36,8 @@ function getStatusLabel(status: ServiceBar['status']): string {
       return 'Moderate';
     case 'high':
       return 'Busy';
+    case 'closed':
+      return 'Closed';
   }
 }
 
@@ -99,19 +103,24 @@ export default function BarSelectorModal({ isOpen, onClose }: BarSelectorModalPr
         {sortedBars.map((bar) => {
           const isCurrentBar = currentBar?.id === bar.id;
           const isRecommended = isBarRecommended(bar);
+          const isClosed = bar.status === 'closed';
 
           return (
             <Card
               key={bar.id}
-              onClick={() => handleSelectBar(bar)}
-              className={`${isCurrentBar ? 'ring-2 ring-primary-500 bg-primary-50/30' : ''}`}
+              onClick={() => !isClosed && handleSelectBar(bar)}
+              className={`${isCurrentBar ? 'ring-2 ring-primary-500 bg-primary-50/30' : ''} ${
+                isClosed ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+              }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Bar name and badges */}
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                    <h3 className="font-semibold text-slate-900">{bar.name}</h3>
-                    {isRecommended && (
+                    <h3 className={`font-semibold ${isClosed ? 'text-slate-500' : 'text-slate-900'}`}>
+                      {bar.name}
+                    </h3>
+                    {isRecommended && !isClosed && (
                       <Badge variant="primary" size="sm">
                         Recommended
                       </Badge>
@@ -127,27 +136,31 @@ export default function BarSelectorModal({ isOpen, onClose }: BarSelectorModalPr
                     <span className="text-sm">{bar.location}</span>
                   </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1.5">
-                      <ClockIcon className="w-4 h-4 text-slate-400" />
-                      <span className={`font-semibold ${
-                        bar.status === 'high' ? 'text-red-600' :
-                        bar.status === 'medium' ? 'text-amber-600' :
-                        'text-green-600'
-                      }`}>
-                        ~{bar.estimatedWaitMinutes} min
-                      </span>
+                  {/* Stats - hide for closed bars */}
+                  {!isClosed ? (
+                    <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center gap-1.5">
+                        <ClockIcon className="w-4 h-4 text-slate-400" />
+                        <span className={`font-semibold ${
+                          bar.status === 'high' ? 'text-red-600' :
+                          bar.status === 'medium' ? 'text-amber-600' :
+                          'text-green-600'
+                        }`}>
+                          ~{bar.estimatedWaitMinutes} min
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-slate-500">
+                        <Users className="w-4 h-4" />
+                        <span>{bar.availableServers} servers</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-slate-500">
-                      <Users className="w-4 h-4" />
-                      <span>{bar.availableServers} servers</span>
-                    </div>
-                  </div>
+                  ) : (
+                    <p className="text-sm text-slate-400">Currently unavailable</p>
+                  )}
                 </div>
 
                 {/* Current indicator */}
-                {isCurrentBar && (
+                {isCurrentBar && !isClosed && (
                   <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
                     <CheckIcon className="w-4 h-4 text-white" />
                   </div>

@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Martini, User, Receipt, Heart, Home } from 'lucide-react';
 import { motion, LayoutGroup } from 'framer-motion';
-import { useProfile } from '../../context';
 
 interface NavItem {
   path: string;
@@ -19,13 +18,6 @@ const navItems: NavItem[] = [
 
 export default function BottomNav() {
   const location = useLocation();
-  const { isGuest } = useProfile();
-
-  // Guests don't need bottom nav - they access cart via header
-  if (isGuest) {
-    return null;
-  }
-
   const isActive = (path: string) => location.pathname === path;
 
   return (

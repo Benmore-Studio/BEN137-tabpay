@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CheckCircleIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import { AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AppLayout, Button, Card, EmptyState, NotificationPrompt } from '../components';
-import { useCart, useNotifications } from '../context';
+import { useCart, useNotifications, useProfile, useOrderHistory } from '../context';
 import type { OrderStatus } from '../types';
 
 const containerVariants = {
@@ -39,7 +39,14 @@ const currentStatus: OrderStatus = 'preparing';
 
 export default function Confirmation() {
   const { orderId } = useParams<{ orderId: string }>();
-  const { queuePosition, setQueuePosition, serviceBar, location } = useCart();
+  const navigate = useNavigate();
+  const { queuePosition, setQueuePosition, serviceBar } = useCart();
+  const { orders, updateOrderStatus } = useOrderHistory();
+  const { isGuest } = useProfile();
+
+  // Find the order from history
+  const order = orders.find((o) => o.id === orderId);
+  const orderLocation = order?.location;
   const {
     permissionState,
     notifyOrderStatus,
@@ -58,23 +65,28 @@ export default function Confirmation() {
     }
   }, [hasPromptedForPermission, permissionState.isSupported, permissionState.permission]);
 
-  // Notify on status changes (when permission granted)
+  // Notify only when status actually changes (not on every page load)
   useEffect(() => {
     if (permissionState.permission === 'granted' && orderId) {
-      notifyOrderStatus(orderId, currentStatus);
+      const notificationKey = `tabpay_notified_${orderId}_${currentStatus}`;
+      // Only notify if we haven't already notified for this order+status
+      if (!localStorage.getItem(notificationKey)) {
+        localStorage.setItem(notificationKey, 'true');
+        notifyOrderStatus(orderId, currentStatus);
+      }
     }
   }, [currentStatus, orderId, notifyOrderStatus, permissionState.permission]);
 
-  // Handle missing order ID
-  if (!orderId) {
+  // Handle missing order ID or order not found
+  if (!orderId || !order) {
     return (
       <AppLayout showHeader={false} showBottomNav={false}>
         <EmptyState
           icon={AlertCircle}
           title="Order not found"
           description="We couldn't find this order. Please check your order history."
-          actionLabel="View Orders"
-          actionTo="/orders"
+          actionLabel={isGuest ? 'Browse Menu' : 'View Orders'}
+          actionTo={isGuest ? '/menu' : '/orders'}
           variant="error"
         />
       </AppLayout>
@@ -130,7 +142,7 @@ export default function Confirmation() {
           </motion.div>
 
           {/* Delivery Location */}
-          {location && (
+          {orderLocation && (
             <motion.div variants={itemVariants}>
               <Card variant="elevated" className="mb-5">
                 <div className="flex items-center gap-3">
@@ -139,7 +151,7 @@ export default function Confirmation() {
                   </div>
                   <div>
                     <p className="text-sm text-slate-500">Delivering to</p>
-                    <p className="text-lg font-bold text-slate-900">{location}</p>
+                    <p className="text-lg font-bold text-slate-900">{orderLocation}</p>
                   </div>
                 </div>
               </Card>
@@ -275,17 +287,35 @@ export default function Confirmation() {
             <Link to="/menu" className="block">
               <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                 <Button variant="primary" className="w-full">
-                  Order More
+                  Browse Menu
                 </Button>
               </motion.div>
             </Link>
-            <Link to="/" className="block">
+            {!isGuest && (
+              <Link to="/home" className="block">
+                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                  <Button variant="secondary" className="w-full">
+                    Back to Home
+                  </Button>
+                </motion.div>
+              </Link>
+            )}
+
+            {/* Demo: Mark as Delivered */}
+            {order && ['received', 'preparing', 'delivering'].includes(order.status) && (
               <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-                <Button variant="secondary" className="w-full">
-                  Back to Home
+                <Button
+                  variant="secondary"
+                  className="w-full text-xs opacity-60"
+                  onClick={() => {
+                    updateOrderStatus(orderId!, 'delivered');
+                    navigate('/orders');
+                  }}
+                >
+                  [Demo] Mark as Delivered
                 </Button>
               </motion.div>
-            </Link>
+            )}
           </motion.div>
         </motion.div>
       </div>

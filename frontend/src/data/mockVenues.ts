@@ -63,6 +63,16 @@ export const mockServiceBars: ServiceBar[] = [
     estimatedWaitMinutes: 25,
     status: 'high',
   },
+  {
+    id: 'bar-009',
+    venueId: 'venue-001',
+    name: 'Poolside Bar',
+    location: 'Pool Deck - Outdoor',
+    activeOrders: 0,
+    availableServers: 0,
+    estimatedWaitMinutes: 0,
+    status: 'closed',
+  },
   // Royal Palace Casino bars
   {
     id: 'bar-005',

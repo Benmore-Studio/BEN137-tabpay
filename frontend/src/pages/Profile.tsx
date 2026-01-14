@@ -16,7 +16,7 @@ export default function Profile() {
   // Redirect guests to auth
   if (isGuest || !profile) {
     return (
-      <AppLayout cartCount={0} showBackButton={false}>
+      <AppLayout cartCount={0} showBackButton={false} showBarSelector>
         <div className="px-4 pt-6 pb-24 md:pb-8">
           <div className="text-center py-16">
             <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
@@ -65,7 +65,7 @@ export default function Profile() {
   };
 
   return (
-    <AppLayout cartCount={0} showBackButton={false}>
+    <AppLayout cartCount={0} showBackButton={false} showBarSelector>
       <div className="px-4 pt-6 pb-24 md:pb-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Profile</h1>

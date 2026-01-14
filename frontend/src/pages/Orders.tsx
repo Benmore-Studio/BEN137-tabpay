@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ClockIcon, MapPinIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, MapPinIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { ShoppingBagIcon } from '@heroicons/react/24/solid';
 import { AppLayout, Card, Price, Button } from '../components';
-import { useOrderHistory, useCart } from '../context';
+import { useOrderHistory, useCart, useProfile } from '../context';
 import { useToast } from '../components/ui/Toast';
 import type { Order } from '../types';
 
@@ -30,6 +30,9 @@ function OrderCard({ order }: { order: Order }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
   const navigate = useNavigate();
+
+  // Active orders go to confirmation page, completed orders expand inline
+  const isActiveOrder = ['received', 'preparing', 'delivering'].includes(order.status);
 
   const handleReorder = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -61,11 +64,19 @@ function OrderCard({ order }: { order: Order }) {
     navigate('/cart');
   };
 
+  const handleCardClick = () => {
+    if (isActiveOrder) {
+      navigate(`/confirmation/${order.id}`);
+    } else {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
   return (
     <Card
       variant="elevated"
       className="cursor-pointer"
-      onClick={() => setIsExpanded(!isExpanded)}
+      onClick={handleCardClick}
     >
       <div className="space-y-3">
         {/* Header */}
@@ -74,23 +85,26 @@ function OrderCard({ order }: { order: Order }) {
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs tabular-nums font-bold text-primary-600 tracking-tight">#{order.id}</span>
               <span className={`
-                px-2 py-0.5 text-xs font-medium rounded-full
+                px-2 py-0.5 text-xs font-medium rounded-full flex items-center gap-1
                 ${order.status === 'delivered' ? 'bg-green-100 text-green-700' :
-                  order.status === 'delivering' ? 'bg-blue-100 text-blue-700' :
-                  order.status === 'preparing' ? 'bg-amber-100 text-amber-700' :
-                  'bg-slate-100 text-slate-700'}
+                  order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                  'bg-primary-100 text-primary-700'}
               `}>
-                {order.status === 'delivered' ? 'Delivered' :
-                 order.status === 'delivering' ? 'Delivering' :
-                 order.status === 'preparing' ? 'Preparing' :
-                 'Received'}
+                {isActiveOrder && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+                )}
+                {order.status === 'delivered' ? 'Completed' :
+                 order.status === 'cancelled' ? 'Cancelled' :
+                 'Active'}
               </span>
             </div>
             <p className="text-xs text-slate-500">{formatDate(order.createdAt)}</p>
           </div>
           <div className="flex items-center gap-2">
             <Price amount={order.total} size="lg" className="font-bold" />
-            {isExpanded ? (
+            {isActiveOrder ? (
+              <ChevronRightIcon className="w-5 h-5 text-slate-400" />
+            ) : isExpanded ? (
               <ChevronUpIcon className="w-5 h-5 text-slate-400" />
             ) : (
               <ChevronDownIcon className="w-5 h-5 text-slate-400" />
@@ -184,15 +198,30 @@ function OrderCard({ order }: { order: Order }) {
 }
 
 export default function Orders() {
-  const { orders, loading } = useOrderHistory();
+  const { orders, loading, activeOrderIds } = useOrderHistory();
+  const { isGuest } = useProfile();
+
+  // For guests, only show active orders from their session
+  // For authenticated users, show full order history
+  const displayOrders = isGuest
+    ? orders.filter((order) => activeOrderIds.includes(order.id))
+    : orders;
 
   return (
-    <AppLayout cartCount={0} showBackButton={false}>
+    <AppLayout
+      cartCount={0}
+      showBackButton={isGuest}
+      headerTitle={isGuest ? 'Your Orders' : undefined}
+      showBarSelector={!isGuest}
+    >
       <div className="px-4 pt-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Order History</h1>
-          <p className="text-slate-500 mt-1">View your past orders</p>
-        </div>
+        {/* Header - only show for authenticated users (guests get it from AppLayout) */}
+        {!isGuest && (
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-slate-900">Order History</h1>
+            <p className="text-slate-500 mt-1">View your past orders</p>
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (
@@ -202,24 +231,39 @@ export default function Orders() {
         )}
 
         {/* Orders List */}
-        {!loading && orders.length > 0 && (
+        {!loading && displayOrders.length > 0 && (
           <div className="space-y-3">
-            {orders.map((order) => (
+            {displayOrders.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))}
+
+            {/* Back to Menu link for guests */}
+            {isGuest && (
+              <div className="pt-4">
+                <Link to="/menu" className="block">
+                  <Button variant="secondary" className="w-full">
+                    Back to Menu
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         )}
 
         {/* Empty State */}
-        {!loading && orders.length === 0 && (
+        {!loading && displayOrders.length === 0 && (
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center py-16">
               <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
                 <ShoppingBagIcon className="w-10 h-10 text-slate-400" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900">No orders yet</h3>
+              <h3 className="text-lg font-semibold text-slate-900">
+                {isGuest ? 'No active orders' : 'No orders yet'}
+              </h3>
               <p className="text-slate-500 mt-1 mb-6">
-                Your order history will appear here
+                {isGuest
+                  ? 'Place an order to see it here'
+                  : 'Your order history will appear here'}
               </p>
               <Link to="/menu">
                 <Button>Browse Menu</Button>

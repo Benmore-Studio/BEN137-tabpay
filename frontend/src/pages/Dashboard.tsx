@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   QrCode,
   Clock,
   Flame,
-  ChevronRight,
   MapPin,
   Sparkles,
 } from 'lucide-react';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { AppLayout, Card, Button } from '../components';
+import { BarSelectorModal } from '../components/bar';
 import { useCart, useProfile, useOrderHistory, useAuth } from '../context';
 import Logo from '../assets/Logo.png';
 
@@ -33,6 +33,7 @@ export default function Dashboard() {
   const { isGuest } = useProfile();
   const { itemCount, serviceBar, venue } = useCart();
   const { orders, getRecentOrders } = useOrderHistory();
+  const [isBarModalOpen, setIsBarModalOpen] = useState(false);
 
   const recentOrders = getRecentOrders(3);
 
@@ -48,10 +49,10 @@ export default function Dashboard() {
     const itemCounts: Record<string, { name: string; count: number }> = {};
     orders.forEach(order => {
       order.items.forEach(item => {
-        if (!itemCounts[item.id]) {
-          itemCounts[item.id] = { name: item.name, count: 0 };
+        if (!itemCounts[item.menuItem.id]) {
+          itemCounts[item.menuItem.id] = { name: item.menuItem.name, count: 0 };
         }
-        itemCounts[item.id].count += item.quantity;
+        itemCounts[item.menuItem.id].count += item.quantity;
       });
     });
     const favoriteItem = Object.values(itemCounts).sort((a, b) => b.count - a.count)[0];
@@ -68,10 +69,6 @@ export default function Dashboard() {
     };
   }, [orders]);
 
-  // Get last visited bar from most recent order or current session
-  const lastBar = serviceBar || null;
-  const lastVenue = venue || null;
-
   const handleScanQR = () => {
     // In a real app, this would open the camera
     // For demo, navigate to guest entry with default params
@@ -79,7 +76,7 @@ export default function Dashboard() {
   };
 
   return (
-    <AppLayout cartCount={itemCount}>
+    <AppLayout cartCount={itemCount} showBarSelector>
       <motion.div
         className="px-4 pt-6 pb-8"
         variants={containerVariants}
@@ -115,26 +112,36 @@ export default function Dashboard() {
           </Button>
         </motion.div>
 
-        {/* Last Visit Card */}
-        {lastBar && lastVenue && (
+        {/* Ordering From Card - Auth users can change bar here */}
+        {!isGuest && serviceBar && venue && (
           <motion.div variants={itemVariants} className="mb-6">
             <Card className="overflow-hidden">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
                     <MapPin className="w-3.5 h-3.5" />
-                    <span>Last Visit</span>
+                    <span>Ordering from</span>
                   </div>
-                  <h3 className="font-semibold text-slate-900">{lastBar.name}</h3>
-                  <p className="text-sm text-slate-500">{lastVenue.name}</p>
+                  <h3 className="font-semibold text-slate-900">{serviceBar.name}</h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-sm text-slate-500">{venue.name}</span>
+                    {serviceBar.status !== 'closed' && (
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        serviceBar.status === 'low' ? 'bg-green-100 text-green-700' :
+                        serviceBar.status === 'medium' ? 'bg-amber-100 text-amber-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        ~{serviceBar.estimatedWaitMinutes} min
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <Button
                   size="sm"
                   variant="secondary"
-                  onClick={() => navigate('/menu')}
+                  onClick={() => setIsBarModalOpen(true)}
                 >
-                  Order Again
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                  Change
                 </Button>
               </div>
             </Card>
@@ -189,7 +196,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-900 truncate">
-                        {order.items.map(i => i.name).join(', ')}
+                        {order.items.map(i => i.menuItem.name).join(', ')}
                       </p>
                       <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
                         <Clock className="w-3 h-3" />
@@ -239,6 +246,12 @@ export default function Dashboard() {
           </motion.div>
         )}
       </motion.div>
+
+      {/* Bar selector modal */}
+      <BarSelectorModal
+        isOpen={isBarModalOpen}
+        onClose={() => setIsBarModalOpen(false)}
+      />
     </AppLayout>
   );
 }
