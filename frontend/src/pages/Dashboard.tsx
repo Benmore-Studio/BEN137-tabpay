@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -29,13 +29,26 @@ const itemVariants = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { isGuest } = useProfile();
   const { itemCount, serviceBar, venue } = useCart();
   const { orders, getRecentOrders } = useOrderHistory();
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
 
+  // Redirect unauthenticated users to auth page
+  // Guests who came through /order route will have venue/serviceBar set
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth', { replace: true });
+    }
+  }, [authLoading, user, navigate]);
+
   const recentOrders = getRecentOrders(3);
+
+  // Show nothing while checking auth or redirecting
+  if (authLoading || !user) {
+    return null;
+  }
 
   // Calculate fun stats
   const stats = useMemo(() => {
