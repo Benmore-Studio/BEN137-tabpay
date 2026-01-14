@@ -93,8 +93,8 @@ export default function Auth() {
       try {
         const success = await login({ email, password });
         if (success) {
-          // If app is already installed as PWA, go to menu; otherwise show install instructions
-          navigate(isAppInstalled() ? '/menu' : '/install');
+          // If app is already installed as PWA, go to home; otherwise show install instructions
+          navigate(isAppInstalled() ? '/home' : '/install');
         } else {
           setError('Invalid email or password');
         }
@@ -116,8 +116,8 @@ export default function Auth() {
           password,
         });
         if (success) {
-          // If app is already installed as PWA, go to menu; otherwise show install instructions
-          navigate(isAppInstalled() ? '/menu' : '/install');
+          // If app is already installed as PWA, go to home; otherwise show install instructions
+          navigate(isAppInstalled() ? '/home' : '/install');
         }
       } finally {
         setIsLoading(false);
