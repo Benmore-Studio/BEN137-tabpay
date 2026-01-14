@@ -93,4 +93,8 @@ export const ORDER_STATUS_MESSAGES: Record<OrderStatus, { title: string; body: s
     title: 'Order Delivered',
     body: 'Enjoy your drinks! Tap to order again.',
   },
+  cancelled: {
+    title: 'Order Cancelled',
+    body: 'Your order has been cancelled.',
+  },
 };

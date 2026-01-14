@@ -5,7 +5,6 @@ import Badge from '../ui/Badge';
 import { BarSelectorModal } from '../bar';
 import { useProfile, useCart } from '../../context';
 import FullLogo from '../../assets/Full_Logo.png';
-import Logo from '../../assets/Logo.png';
 
 interface HeaderProps {
   cartCount?: number;

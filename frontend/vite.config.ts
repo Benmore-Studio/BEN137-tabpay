@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['martini.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon-180x180.png', 'pwa-icon-source.svg'],
+      includeAssets: ['martini.svg', 'favicon-32x32.png', 'robots.txt', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'TabPay - Casino Ordering',
         short_name: 'TabPay',

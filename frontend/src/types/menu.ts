@@ -65,4 +65,4 @@ export interface Order {
   isASAP: boolean;
 }
 
-export type OrderStatus = 'received' | 'preparing' | 'delivering' | 'delivered';
+export type OrderStatus = 'received' | 'preparing' | 'delivering' | 'delivered' | 'cancelled';
