@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import venueRoutes from './venues';
+import barRoutes from './bars';
 
 const router = Router();
 
@@ -13,9 +15,12 @@ router.get('/health', (_req, res) => {
   });
 });
 
-// Future routes will be added here:
+// API routes
+router.use('/venues', venueRoutes);
+router.use('/bars', barRoutes);
+
+// Future routes:
 // router.use('/auth', authRoutes);
-// router.use('/venues', venueRoutes);
 // router.use('/menu', menuRoutes);
 // router.use('/orders', orderRoutes);
 // router.use('/admin', adminRoutes);
