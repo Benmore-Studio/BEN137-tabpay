@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import venueRoutes from './venues';
 import barRoutes from './bars';
+import categoryRoutes from './categories';
+import menuItemRoutes from './menu-items';
+import authRoutes from './auth';
 
 const router = Router();
 
@@ -16,12 +19,13 @@ router.get('/health', (_req, res) => {
 });
 
 // API routes
+router.use('/auth', authRoutes);
 router.use('/venues', venueRoutes);
 router.use('/bars', barRoutes);
+router.use('/categories', categoryRoutes);
+router.use('/menu-items', menuItemRoutes);
 
 // Future routes:
-// router.use('/auth', authRoutes);
-// router.use('/menu', menuRoutes);
 // router.use('/orders', orderRoutes);
 // router.use('/admin', adminRoutes);
 

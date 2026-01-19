@@ -4,6 +4,7 @@ export interface ApiError extends Error {
   statusCode: number;
   code?: string;
   isOperational?: boolean;
+  details?: unknown;
 }
 
 export interface ApiResponse<T = unknown> {

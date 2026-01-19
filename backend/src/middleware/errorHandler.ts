@@ -6,12 +6,14 @@ export class AppError extends Error implements ApiError {
   statusCode: number;
   code: string;
   isOperational: boolean;
+  details?: unknown;
 
-  constructor(message: string, statusCode: number, code?: string) {
+  constructor(message: string, statusCode: number, code?: string, details?: unknown) {
     super(message);
     this.statusCode = statusCode;
     this.code = code || 'ERROR';
     this.isOperational = true;
+    this.details = details;
 
     Error.captureStackTrace(this, this.constructor);
   }
@@ -37,12 +39,26 @@ export const errorHandler = (err: ApiError, _req: Request, res: Response, _next:
     });
   }
 
-  res.status(statusCode).json({
+  const errorResponse: {
+    success: false;
+    error: {
+      code: string;
+      message: string;
+      details?: unknown;
+    };
+  } = {
     success: false,
     error: {
       code,
       message:
         config.env === 'production' && statusCode === 500 ? 'Internal Server Error' : message,
     },
-  });
+  };
+
+  // Add details if available (e.g., validation errors)
+  if (err.details) {
+    errorResponse.error.details = err.details;
+  }
+
+  res.status(statusCode).json(errorResponse);
 };
