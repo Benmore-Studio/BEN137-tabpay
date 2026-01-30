@@ -77,6 +77,17 @@ export default function Confirmation() {
     }
   }, [currentStatus, orderId, notifyOrderStatus, permissionState.permission]);
 
+  // Simulate queue position decreasing over time
+  useEffect(() => {
+    if (queuePosition && queuePosition > 1 && orderId && order) {
+      const interval = setInterval(() => {
+        setQueuePosition(Math.max(1, queuePosition - 1));
+      }, 150000); // Decrease by 1 every 2.5 minutes
+
+      return () => clearInterval(interval);
+    }
+  }, [queuePosition, setQueuePosition, orderId, order]);
+
   // Handle missing order ID or order not found
   if (!orderId || !order) {
     return (
@@ -94,17 +105,6 @@ export default function Confirmation() {
   }
 
   const currentStageIndex = orderStages.findIndex((s) => s.status === currentStatus);
-
-  // Simulate queue position decreasing over time
-  useEffect(() => {
-    if (queuePosition && queuePosition > 1) {
-      const interval = setInterval(() => {
-        setQueuePosition(Math.max(1, queuePosition - 1));
-      }, 150000); // Decrease by 1 every 2.5 minutes
-
-      return () => clearInterval(interval);
-    }
-  }, [queuePosition, setQueuePosition]);
 
   return (
     <AppLayout showHeader={false} showBottomNav={false}>

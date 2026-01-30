@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { Modal, Button, QuantitySelector, Price, Input } from '../ui';
@@ -28,21 +28,25 @@ export default function ItemDetailModal({
   const [specialInstructions, setSpecialInstructions] = useState('');
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  // Reset state when modal opens with new item
-  useMemo(() => {
+  // Compute initial modifiers for required fields
+  const computeInitialModifiers = useCallback((menuItem: MenuItem) => {
+    const initial: Record<string, ModifierOption[]> = {};
+    menuItem.modifiers?.forEach((mod) => {
+      if (mod.required && mod.options.length > 0) {
+        initial[mod.id] = [mod.options[0]];
+      }
+    });
+    return initial;
+  }, []);
+
+  // Reset state when item changes
+  useEffect(() => {
     if (item) {
       setQuantity(1);
       setSpecialInstructions('');
-      // Initialize required modifiers with first option
-      const initial: Record<string, ModifierOption[]> = {};
-      item.modifiers?.forEach((mod) => {
-        if (mod.required && mod.options.length > 0) {
-          initial[mod.id] = [mod.options[0]];
-        }
-      });
-      setSelectedModifiers(initial);
+      setSelectedModifiers(computeInitialModifiers(item));
     }
-  }, [item?.id]);
+  }, [item, computeInitialModifiers]);
 
   if (!item) return null;
 
@@ -59,7 +63,8 @@ export default function ItemDetailModal({
         // Deselect
         const filtered = current.filter((o) => o.id !== option.id);
         if (filtered.length === 0) {
-          const { [modifierId]: _, ...rest } = prev;
+          const { [modifierId]: _removed, ...rest } = prev;
+          void _removed; // Intentionally unused - destructuring to remove key
           return rest;
         }
         return { ...prev, [modifierId]: filtered };

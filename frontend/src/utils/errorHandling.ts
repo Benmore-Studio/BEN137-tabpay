@@ -61,7 +61,7 @@ export function isNetworkError(error: unknown): boolean {
     return true;
   }
   if (error instanceof Error && 'code' in error) {
-    const code = (error as any).code;
+    const code = (error as Error & { code?: string }).code;
     return code === 'NETWORK_ERROR' || code === 'ECONNREFUSED';
   }
   return false;

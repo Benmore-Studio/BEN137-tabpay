@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCardIcon, DevicePhoneMobileIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
@@ -46,7 +46,7 @@ export default function Checkout() {
   const [locationError, setLocationError] = useState('');
   const [scheduledFor, setScheduledFor] = useState<Date | null>(null);
   const [isASAP, setIsASAP] = useState(true);
-  const isCheckoutCompleteRef = useRef(false);
+  const [isCheckoutComplete, setIsCheckoutComplete] = useState(false);
 
   // Initialize default tip from user preferences
   useEffect(() => {
@@ -69,13 +69,13 @@ export default function Checkout() {
 
   // Redirect if cart is empty (but not after successful checkout)
   useEffect(() => {
-    if (items.length === 0 && !isCheckoutCompleteRef.current) {
+    if (items.length === 0 && !isCheckoutComplete) {
       navigate('/menu');
     }
-  }, [items.length, navigate]);
+  }, [items.length, navigate, isCheckoutComplete]);
 
   // Show nothing while redirecting (but not after successful checkout)
-  if (items.length === 0 && !isCheckoutCompleteRef.current) {
+  if (items.length === 0 && !isCheckoutComplete) {
     return null;
   }
 
@@ -139,7 +139,7 @@ export default function Checkout() {
     addActiveOrderId(orderId);
 
     // Mark checkout as complete to prevent empty cart redirect
-    isCheckoutCompleteRef.current = true;
+    setIsCheckoutComplete(true);
     clearCart();
     navigate(`/checkout-success/${orderId}`);
   };
