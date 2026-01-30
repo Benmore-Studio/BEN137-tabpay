@@ -4,6 +4,7 @@ import barRoutes from './bars';
 import categoryRoutes from './categories';
 import menuItemRoutes from './menu-items';
 import authRoutes from './auth';
+import userRoutes from './users';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.get('/health', (_req, res) => {
 
 // API routes
 router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 router.use('/venues', venueRoutes);
 router.use('/bars', barRoutes);
 router.use('/categories', categoryRoutes);

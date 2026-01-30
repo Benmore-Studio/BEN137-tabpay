@@ -32,6 +32,32 @@ export const refreshSchema = z.object({
   token: z.string().min(1, 'Token is required'),
 });
 
+// User profile update schema
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(50, 'First name too long').optional(),
+  lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long').optional(),
+  phone: phoneSchema.optional(),
+  dateOfBirth: z.string().datetime({ message: 'Invalid date format' }).optional(),
+});
+
+// User preferences update schema
+export const updatePreferencesSchema = z.object({
+  defaultTipPercent: z.number().int().refine(
+    (val) => [0, 15, 18, 20].includes(val),
+    { message: 'Tip percentage must be 0, 15, 18, or 20' }
+  ).optional(),
+  notifications: z.boolean().optional(),
+  autoReorder: z.boolean().optional(),
+});
+
+// Age verification schema
+export const verifyAgeSchema = z.object({
+  dateOfBirth: z.string().datetime({ message: 'Invalid date format' }),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshInput = z.infer<typeof refreshSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type UpdatePreferencesInput = z.infer<typeof updatePreferencesSchema>;
+export type VerifyAgeInput = z.infer<typeof verifyAgeSchema>;

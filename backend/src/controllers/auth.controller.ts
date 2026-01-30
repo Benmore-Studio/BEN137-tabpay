@@ -238,7 +238,7 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
       userId: string;
       email: string;
     };
-  } catch (error) {
+  } catch {
     throw new AppError('Invalid or expired token', 401, 'INVALID_TOKEN');
   }
 

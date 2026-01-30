@@ -22,3 +22,19 @@ export type AsyncHandler = (
   res: Response,
   next: NextFunction
 ) => Promise<void | Response>;
+
+/**
+ * User data attached to authenticated requests
+ */
+export interface AuthUser {
+  userId: string;
+  email: string;
+  sessionId: string;
+}
+
+/**
+ * Extended Request type with optional user data for authenticated routes
+ */
+export interface AuthenticatedRequest extends Request {
+  user?: AuthUser;
+}
