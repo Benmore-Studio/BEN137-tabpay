@@ -10,7 +10,7 @@ describe('Auth API - Login & Sessions', () => {
   const testEmail = `testsession${Date.now()}@example.com`;
   const testPassword = 'SecurePass123!';
   let testUserId: string;
-  let testToken: string;
+  let _testToken: string; // Token stored for potential future test use
 
   beforeAll(async () => {
     // Create a test user first
@@ -46,7 +46,7 @@ describe('Auth API - Login & Sessions', () => {
       expect(response.body.data).toHaveProperty('user');
       expect(response.body.data).toHaveProperty('expiresAt');
 
-      testToken = response.body.data.token;
+      _testToken = response.body.data.token;
     });
 
     it('should return user data without password', async () => {
