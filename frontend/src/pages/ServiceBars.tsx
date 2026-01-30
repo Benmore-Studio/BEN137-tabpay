@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ClockIcon,
@@ -86,13 +86,13 @@ export default function ServiceBars() {
   const [changedBarIds, setChangedBarIds] = useState<Set<string>>(new Set());
 
   // Helper to check if a bar is recommended for the user
-  const isBarRecommended = (bar: ServiceBar): boolean => {
+  const isBarRecommended = useCallback((bar: ServiceBar): boolean => {
     if (isGuest || !defaultLocation) return false;
     // Match if bar location contains part of saved location or vice versa
     const barLoc = bar.location.toLowerCase();
     const savedLoc = defaultLocation.location.toLowerCase();
     return barLoc.includes(savedLoc) || savedLoc.includes(barLoc);
-  };
+  }, [isGuest, defaultLocation]);
 
   // Sort bars: recommended first, then by wait time
   const sortedBars = useMemo(() => {
@@ -109,16 +109,12 @@ export default function ServiceBars() {
       if (!aRecommended && bRecommended) return 1;
       return a.estimatedWaitMinutes - b.estimatedWaitMinutes;
     });
-  }, [serviceBars, isGuest, defaultLocation]);
-
-  // Redirect if venue not found
-  if (!venue) {
-    navigate('/menu');
-    return null;
-  }
+  }, [serviceBars, isGuest, defaultLocation, isBarRecommended]);
 
   // Real-time occupancy simulation
   useEffect(() => {
+    if (!venue) return; // Don't run if no venue
+
     const interval = setInterval(() => {
       setServiceBars((prevBars) => {
         const updatedBars = prevBars.map((bar) => {
@@ -146,7 +142,13 @@ export default function ServiceBars() {
     }, 12000); // Update every 12 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [venue]);
+
+  // Redirect if venue not found
+  if (!venue) {
+    navigate('/menu');
+    return null;
+  }
 
   const handleBarSelect = (bar: ServiceBar) => {
     // Store selected venue and bar in cart context

@@ -40,6 +40,22 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
   const isGuest = !user;
 
+  const initializeProfile = (currentUser: typeof user) => {
+    if (!currentUser) return;
+
+    const newProfile: UserProfile = {
+      user: currentUser,
+      paymentMethods: [],
+      savedLocations: [],
+      preferences: {
+        defaultTipPercent: 15,
+        notifications: true,
+        autoReorder: false,
+      },
+    };
+    setProfile(newProfile);
+  };
+
   // Load profile from localStorage on mount
   useEffect(() => {
     if (!user) {
@@ -81,22 +97,6 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       }
     }
   }, [profile, loading]);
-
-  const initializeProfile = (currentUser: typeof user) => {
-    if (!currentUser) return;
-
-    const newProfile: UserProfile = {
-      user: currentUser,
-      paymentMethods: [],
-      savedLocations: [],
-      preferences: {
-        defaultTipPercent: 15,
-        notifications: true,
-        autoReorder: false,
-      },
-    };
-    setProfile(newProfile);
-  };
 
   const updateProfile = (data: Partial<UserProfile>) => {
     if (!profile) return;

@@ -1,37 +1,7 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { config } from './config';
+import { createApp, prisma } from './app';
 
-const prisma = new PrismaClient();
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-
-// Health check endpoint
-app.get('/', (req, res) => {
-  res.json({
-    status: 'healthy',
-    service: 'TabPay Backend',
-    version: '1.0.0'
-  });
-});
-
-// Database health check
-app.get('/health', async (req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({
-      status: 'healthy',
-      database: 'connected'
-    });
-  } catch (error) {
-    res.status(503).json({
-      status: 'unhealthy',
-      database: 'disconnected',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-  }
-});
+const app = createApp();
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
@@ -44,8 +14,8 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-app.listen(port, () => {
-  console.log(`TabPay Backend running on port ${port}`);
+app.listen(config.port, () => {
+  console.info(`TabPay Backend running on port ${config.port} in ${config.env} mode`);
 });
 
 export { prisma };

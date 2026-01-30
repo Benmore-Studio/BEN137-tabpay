@@ -79,7 +79,7 @@ export default function BarSelectorModal({ isOpen, onClose }: BarSelectorModalPr
       if (!aRecommended && bRecommended) return 1;
       return a.estimatedWaitMinutes - b.estimatedWaitMinutes;
     });
-  }, [serviceBars, isGuest, defaultLocation]);
+  }, [serviceBars, isGuest, defaultLocation, isBarRecommended]);
 
   const handleSelectBar = (bar: ServiceBar) => {
     setServiceBar(bar);
